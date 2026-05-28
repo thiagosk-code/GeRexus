@@ -20,7 +20,7 @@ Para adaptar la experiencia al entorno digital y aportar valor competitivo, **Dr
 
 El proyecto se divide en dos módulos independientes y complementarios:
 
-### 1. Modo de Seguimiento (Asistente Físico) 📝
+### 1. Modo de Seguimiento
 Diseñado para asistir a los jugadores en sus partidas del juego físico real. Esta herramienta automatiza y agiliza el tedioso proceso de conteo y cálculo de puntajes finales de todos los participantes, haciendo las partidas mucho más dinámicas.
 
 ### 2. Juego Digitalizado
