@@ -38,6 +38,6 @@ El proyecto se ha construido bajo una arquitectura segmentada en capas, garantiz
 
 ---
 
-## El Nosotros: GeRexus
+## Nosotros: GeRexus
 
 Este proyecto fue diseñado, programado y documentado por el equipo de **GeRexus** 
