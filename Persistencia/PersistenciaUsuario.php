@@ -1,0 +1,1 @@
+//En este archivo se encuentra la clase PersistenciaUsuario, la cual se encarga de realizar las operaciones de persistencia de los usuarios en la base de datos.
