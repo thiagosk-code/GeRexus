@@ -1,0 +1,351 @@
+:root {
+    --color-white: #F5F5F5;
+    --color-green: #8C9C3F;
+    --color-blue-btn: #2D3D57;
+    --font-main: 'Michroma', sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-main);
+    color: var(--color-white);
+    height: 100vh;
+    max-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden;
+    background-image: url('../Assets/FondoOscuro.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+/* --- Header --- */
+.main-header {
+    width: 100%;
+    padding: 0.625rem 2.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    text-decoration: none;
+    color: var(--color-white);
+}
+
+.logo-img {
+    width: 4.6875rem;
+    height: auto;
+}
+
+.logo-text {
+    font-size: 2.625rem;
+    letter-spacing: 0.0625rem;
+    text-shadow: 0 0.1875rem 0.375rem rgba(0, 0, 0, 0.9);
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 2.1875rem;
+    font-size: 2.25rem;
+}
+
+.leng-switcher {
+    display: flex;
+    gap: 0.625rem;
+    text-shadow: 0 0.1875rem 0.375rem rgba(0, 0, 0, 0.9);
+}
+
+.leng-switcher .active {
+    color: var(--color-green);
+}
+
+.leng-switcher .divider {
+    color: var(--color-white);
+}
+
+.leng-switcher .inactive {
+    color: var(--color-white);
+    text-decoration: none;
+}
+
+.tema-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    color: var(--color-white);
+    transition: color 0.3s ease, transform 0.2s ease;
+}
+
+.tema-toggle .material-symbols-outlined {
+    font-size: 2.5rem;
+    filter: drop-shadow(0 0.1875rem 0.375rem rgba(0, 0, 0, 0.9));
+}
+
+.tema-toggle:hover {
+    color: var(--color-green);
+    transform: scale(1.1);
+}
+
+.register-btn {
+    color: var(--color-green);
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+    text-shadow: 0 0.1875rem 0.375rem rgba(0, 0, 0, 0.9);
+}
+
+.register-btn:hover {
+    opacity: 0.8;
+}
+
+/* --- Contenedor de Login --- */
+.login-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; 
+    align-items: center;
+    text-align: center;
+    padding: 7.5rem 1.25rem 2.5rem 1.25rem;
+    max-width: 75rem;
+    margin: 0 auto;
+    width: 100%;
+    height: calc(100vh - 7.5rem);
+}
+
+.login-title {
+    font-size: clamp(3.5rem, 6vh, 4.8rem);
+    font-weight: normal;
+    letter-spacing: 0.125rem;
+    margin-bottom: min(2rem, 3.5vh);
+    text-shadow: 0 0.25rem 0.25rem rgba(0, 0, 0, 1);
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 33rem;
+}
+
+/* Contenedor interno de inputs */
+.inputs-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: min(1.5rem, 2.8vh);
+}
+
+/* --- Grupos de Input --- */
+.input-group {
+    position: relative;
+    width: 100%;
+}
+
+.input-group input {
+    width: 100%;
+    height: clamp(3.5rem, 6.5vh, 4.25rem);
+    padding: 0 1.5rem; 
+    font-family: var(--font-main);
+    font-size: 1.25rem;
+    color: var(--color-white);
+    background-color: transparent;
+    border: 0.125rem solid var(--color-white);
+    border-radius: 0.9375rem;
+    outline: none;
+}
+
+.input-group input:focus {
+    border-color: var(--color-white);
+    box-shadow: none;
+}
+
+.input-group input::placeholder {
+    color: var(--color-white);
+    opacity: 0.9;
+}
+
+/* Forzado estricto de color blanco para texto autollenado AAaaaaaaaaaaaaaaaaaa*/
+.input-group input:-webkit-autofill,
+.input-group input:-webkit-autofill:hover,
+.input-group input:-webkit-autofill:focus,
+.input-group input:-webkit-autofill:active {
+    -webkit-text-fill-color: var(--color-white) !important;
+    -webkit-box-shadow: 0 0 0.0625rem 625rem rgba(25, 25, 25, 0.9) inset !important;
+    border: 0.125rem solid var(--color-white) !important;
+    font-family: var(--font-main) !important;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+.input-group .field-icon {
+    position: absolute;
+    left: -3.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 2.5rem;
+    color: var(--color-white);
+    filter: drop-shadow(0 0.125rem 0.25rem rgba(0, 0, 0, 0.8));
+    pointer-events: none;
+}
+
+/* --- Contenedor inferior --- */
+.bottom-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 2rem; 
+    padding-top: 0.5rem; 
+    padding-bottom: min(1rem, 2vh);
+}
+
+/* --- Boton de Envio --- */
+.btn-submit {
+    width: 100%;
+    height: clamp(3.8rem, 7.5vh, 4.6rem);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: var(--font-main);
+    font-size: 1.9rem;
+    color: var(--color-white);
+    background-color: rgba(45, 61, 87, 0.4);
+    border: 0.1875rem solid var(--color-blue-btn);
+    border-radius: 1.25rem;
+    cursor: pointer;
+    box-shadow: 0 0.25rem 0.625rem rgba(0, 0, 0, 0.3);
+    text-shadow: 0 0.1875rem 0.375rem rgba(0, 0, 0, 0.9);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.1s ease;
+    margin-bottom: min(1.25rem, 2vh); 
+}
+
+.btn-submit:hover {
+    background-color: rgba(45, 61, 87, 1);
+    box-shadow: 0 0.375rem 0.875rem rgba(0, 0, 0, 0.5);
+}
+
+.btn-submit:active {
+    transform: scale(0.98);
+}
+
+/* --- Enlace de Redireccion (Al fondo en el Login) --- */
+.register-link {
+    font-family: var(--font-main);
+    font-size: 1.05rem;
+    color: var(--color-white);
+    text-decoration: none;
+    text-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.5);
+    margin-top: 0.75rem;
+    margin-bottom: 0.5rem;  
+}
+
+/* --- Responsive para Tablets --- */
+@media (max-width: 1200px) {
+    .login-title { font-size: 3.8rem; }
+    .main-header { padding: 0.625rem 1.875rem; }
+    .logo-img { width: 4.0625rem; }
+    .logo-text { font-size: 2.25rem; }
+    .header-actions { font-size: 1.875rem; gap: 1.5625rem; }
+}
+
+/* --- Responsive para mobile --- */
+@media (max-width: 768px) {
+    .main-header {
+        padding: 0.75rem 1.25rem;
+    }
+    .logo-img { width: 2.375rem; }
+    .logo-text { font-size: 1.375rem; }
+    .header-actions { font-size: 1.1rem; gap: 0.85rem; }
+    .register-btn { display: none; } 
+    
+    .tema-toggle .material-symbols-outlined {
+        font-size: 1.5rem;
+    }
+    
+    .login-container {
+        padding: 14vh 2rem 2.5rem 2rem;
+        justify-content: space-between;
+        height: 100vh;
+    }
+    .login-title {
+        font-size: 1.95rem;
+        margin-bottom: 0;
+    }
+    .login-form {
+        max-width: 17.5rem;
+        flex: 1;
+        justify-content: space-around;
+    }
+    
+    /* Cacho que empuja todo hacia abajo porque le cuesta... el problema siempre estuvo entre la silla y la pantalla. */
+    .inputs-container {
+        gap: 1.5rem; 
+        margin-top: 7vh;
+    }
+    .input-group input {
+        height: 3.15rem;
+        font-size: 1rem;
+        padding: 0 1rem;
+    }
+    .input-group input:-webkit-autofill {
+        font-size: 1rem !important;
+    }
+    .input-group .field-icon {
+        left: -2.85rem;
+        font-size: 2rem;
+    }
+    
+    .bottom-container {
+        margin-top: 0;
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+    .btn-submit {
+        height: 3.4rem;
+        font-size: 1.4rem;
+        border-radius: 1rem;
+        margin-bottom: 0.75rem;
+    }
+    .register-link {
+        font-size: 0.85rem;
+    }
+}
+
+/* Pantallas chicas */
+@media (max-width: 400px) {
+    .logo-text { font-size: 1.15rem; }
+    .header-actions { font-size: 0.9rem; gap: 0.6rem; }
+    
+    .login-container { padding-top: 12vh; padding-bottom: 1.5rem; }
+    .login-title { font-size: 1.7rem; margin-top: 2vh; }
+    .login-form { max-width: 15.5rem; }
+    
+    .inputs-container { 
+        gap: 1.3rem; 
+    }
+    .input-group input { height: 2.85rem; font-size: 0.9rem; }
+    .input-group input:-webkit-autofill { font-size: 0.9rem !important; }
+    .input-group .field-icon { left: -2.4rem; font-size: 1.7rem; }
+    
+    .btn-submit { height: 3.1rem; font-size: 1.2rem; margin-bottom: 0.5rem; }
+    .register-link { font-size: 0.75rem; margin-bottom: 0.2rem; margin-top: 0.6rem; }
+}
