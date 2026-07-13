@@ -14,8 +14,8 @@
 <body>
 
     <header class="main-header">
-        <a href="#" class="logo-container">
-            <img src="../Assets/RexRojoPng.png" alt="GeRexus Logo" class="logo-img">
+        <a href="index.php" class="logo-container">
+            <span class="logo-img"></span>
             <span class="logo-text">GeRexus</span>
         </a>
         

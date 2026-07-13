@@ -3,6 +3,9 @@
     --color-green: #8C9C3F;
     --color-blue-btn: #2D3D57;
     --font-main: 'Michroma', sans-serif;
+
+    --url-logo: url('../Assets/RexRojoPng.png');
+    --url-fondo: url('../Assets/FondoOscuro.jpg');
 }
 
 * {
@@ -48,9 +51,14 @@ body {
     color: var(--color-white);
 }
 
-.logo-img {
-    width: 4.6875rem;
-    height: auto;
+logo-img {
+    display: inline-block;
+    background-image: url(--url-logo);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 4.6875rem; 
+    height: auto; 
 }
 
 .logo-text {
