@@ -5,10 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Draftoicos - Registro</title>
     <link rel="icon" type="image/png" href="../Assets/SocratesPNG.png">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Michroma&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+
     <link rel="stylesheet" href="register.css">
 </head>
 <body>
@@ -30,7 +32,7 @@
                 <span class="material-symbols-outlined">light_mode</span>
             </button>
 
-            <a href="login.html" class="login-btn">Iniciar sesión</a>
+            <a href="login.php" class="login-btn">Iniciar sesión</a>
         </div>
     </header>
 
@@ -62,12 +64,13 @@
             </div>
 
             <div class="bottom-container">
-                <a href="login.html" class="login-link">¿Ya tienes una cuenta?</a>
+                <a href="login.php" class="login-link">¿Ya tienes una cuenta?</a>
                 <button type="submit" class="btn-submit">Registrarse</button>
             </div>
         </form>
     </main>
 
+    <script src="Temas.js"></script>
 </body>
 
 <!-- Lista de ingredientes para el guiso de Unicornio:

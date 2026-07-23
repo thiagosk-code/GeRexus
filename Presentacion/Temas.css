@@ -1,0 +1,26 @@
+body, 
+body *, 
+body *::before, 
+body *::after {
+    transition: background-color 0.3s ease-out, 
+                color 0.3s ease-out, 
+                border-color 0.3s ease-out, 
+                box-shadow 0.3s ease-out,
+                background-image 0.3s ease-out;
+}
+
+.tema-toggle {
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.tema-toggle.pop-effect {
+    transform: scale(1.25) rotate(15deg);
+}
+
+.tema-toggle .material-symbols-outlined {
+    transition: transform 0.4s ease;
+}
+
+body.light-mode .tema-toggle .material-symbols-outlined {
+    transform: rotate(180deg);
+}

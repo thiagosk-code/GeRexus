@@ -5,10 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Draftoicos - Iniciar Sesion</title>
     <link rel="icon" type="image/png" href="../Assets/SocratesPNG.png">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Michroma&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+
     <link rel="stylesheet" href="login.css">
 </head>
 <body>
@@ -30,7 +32,7 @@
                 <span class="material-symbols-outlined">light_mode</span>
             </button>
 
-            <a href="register.html" class="register-btn">Registrarse</a>
+            <a href="register.php" class="register-btn">Registrarse</a>
         </div>
     </header>
 
@@ -52,11 +54,11 @@
 
             <div class="bottom-container">
                 <button type="submit" class="btn-submit">Iniciar Sesion</button>
-                <a href="register.html" class="register-link">¿No tienes una cuenta?</a>
+                <a href="register.php" class="register-link">¿No tienes una cuenta?</a>
             </div>
         </form>
     </main>
-
+    <script src="Temas.js"></script>
 </body>
 
 <!-- No, en este ya no hay receta pero estate atento que en otros archivos puede haber algo... (Puntos suspensivos para dar intriga) -->
