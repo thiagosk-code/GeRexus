@@ -7,15 +7,16 @@ class UsuarioDTO {
     private string $email;
     private string $password;
     private int $partidasGanadas;
+    private bool $esAdmin;
 
     // Constructor
-    public function __construct(int $idUsuario, string $nombre, string $email, string $password) {
+    public function __construct(int $idUsuario, string $nombre, string $email, string $password, bool $esAdmin) {
         $this->idUsuario = $idUsuario;
         $this->nombre = $nombre;
         $this->email = $email;
         $this->password = $password;
         $this->partidasGanadas = 0;
-        $this->esHost = false;
+        $this->esAdmin = $esAdmin;
     }
 
     // idUsuario
@@ -61,6 +62,15 @@ class UsuarioDTO {
 
     public function getPartidasGanadas(): int {
         return $this->partidasGanadas;
+    }
+
+    // esAdmin
+    public function setEsAdmin(bool $esAdmin): void {
+        $this->esAdmin = $esAdmin;
+    }
+
+    public function getEsAdmin(): bool {
+        return $this->esAdmin;
     }
 
 }

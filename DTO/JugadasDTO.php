@@ -1,14 +1,14 @@
 <?php
 
 class JugadasDTO {
-    // Atributos
+    // Atributos privados basados en tus otros DTOs y datos de turno
     private UsuarioDTO $usuario;
     private RecintoDTO $recinto;
     private AdeptoDTO $adepto;
     private int $turno;
     private int $ronda;
 
-    // Constructor
+    // Constructor tradicional que inicializa todas las propiedades
     public function __construct(UsuarioDTO $usuario, RecintoDTO $recinto, AdeptoDTO $adepto, int $turno, int $ronda) {
         $this->usuario = $usuario;
         $this->recinto = $recinto;
