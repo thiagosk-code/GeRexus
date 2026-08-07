@@ -1,9 +1,39 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+if (isset($_GET['lang'])) {
+    if ($_GET['lang'] === 'en') {
+        $_SESSION['lang'] = 'en';
+    } else {
+        $_SESSION['lang'] = 'es';
+    }
+}
+
+$lang = (isset($_SESSION['lang']) && $_SESSION['lang'] === 'en') ? 'en' : 'es';
+
+$dic = [
+    'es' => [
+        'iniciar_sesion' => 'Iniciar sesion',
+        'dev_title' => 'Página en desarrollo',
+        'volver' => 'Volver'
+    ],
+    'en' => [
+        'iniciar_sesion' => 'Log in',
+        'dev_title' => 'Page Under Development',
+        'volver' => 'Back'
+    ]
+];
+
+$txt = $dic[$lang];
+?>
 <!DOCTYPE html>
-<html lang="es">
+<html lang="<?php echo $lang; ?>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Draftoicos - Página en Desarrollo</title>
+    <title>Draftoicos - <?php echo $txt['dev_title']; ?></title>
     <link rel="icon" type="image/png" href="../Assets/SocratesPNG.png">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -24,21 +54,21 @@
         
         <div class="header-actions">
             <div class="leng-switcher">
-                <span class="active">Esp</span>
+                <a href="?lang=es" class="<?php echo ($lang === 'es') ? 'active' : 'inactive'; ?>">Esp</a>
                 <span class="divider">|</span>
-                <a href="#" class="inactive">Eng</a>
+                <a href="?lang=en" class="<?php echo ($lang === 'en') ? 'active' : 'inactive'; ?>">Eng</a>
             </div>
             
             <button class="tema-toggle" aria-label="Cambiar a modo claro">
                 <span class="material-symbols-outlined">light_mode</span>
             </button>
             
-            <a href="login.php" class="login-btn">Iniciar sesion</a>
+            <a href="login.php" class="login-btn"><?php echo $txt['iniciar_sesion']; ?></a>
         </div>
     </header>
 
     <main class="main-content">
-        <h1 class="main-title dev-title">PÁGINA EN DESARROLLO</h1>
+        <h1 class="main-title dev-title"><?php echo $txt['dev_title']; ?></h1>
         
         <div class="dev-container">
             <div aria-label="Orange and tan hamster running in a metal wheel" role="img" class="wheel-and-hamster">
@@ -61,9 +91,10 @@
             </div>
         </div>
 
-        <a href="index.php" class="btn-volver">VOLVER</a>
+        <a href="index.php" class="btn-volver"><?php echo $txt['volver']; ?></a>
     </main>
 
+    <script src="lang.js"></script>
     <script src="Temas.js"></script>
 </body>
 </html>

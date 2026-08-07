@@ -4,15 +4,15 @@ class AdeptoDTO {
     // Atributos
     private int $idAdepto;
     private string $especie;
-    private bool $shiny;
+    private bool $esShiny;
     private string $corriente;
     private string $descripcion;
 
     // Constructor
-    public function __construct(int $idAdepto, string $especie, bool $shiny = false, string $corriente = '', string $descripcion = '') {
+    public function __construct(int $idAdepto, string $especie, bool $esShiny = false, string $corriente = '', string $descripcion = '') {
         $this->idAdepto = $idAdepto;
         $this->especie = $especie;
-        $this->shiny = $shiny;
+        $this->esShiny = $esShiny;
         $this->corriente = $corriente;
         $this->descripcion = $descripcion;
     }
@@ -35,13 +35,13 @@ class AdeptoDTO {
         return $this->especie;
     }
 
-    // shiny
-    public function setShiny(bool $shiny): void {
-        $this->shiny = $shiny;
+    // esShiny
+    public function setEsShiny(bool $esShiny): void {
+        $this->esShiny = $esShiny;
     }
 
-    public function getShiny(): bool {
-        return $this->shiny;
+    public function getEsShiny(): bool {
+        return $this->esShiny;
     }
 
     // corriente 

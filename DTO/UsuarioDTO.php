@@ -7,15 +7,17 @@ class UsuarioDTO {
     private string $email;
     private string $password;
     private int $partidasGanadas;
+    private int $monedas;
     private bool $esAdmin;
 
     // Constructor
-    public function __construct(int $idUsuario, string $nombre, string $email, string $password, bool $esAdmin) {
+    public function __construct(int $idUsuario, string $nombre, string $email, string $password, int $partidasGanadas, int $monedas, bool $esAdmin) {
         $this->idUsuario = $idUsuario;
         $this->nombre = $nombre;
         $this->email = $email;
         $this->password = $password;
-        $this->partidasGanadas = 0;
+        $this->partidasGanadas = $partidasGanadas;
+        $this->monedas = $monedas;
         $this->esAdmin = $esAdmin;
     }
 
@@ -62,6 +64,15 @@ class UsuarioDTO {
 
     public function getPartidasGanadas(): int {
         return $this->partidasGanadas;
+    }
+
+    // monedas
+    public function setMonedas(int $cantidad): void {
+        $this->monedas = $cantidad;
+    }
+
+    public function getMonedas(): int {
+        return $this->monedas;
     }
 
     // esAdmin

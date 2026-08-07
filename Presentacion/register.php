@@ -1,16 +1,55 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+if (isset($_GET['lang'])) {
+    if ($_GET['lang'] === 'en') {
+        $_SESSION['lang'] = 'en';
+    } else {
+        $_SESSION['lang'] = 'es';
+    }
+}
+
+$lang = (isset($_SESSION['lang']) && $_SESSION['lang'] === 'en') ? 'en' : 'es';
+
+$dic = [
+    'es' => [
+        'iniciar_sesion' => 'Iniciar sesión',
+        'registrarse' => 'Registro',
+        'usuario' => 'Usuario',
+        'correo_elec' => 'Correo electrónico',
+        'contrasena' => 'Contraseña',
+        'confirmar_contrasena' => 'Confirmar contraseña',
+        'ya_cuenta' => '¿Ya tienes una cuenta?'
+    ],
+    'en' => [
+        'iniciar_sesion' => 'Log in',
+        'registrarse' => 'Registration',
+        'usuario' => 'Username',
+        'correo_elec' => 'Email address',
+        'contrasena' => 'Password',
+        'confirmar_contrasena' => 'Confirm password',
+        'ya_cuenta' => 'Already have an account?'
+    ]
+];
+
+$txt = $dic[$lang];
+?>
 <!DOCTYPE html>
-<html lang="es">
+<html lang="<?php echo $lang; ?>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Draftoicos - Registro</title>
+    <title>Draftoicos - <?php echo $txt['registrarse']; ?></title>
     <link rel="icon" type="image/png" href="../Assets/SocratesPNG.png">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Michroma&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
-
+    
+    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="register.css">
 </head>
 <body>
@@ -23,53 +62,54 @@
         
         <div class="header-actions">
             <div class="leng-switcher">
-                <span class="active">Esp</span>
+                <a href="?lang=es" class="<?php echo ($lang === 'es') ? 'active' : 'inactive'; ?>">Esp</a>
                 <span class="divider">|</span>
-                <a href="#" class="inactive">Eng</a>
+                <a href="?lang=en" class="<?php echo ($lang === 'en') ? 'active' : 'inactive'; ?>">Eng</a>
             </div>
             
             <button class="tema-toggle" aria-label="Cambiar a modo claro">
                 <span class="material-symbols-outlined">light_mode</span>
             </button>
 
-            <a href="login.php" class="login-btn">Iniciar sesión</a>
+            <a href="login.php" class="login-btn"><?php echo $txt['iniciar_sesion']; ?></a>
         </div>
     </header>
 
     <main class="register-container">
-        <h1 class="register-title">Registro</h1>
+        <h1 class="register-title"><?php echo $txt['registrarse']; ?></h1>
         
         <form class="register-form" action="/rutita" method="POST">
             
             <div class="inputs-container">
                 <div class="input-group">
                     <span class="material-symbols-outlined field-icon">person</span>
-                    <input type="text" name="username" placeholder="Usuario" required autocomplete="username">
+                    <input type="text" name="username" placeholder="<?php echo $txt['usuario']; ?>" required autocomplete="username">
                 </div>
 
                 <div class="input-group">
                     <span class="material-symbols-outlined field-icon">mail</span>
-                    <input type="email" name="email" placeholder="Correo electrónico" required autocomplete="email">
+                    <input type="email" name="email" placeholder="<?php echo $txt['correo_elec']; ?>" required autocomplete="email">
                 </div>
 
                 <div class="input-group">
                     <span class="material-symbols-outlined field-icon">key</span>
-                    <input type="password" name="password" placeholder="Contraseña" required autocomplete="new-password">
+                    <input type="password" name="password" placeholder="<?php echo $txt['contrasena']; ?>" required autocomplete="new-password">
                 </div>
 
                 <div class="input-group">
                     <span class="material-symbols-outlined field-icon">key</span>
-                    <input type="password" name="confirm_password" placeholder="Confirmar contraseña" required autocomplete="new-password">
+                    <input type="password" name="confirm_password" placeholder="<?php echo $txt['confirmar_contrasena']; ?>" required autocomplete="new-password">
                 </div>
             </div>
 
             <div class="bottom-container">
-                <a href="login.php" class="login-link">¿Ya tienes una cuenta?</a>
-                <button type="submit" class="btn-submit">Registrarse</button>
+                <a href="login.php" class="login-link"><?php echo $txt['ya_cuenta']; ?></a>
+                <button type="submit" class="btn-submit"><?php echo $txt['registrarse']; ?></button>
             </div>
         </form>
     </main>
 
+    <script src="lang.js"></script>
     <script src="Temas.js"></script>
 </body>
 

@@ -1,26 +1,35 @@
-@import url('style.css');
-@import url('Temas.css');
-
 .main-content {
-    padding-top: 7rem;
-    padding-bottom: 2rem;
-    gap: 1.5rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding-top: 8rem;
+    padding-bottom: 3rem;
+    gap: 2rem;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .dev-title {
-    font-size: clamp(1.6rem, 4.8vw, 3.8rem);
-    white-space: nowrap;
-    margin-bottom: 0;
+    font-size: clamp(3.5rem, 6vh, 4.8rem);
+    font-weight: normal;
+    letter-spacing: 0.125rem;
+    margin-bottom: min(2rem, 3.5vh);
+    text-shadow: 0 0.25rem 0.25rem var(--shadow-black);
 }
 
 .dev-container {
+    position: relative;
     display: flex;
-    flex-direction: column;
-    align-items: center;
     justify-content: center;
-    margin: 0.5rem 0;
+    align-items: center;
+    width: 100%;
+    margin: 1rem 0;
 }
 
+/* --- Hamster Animation --- */
 .wheel-and-hamster {
     --dur: 1s;
     position: relative;
@@ -238,6 +247,7 @@
     to { transform: rotate(-1turn); }
 }
 
+/* Botón VOLVER */
 .btn-volver {
     width: 22rem;
     height: 5rem;
@@ -267,15 +277,7 @@
 }
 
 @media (max-width: 768px) {
-    .dev-title {
-        font-size: clamp(1.2rem, 4.5vw, 2.2rem);
-    }
-    .wheel-and-hamster {
-        font-size: 16px;
-    }
-    .btn-volver {
-        width: 15rem;
-        height: 3.75rem;
-        font-size: 1.5rem;
-    }
+    .dev-title { font-size: clamp(1.2rem, 4.5vw, 2.2rem); }
+    .wheel-and-hamster { font-size: 16px; }
+    .btn-volver { width: 15rem; height: 3.75rem; font-size: 1.5rem; }
 }
