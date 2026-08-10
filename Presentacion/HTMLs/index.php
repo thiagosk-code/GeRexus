@@ -1,32 +1,7 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
-// 1. Evalúa si viene por URL y actualiza la sesión
-if (isset($_GET['lang'])) {
-    $lang = ($_GET['lang'] === 'en') ? 'en' : 'es';
-    $_SESSION['lang'] = $lang;
-} else {
-    $lang = $_SESSION['lang'] ?? 'es';
-}
-
-// 2. Diccionario de la página
-$dic = [
-    'es' => [
-        'iniciar_sesion' => 'Iniciar sesion',
-        'desc' => 'Un juego de mesa con mecanicas draft donde asignaras Adeptos de distintas corrientes filosoficas a distintas salas',
-        'jugar' => 'Jugar'
-    ],
-    'en' => [
-        'iniciar_sesion' => 'Log in',
-        'desc' => 'A board game with draft mechanics where you will assign Adepts from different philosophical currents to different rooms',
-        'jugar' => 'Play'
-    ]
-];
-
-$txt = $dic[$lang];
+require_once __DIR__ . '/../Scripts/lang.php';
 ?>
+
 <!DOCTYPE html>
 <html lang="<?php echo $lang; ?>">
 <head>
@@ -40,8 +15,8 @@ $txt = $dic[$lang];
     <link href="https://fonts.googleapis.com/css2?family=Michroma&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="../CSSs/style.css">
+    <link rel="stylesheet" href="../CSSs/index.css">
 </head>
 <body>
 
@@ -84,7 +59,7 @@ $txt = $dic[$lang];
         </a>
     </main>
 
-    <script src="lang.js"></script>
-    <script src="Temas.js"></script>
+    <script src="../Scripts/lang.js"></script>
+    <script src="../Scripts/Temas.js"></script>
 </body>
 </html>

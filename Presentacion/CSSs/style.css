@@ -18,8 +18,8 @@
     --shadow-light: rgba(0, 0, 0, 0.3);
 
     --font-main: 'Michroma', sans-serif;
-    --url-logo: url('../Assets/RexRojoPng.png');
-    --url-fondo: url('../Assets/FondoOscuro.jpg');
+    --url-logo: url('../../Assets/RexRojoPng.png');
+    --url-fondo: url('../../Assets/FondoOscuro.jpg');
 }
 
 body.light-mode {
@@ -28,8 +28,8 @@ body.light-mode {
     --bg-btn-jugar: rgba(181, 89, 64, 0.2);
     --bg-btn-submit: rgba(181, 89, 64, 0.2);
     --bg-btn-hover: #B55940;
-    --url-logo: url('../Assets/RexVerdePng.png');
-    --url-fondo: url('../Assets/FondoClaro.jpg');
+    --url-logo: url('../../Assets/RexVerdePng.png');
+    --url-fondo: url('../../Assets/FondoClaro.jpg');
     --bg-autofill: rgba(220, 237, 233, 0.9);
 }
 

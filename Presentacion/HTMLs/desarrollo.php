@@ -1,33 +1,7 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
-if (isset($_GET['lang'])) {
-    if ($_GET['lang'] === 'en') {
-        $_SESSION['lang'] = 'en';
-    } else {
-        $_SESSION['lang'] = 'es';
-    }
-}
-
-$lang = (isset($_SESSION['lang']) && $_SESSION['lang'] === 'en') ? 'en' : 'es';
-
-$dic = [
-    'es' => [
-        'iniciar_sesion' => 'Iniciar sesion',
-        'dev_title' => 'Página en desarrollo',
-        'volver' => 'Volver'
-    ],
-    'en' => [
-        'iniciar_sesion' => 'Log in',
-        'dev_title' => 'Page Under Development',
-        'volver' => 'Back'
-    ]
-];
-
-$txt = $dic[$lang];
+require_once __DIR__ . '/../Scripts/lang.php';
 ?>
+
 <!DOCTYPE html>
 <html lang="<?php echo $lang; ?>">
 <head>
@@ -41,8 +15,8 @@ $txt = $dic[$lang];
     <link href="https://fonts.googleapis.com/css2?family=Michroma&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="desarrollo.css">
+    <link rel="stylesheet" href="../CSSs/style.css">
+    <link rel="stylesheet" href="../CSSs/desarrollo.css">
 </head>
 <body>
 
@@ -94,7 +68,7 @@ $txt = $dic[$lang];
         <a href="index.php" class="btn-volver"><?php echo $txt['volver']; ?></a>
     </main>
 
-    <script src="lang.js"></script>
-    <script src="Temas.js"></script>
+    <script src="../Scripts/lang.js"></script>
+    <script src="../Scripts/Temas.js"></script>
 </body>
 </html>

@@ -1,0 +1,15 @@
+{
+    "iniciar_sesion": "Iniciar sesión",
+    "registrarse": "Registro",
+    "usuario": "Usuario",
+    "correo": "Correo",
+    "correo_elec": "Correo electrónico",
+    "contrasena": "Contraseña",
+    "confirmar_contrasena": "Confirmar contraseña",
+    "ya_cuenta": "¿Ya tienes una cuenta?",
+    "no_cuenta": "¿No tienes una cuenta?",
+    "desc": "Un juego de mesa con mecanicas draft donde asignaras Adeptos de distintas corrientes filosoficas a distintas salas",
+    "jugar": "Jugar",
+    "dev_title": "Página en desarrollo",
+    "volver": "Volver"
+}
