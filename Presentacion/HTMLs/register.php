@@ -1,41 +1,7 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
-if (isset($_GET['lang'])) {
-    if ($_GET['lang'] === 'en') {
-        $_SESSION['lang'] = 'en';
-    } else {
-        $_SESSION['lang'] = 'es';
-    }
-}
-
-$lang = (isset($_SESSION['lang']) && $_SESSION['lang'] === 'en') ? 'en' : 'es';
-
-$dic = [
-    'es' => [
-        'iniciar_sesion' => 'Iniciar sesión',
-        'registrarse' => 'Registro',
-        'usuario' => 'Usuario',
-        'correo_elec' => 'Correo electrónico',
-        'contrasena' => 'Contraseña',
-        'confirmar_contrasena' => 'Confirmar contraseña',
-        'ya_cuenta' => '¿Ya tienes una cuenta?'
-    ],
-    'en' => [
-        'iniciar_sesion' => 'Log in',
-        'registrarse' => 'Registration',
-        'usuario' => 'Username',
-        'correo_elec' => 'Email address',
-        'contrasena' => 'Password',
-        'confirmar_contrasena' => 'Confirm password',
-        'ya_cuenta' => 'Already have an account?'
-    ]
-];
-
-$txt = $dic[$lang];
+require_once __DIR__ . '/../Scripts/lang.php';
 ?>
+
 <!DOCTYPE html>
 <html lang="<?php echo $lang; ?>">
 <head>
@@ -49,8 +15,8 @@ $txt = $dic[$lang];
     <link href="https://fonts.googleapis.com/css2?family=Michroma&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
     
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="register.css">
+    <link rel="stylesheet" href="../CSSs/style.css">
+    <link rel="stylesheet" href="../CSSs/register.css">
 </head>
 <body>
 
@@ -109,8 +75,8 @@ $txt = $dic[$lang];
         </form>
     </main>
 
-    <script src="lang.js"></script>
-    <script src="Temas.js"></script>
+    <script src="../Scripts/lang.js"></script>
+    <script src="../Scripts/Temas.js"></script>
 </body>
 
 <!-- Lista de ingredientes para el guiso de Unicornio:

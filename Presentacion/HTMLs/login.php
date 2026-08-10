@@ -1,37 +1,7 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
-if (isset($_GET['lang'])) {
-    if ($_GET['lang'] === 'en') {
-        $_SESSION['lang'] = 'en';
-    } else {
-        $_SESSION['lang'] = 'es';
-    }
-}
-
-$lang = (isset($_SESSION['lang']) && $_SESSION['lang'] === 'en') ? 'en' : 'es';
-
-$dic = [
-    'es' => [
-        'registrarse' => 'Registrarse',
-        'iniciar_sesion' => 'Iniciar Sesion',
-        'correo' => 'Correo',
-        'contrasena' => 'Contraseña',
-        'no_cuenta' => '¿No tienes una cuenta?'
-    ],
-    'en' => [
-        'registrarse' => 'Sign up',
-        'iniciar_sesion' => 'Log in',
-        'correo' => 'Email',
-        'contrasena' => 'Password',
-        'no_cuenta' => "Don't have an account?"
-    ]
-];
-
-$txt = $dic[$lang];
+require_once __DIR__ . '/../Scripts/lang.php';
 ?>
+
 <!DOCTYPE html>
 <html lang="<?php echo $lang; ?>">
 <head>
@@ -45,8 +15,8 @@ $txt = $dic[$lang];
     <link href="https://fonts.googleapis.com/css2?family=Michroma&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="login.css">
+    <link rel="stylesheet" href="../CSSs/style.css">
+    <link rel="stylesheet" href="../CSSs/login.css">
 </head>
 <body>
 
@@ -94,8 +64,8 @@ $txt = $dic[$lang];
         </form>
     </main>
     
-    <script src="lang.js"></script>
-    <script src="Temas.js"></script>
+    <script src="../Scripts/lang.js"></script>
+    <script src="../Scripts/Temas.js"></script>
 </body>
 
 <!-- No, en este ya no hay receta pero estate atento que en otros archivos puede haber algo... (Puntos suspensivos para dar intriga) -->
