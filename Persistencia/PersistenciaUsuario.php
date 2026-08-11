@@ -75,7 +75,7 @@ class PersistenciaUsuario implements IPersistenciaUsuario {
 
             try {
                 $stmt = $this->conn->prepare($sql);
-                $stmt->execute([$nombre, $email, $contra, $monedas, $esAdmin, $bajaLogica]);
+                $stmt->execute([$nombre, $email, $contra, $partidasGanadas, $monedas, $esAdmin, $bajaLogica]);
                 $stmt->closeCursor();
                 $res = true;
             } catch (\PDOException $e) {
