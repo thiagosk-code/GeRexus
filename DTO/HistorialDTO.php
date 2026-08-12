@@ -2,14 +2,14 @@
 
 class HistorialDTO {
     // Atributos
-    private int $idUsuario;
-    private int $idPartida;
+    private UsuarioDTO $idUsuario;
+    private PartidaDTO $idPartida;
     private int $puesto;
     private int $puntosHistoricos;
     private bool $esGanador;
 
     // Constructor
-    public function __construct(int $idUsuario, int $idPartida, int $puesto, int $puntosHistoricos, bool $esGanador) {
+    public function __construct(UsuarioDTO $idUsuario, PartidaDTO $idPartida, int $puesto, int $puntosHistoricos, bool $esGanador) {
         $this->idUsuario = $idUsuario;
         $this->idPartida = $idPartida;
         $this->puesto = $puesto;
@@ -18,18 +18,18 @@ class HistorialDTO {
     }
 
     // idUsuario
-    public function getIdUsuario(): int {
+    public function getIdUsuario(): UsuarioDTO {
         return $this->idUsuario; 
     }
-    public function setIdUsuario(int $idUsuario): void {
+    public function setIdUsuario(UsuarioDTO $idUsuario): void {
         $this->idUsuario = $idUsuario; 
     }
 
     // idPartida
-    public function getIdPartida(): int {
+    public function getIdPartida(): PartidaDTO {
         return $this->idPartida;
     }
-    public function setIdPartida(int $idPartida): void {
+    public function setIdPartida(PartidaDTO $idPartida): void {
         $this->idPartida = $idPartida;
     }
 
