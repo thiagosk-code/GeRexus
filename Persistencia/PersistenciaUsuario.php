@@ -1,8 +1,8 @@
 <?php
 
+require_once (__DIR__ . '/../Conexion/ConexionBD.php');
 require_once (__DIR__ . '/../DTO/UsuarioDTO.php');
-require_once ('IPersistenciaUsuario.php');
-require_once '../Conexion/ConexionBD.php';
+require_once (__DIR__ . '/IPersistenciaUsuario.php');
 
 class PersistenciaUsuario implements IPersistenciaUsuario {
 
@@ -17,7 +17,7 @@ class PersistenciaUsuario implements IPersistenciaUsuario {
         return self::$instancia;
     }
     private function __clone() {}
-    private function __wakeup() {}
+    public function __wakeup() {}
     private function __construct() {
         try {
             $conexionBD = new ConexionBD();
@@ -61,21 +61,20 @@ class PersistenciaUsuario implements IPersistenciaUsuario {
     public function altaUsuario(UsuarioDTO $usuarioDTO): bool {
     $res = false;
 
-    if ($this->conn != null) {
-        if ($usuarioDTO != null) {
-            $sql = "INSERT INTO Usuarios (Nombre, Email, Contra, PartidasGanadas, Monedas, esAdmin, Baja_logica) VALUES (?, ?, ?, ?, ?, ?, ?);";
+    if ($this->conn !== null) {
+        if ($usuarioDTO !== null) {
+            $sql = "INSERT INTO Usuarios (Nombre, Email, Contra, Monedas, esAdmin, Baja_logica) VALUES (?, ?, ?, ?, ?, ?);";
             
             $nombre = $usuarioDTO->getNombre();
             $email = $usuarioDTO->getEmail();
             $contra = $usuarioDTO->getPassword();
-            $partidasGanadas = $usuarioDTO->getPartidasGanadas();
             $monedas = $usuarioDTO->getMonedas();
-            $esAdmin = $usuarioDTO->getEsAdmin();
+            $esAdmin = 0;
             $bajaLogica = 0;
 
             try {
                 $stmt = $this->conn->prepare($sql);
-                $stmt->execute([$nombre, $email, $contra, $partidasGanadas, $monedas, $esAdmin, $bajaLogica]);
+                $stmt->execute([$nombre, $email, $contra, $monedas, $esAdmin, $bajaLogica]);
                 $stmt->closeCursor();
                 $res = true;
             } catch (\PDOException $e) {
