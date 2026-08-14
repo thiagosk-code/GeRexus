@@ -5,7 +5,7 @@ class ConexionBD {
     private $host = 'localhost';
     private $db_name = 'Draftoicos';
     private $username = 'root';
-    private $password = '';
+    private $password = 'Root1234';
     private $conn;
 
     public function connect() {

@@ -1,7 +1,8 @@
 <?php
 
+require_once (__DIR__ . '/../Conexion/ConexionBD.php');
 require_once (__DIR__ . '/../DTO/HistorialDTO.php');
-require_once '../Conexion/ConexionBD.php';
+require_once (__DIR__ . '/IPersistenciaHistorial.php');
 
 class PersistenciaHistorial implements IPersistenciaHistorial {
 
@@ -18,7 +19,7 @@ class PersistenciaHistorial implements IPersistenciaHistorial {
     }
 
     private function __clone() {}
-    private function __wakeup() {}
+    public function __wakeup() {}
 
     private function __construct() {
         try {
@@ -32,8 +33,8 @@ class PersistenciaHistorial implements IPersistenciaHistorial {
     public function altaHistorial(HistorialDTO $historialDTO): bool {
         $res = false;
 
-        if ($this->conn != null) {
-            if ($historialDTO != null) {
+        if ($this->conn !== null) {
+            if ($historialDTO !== null) {
                 $sql = "INSERT INTO Historiales (idUsuario, idPartida, Puesto, PuntosHistoricos, esGanador, Baja_logica) VALUES (?, ?, ?, ?, ?, ?);";
 
                 $idUsuario = $historialDTO->getIdUsuario();
@@ -60,8 +61,8 @@ class PersistenciaHistorial implements IPersistenciaHistorial {
 
     public function modificarHistorial(HistorialDTO $historial): bool {
         $res = false;
-        if ($this->conn != null) {
-            if ($historial != null) {
+        if ($this->conn !== null) {
+            if ($historial !== null) {
                 $sql = "UPDATE Historiales SET Puesto = ?, PuntosHistoricos = ?, esGanador = ? WHERE idUsuario = ? AND idPartida = ?;";
 
                 $idUsuario = $historial->getIdUsuario();
@@ -86,7 +87,7 @@ class PersistenciaHistorial implements IPersistenciaHistorial {
 
     public function bajaHistorial(int $idUsuario, int $idPartida): bool {
         $res = false;
-        if ($this->conn != null) {
+        if ($this->conn !== null) {
             $sql = "UPDATE Historiales SET Baja_logica = 1 WHERE idUsuario = ? AND idPartida = ?;";
 
             try {
@@ -105,7 +106,7 @@ class PersistenciaHistorial implements IPersistenciaHistorial {
     public function buscarHistorial(int $idUsuario, int $idPartida): ?HistorialDTO {
         $historial = null;
 
-        if ($this->conn != null) {
+        if ($this->conn !== null) {
             $sql = "SELECT * FROM Historiales WHERE idUsuario = ? AND idPartida = ?;";
 
             try {
@@ -114,13 +115,13 @@ class PersistenciaHistorial implements IPersistenciaHistorial {
 
                 $reader = $stmt->fetch(\PDO::FETCH_ASSOC);
                 if ($reader) {
-                    $idUsuario = (int)$reader['idUsuario'];
-                    $idPartida = (int)$reader['idPartida'];
+                    $idUsuario1 = (int)$reader['idUsuario'];
+                    $idPartida1 = (int)$reader['idPartida'];
                     $puesto = (int)$reader['Puesto'];
                     $puntosHistoricos = (int)$reader['PuntosHistoricos'];
                     $esGanador = (bool)$reader['esGanador'];
 
-                    $historial = new HistorialDTO($idUsuario, $idPartida, $puesto, $puntosHistoricos, $esGanador);
+                    $historial = new HistorialDTO($idUsuario1, $idPartida1, $puesto, $puntosHistoricos, $esGanador);
                 }
 
                 $stmt->closeCursor();
@@ -133,4 +134,3 @@ class PersistenciaHistorial implements IPersistenciaHistorial {
         return $historial;
     }
 }
-?>
