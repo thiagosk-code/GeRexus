@@ -1,0 +1,19 @@
+# Archivos de configuracion sensible y credenciales locales
+config.php
+.env
+.env.local
+
+# Dump de base de datos local / datos de prueba
+Draftoicos.sql
+
+# IDEs, editores y SO
+.vscode/
+.idea/
+*.swp
+*~
+.DS_Store
+Thumbs.db
+
+# Logs y bases de datos temporales/locales
+*.log
+*.sqlite
