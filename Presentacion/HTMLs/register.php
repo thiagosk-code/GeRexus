@@ -1,5 +1,53 @@
 <?php
 require_once __DIR__ . '/../Scripts/lang.php';
+require_once __DIR__ . '/../../Logica/FachadaLogica.php';
+require_once __DIR__ . '/../../DTO/UsuarioDTO.php';
+
+$mensajeError = '';
+$mensajeExito = '';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $nom = $_POST['username'] ?? '';
+    $email = $_POST['email'] ?? '';
+    $contra = $_POST['password'] ?? '';
+    $confirmContra = $_POST['confirm_password'] ?? '';
+    $captchaToken = $_POST['g-recaptcha-response'] ?? '';
+
+    if ($contra !== $confirmContra) {
+        $mensajeError = 'Las contrasenias no coinciden.';
+    } else {
+        $dto = new UsuarioDTO(0, $nom, $email, $contra, 0, 0, false);
+        $fachadaLogica = new FachadaLogica();
+        $logicaUsuario = $fachadaLogica->retornoILogicaUsuario();
+        $res = $logicaUsuario->altaUsuarioL($dto, $captchaToken);
+
+        if ($res['exito'] === true) {
+            $params = session_get_cookie_params();
+            session_set_cookie_params([
+                'lifetime' => 43200,
+                'path'     => $params['path'],
+                'domain'   => $params['domain'],
+                'secure'   => true,
+                'httponly' => true,
+                'samesite' => 'Strict'
+            ]);
+
+            session_start();
+            session_regenerate_id(true);
+
+            $_SESSION['idUsuario']  = $res['idUsuario'] ?? 1; 
+            $_SESSION['nom']        = $nom;
+            $_SESSION['esAdmin']    = false;
+            $_SESSION['login_time'] = time();
+            $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+
+            header('Location: base.php');
+            exit();
+        } else {
+            $mensajeError = $res['mensaje'];
+        }
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -17,6 +65,7 @@ require_once __DIR__ . '/../Scripts/lang.php';
     
     <link rel="stylesheet" href="../CSSs/style.css">
     <link rel="stylesheet" href="../CSSs/register.css">
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body>
 
@@ -43,8 +92,8 @@ require_once __DIR__ . '/../Scripts/lang.php';
 
     <main class="register-container">
         <h1 class="register-title"><?php echo $txt['registrarse']; ?></h1>
-        
-        <form class="register-form" action="/rutita" method="POST">
+
+        <form class="register-form" action="" method="POST">
             
             <div class="inputs-container">
                 <div class="input-group">
@@ -66,6 +115,18 @@ require_once __DIR__ . '/../Scripts/lang.php';
                     <span class="material-symbols-outlined field-icon">key</span>
                     <input type="password" name="confirm_password" placeholder="<?php echo $txt['confirmar_contrasena']; ?>" required autocomplete="new-password">
                 </div>
+            </div>
+
+            <div class="recaptcha-container">
+                <div class="g-recaptcha" data-sitekey="6Lc2npAtAAAAAHQhPwUsh3USUPIpKxiftXoNdcAg"></div>
+
+                <?php if ($mensajeError !== ''): ?>
+                    <p class="msg-status error"><?php echo $mensajeError; ?></p>
+                <?php endif; ?>
+
+                <?php if ($mensajeExito !== ''): ?>
+                    <p class="msg-status success"><?php echo $mensajeExito; ?></p>
+                <?php endif; ?>
             </div>
 
             <div class="bottom-container">
