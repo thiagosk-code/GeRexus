@@ -31,12 +31,13 @@ class PersistenciaUsuario implements IPersistenciaUsuario {
     public function existeEmail(string $email): bool {
         $res = false;
         if ($this->conn !== null) {
-            $sql = "SELECT COUNT(*) FROM Usuarios WHERE Email = ? AND (Baja_logica IS NULL OR Baja_logica = false);";
+            $sql = "CALL sp_ExisteEmailActivo(?);";
             try {
                 $stmt = $this->conn->prepare($sql);
                 $stmt->execute([$email]);
                 $conteo = (int) $stmt->fetchColumn();
                 $stmt->closeCursor();
+    
                 $res = $conteo > 0;
             } catch (\PDOException $e) {
                 $res = false;
