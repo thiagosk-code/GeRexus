@@ -3,48 +3,52 @@ require_once __DIR__ . '/../Scripts/lang.php';
 require_once __DIR__ . '/../../Logica/FachadaLogica.php';
 require_once __DIR__ . '/../../DTO/UsuarioDTO.php';
 
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+
 $mensajeError = '';
 $mensajeExito = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $nom = $_POST['username'] ?? '';
-    $email = $_POST['email'] ?? '';
-    $contra = $_POST['password'] ?? '';
-    $confirmContra = $_POST['confirm_password'] ?? '';
-    $captchaToken = $_POST['g-recaptcha-response'] ?? '';
-
-    if ($contra !== $confirmContra) {
-        $mensajeError = 'Las contrasenias no coinciden.';
+    $tokenEnviado = $_POST['csrf_token'] ?? '';
+    
+    if (!hash_equals($_SESSION['csrf_token'], $tokenEnviado)) {
+        $mensajeError = 'Peticion no valida (Error CSRF).';
     } else {
-        $dto = new UsuarioDTO(0, $nom, $email, $contra, 0, 0, false);
-        $fachadaLogica = new FachadaLogica();
-        $logicaUsuario = $fachadaLogica->retornoILogicaUsuario();
-        $res = $logicaUsuario->altaUsuarioL($dto, $captchaToken);
+        $nom = $_POST['username'] ?? '';
+        $email = $_POST['email'] ?? '';
+        $contra = $_POST['password'] ?? '';
+        $confirmContra = $_POST['confirm_password'] ?? '';
+        $captchaToken = $_POST['g-recaptcha-response'] ?? '';
 
-        if ($res['exito'] === true) {
-            $params = session_get_cookie_params();
-            session_set_cookie_params([
-                'lifetime' => 43200,
-                'path'     => $params['path'],
-                'domain'   => $params['domain'],
-                'secure'   => true,
-                'httponly' => true,
-                'samesite' => 'Strict'
-            ]);
-
-            session_start();
-            session_regenerate_id(true);
-
-            $_SESSION['idUsuario']  = $res['idUsuario'] ?? 1; 
-            $_SESSION['nom']        = $nom;
-            $_SESSION['esAdmin']    = false;
-            $_SESSION['login_time'] = time();
-            $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
-
-            header('Location: base.php');
-            exit();
+        if ($contra !== $confirmContra) {
+            $mensajeError = 'Las contrasenias no coinciden.';
         } else {
-            $mensajeError = $res['mensaje'];
+            $dto = new UsuarioDTO(0, $nom, $email, $contra, 0, 0, false);
+            $fachadaLogica = new FachadaLogica();
+            $logicaUsuario = $fachadaLogica->retornoILogicaUsuario();
+            $res = $logicaUsuario->altaUsuarioL($dto, $captchaToken);
+
+            if ($res['exito'] === true && isset($res['idUsuario']) && $res['idUsuario'] > 0) {
+                session_regenerate_id(true);
+
+                $_SESSION['idUsuario']  = (int)$res['idUsuario']; 
+                $_SESSION['nom']        = $nom;
+                $_SESSION['esAdmin']    = false;
+                $_SESSION['login_time'] = time();
+
+                $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+
+                header('Location: base.php');
+                exit();
+            } else {
+                $mensajeError = $res['mensaje'];
+            }
         }
     }
 }
@@ -94,6 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <h1 class="register-title"><?php echo $txt['registrarse']; ?></h1>
 
         <form class="register-form" action="" method="POST">
+            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
             
             <div class="inputs-container">
                 <div class="input-group">
@@ -117,17 +122,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
             </div>
 
-            <div class="recaptcha-container">
+            <div class="recaptcha-wrapper">
                 <div class="g-recaptcha" data-sitekey="6Lc2npAtAAAAAHQhPwUsh3USUPIpKxiftXoNdcAg"></div>
-
-                <?php if ($mensajeError !== ''): ?>
-                    <p class="msg-status error"><?php echo $mensajeError; ?></p>
-                <?php endif; ?>
-
-                <?php if ($mensajeExito !== ''): ?>
-                    <p class="msg-status success"><?php echo $mensajeExito; ?></p>
-                <?php endif; ?>
             </div>
+
+            <?php if ($mensajeError !== ''): ?>
+                <p class="msg-status error"><?php echo $mensajeError; ?></p>
+            <?php endif; ?>
+
+            <?php if ($mensajeExito !== ''): ?>
+                <p class="msg-status success"><?php echo $mensajeExito; ?></p>
+            <?php endif; ?>
 
             <div class="bottom-container">
                 <a href="login.php" class="login-link"><?php echo $txt['ya_cuenta']; ?></a>

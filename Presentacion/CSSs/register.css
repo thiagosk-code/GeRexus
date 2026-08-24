@@ -43,6 +43,13 @@ body {
     text-shadow: 0 0.125rem 0.25rem var(--shadow-medium);
 }
 
+.recaptcha-wrapper {
+    display: flex;
+    justify-content: center;
+    margin: 15px 0;
+    width: 100%;
+}
+
 @media (max-width: 1200px) {
     .register-title { font-size: 3.8rem; }
 }

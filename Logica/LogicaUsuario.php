@@ -66,10 +66,14 @@ class LogicaUsuario implements ILogicaUsuario {
         }
 
         $nuevoDTO = new UsuarioDTO(0, $nom, $email, $hashSeguro, 0, 0, false);
-        $res = $persistencia->altaUsuario($nuevoDTO);
+        $idNuevo = $persistencia->altaUsuario($nuevoDTO);
 
-        if ($res === true) {
-            return ['exito' => true, 'mensaje' => 'Usuario registrado con exito.'];
+        if ($idNuevo > 0) {
+            return [
+                'exito' => true,
+                'mensaje' => 'Usuario registrado con exito.',
+                'idUsuario' => $idNuevo
+            ];
         }
 
         return ['exito' => false, 'mensaje' => 'No se pudo completar el registro en la base de datos.'];

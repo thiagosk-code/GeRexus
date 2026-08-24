@@ -11,5 +11,12 @@
     "desc": "A board game with draft mechanics where you will assign Adepts from different philosophical currents to different rooms",
     "jugar": "Play",
     "dev_title": "Page Under Development",
-    "volver": "Back"
+    "volver": "Back",
+    "gacha": "Gacha",
+    "subtitulo_modalidad": "Select your what you desire",
+    "asistente_titulo": "Assistant",
+    "draftowiki_desc": "A Wikipedia about different Philosophers and Currents of thought",
+    "asistente_desc": "Manages scores, validates rules, and defines the winner in real time",
+    "digital_desc": "Complete digital game with assistant mode included",
+    "seleccionar": "Select"
 }
