@@ -11,5 +11,12 @@
     "desc": "Un juego de mesa con mecanicas draft donde asignaras Adeptos de distintas corrientes filosoficas a distintas salas",
     "jugar": "Jugar",
     "dev_title": "Página en desarrollo",
-    "volver": "Volver"
+    "volver": "Volver",
+    "gacha": "Gacha",
+    "subtitulo_modalidad": "Seleccione su modalidad deseada",
+    "asistente_titulo": "Asistente",
+    "draftowiki_desc": "Una Wikipedia sobre distintos Filósofos y Corrientes de pensamiento",
+    "asistente_desc": "Gestiona puntuaciones, valida reglas y define al ganador en tiempo real",
+    "digital_desc": "Juego digital completo con modo asistente incluido",
+    "seleccionar": "Seleccionar"
 }

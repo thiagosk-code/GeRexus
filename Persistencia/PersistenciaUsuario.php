@@ -37,7 +37,7 @@ class PersistenciaUsuario implements IPersistenciaUsuario {
                 $stmt->execute([$email]);
                 $conteo = (int) $stmt->fetchColumn();
                 $stmt->closeCursor();
-    
+
                 $res = $conteo > 0;
             } catch (\PDOException $e) {
                 $res = false;
@@ -46,8 +46,8 @@ class PersistenciaUsuario implements IPersistenciaUsuario {
         return $res;
     }
 
-    public function altaUsuario(UsuarioDTO $usuarioDTO): bool {
-        $res = false;
+    public function altaUsuario(UsuarioDTO $usuarioDTO): int {
+        $idGenerado = 0;
         if ($this->conn !== null && $usuarioDTO !== null) {
             $sql = "CALL sp_InsertarUsuario(?, ?, ?, ?, ?, ?);";
 
@@ -62,13 +62,13 @@ class PersistenciaUsuario implements IPersistenciaUsuario {
                 $stmt = $this->conn->prepare($sql);
                 $stmt->execute([$nombre, $email, $contra, $monedas, $esAdmin, $bajaLogica]);
                 $stmt->closeCursor();
-                $res = true;
+
+                $idGenerado = (int) $this->conn->query("SELECT LAST_INSERT_ID()")->fetchColumn();
             } catch (\PDOException $e) {
-                print "Error al guardar en la base de datos: " . $e->getMessage();
-                $res = false;
+                $idGenerado = 0;
             }
         }
-        return $res;
+        return $idGenerado;
     }
 
     public function modificarUsuario(UsuarioDTO $usuario): bool {
@@ -89,7 +89,6 @@ class PersistenciaUsuario implements IPersistenciaUsuario {
                 $stmt->closeCursor();
                 $res = true;
             } catch (\PDOException $e) {
-                print "Error al actualizar en la base de datos: " . $e->getMessage();
                 $res = false;
             }
         }
@@ -107,7 +106,6 @@ class PersistenciaUsuario implements IPersistenciaUsuario {
                 $stmt->closeCursor();
                 $res = true;
             } catch (\PDOException $e) {
-                print "Error al dar de baja en la base de datos: " . $e->getMessage();
                 $res = false;
             }
         }
@@ -136,7 +134,6 @@ class PersistenciaUsuario implements IPersistenciaUsuario {
                 }
                 $stmt->closeCursor();
             } catch (\PDOException $e) {
-                print "Error al recuperar datos en la base de datos: " . $e->getMessage();
                 $usuario = null;
             }
         }
