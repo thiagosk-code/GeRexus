@@ -1,0 +1,254 @@
+body {
+    overflow-y: auto !important;
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+}
+
+.user-name {
+    font-family: var(--font-main);
+    font-size: 1.75rem;
+    color: var(--color-accent);
+    text-shadow: var(--shadow-text);
+}
+
+.user-avatar-img {
+    display: inline-block;
+    width: 2.5rem;
+    height: 2.5rem;
+    background-image: var(--url-img-diogenes);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    filter: drop-shadow(0 0.1875rem 0.375rem var(--shadow-strong));
+}
+
+.admin-main {
+    width: 100%;
+    max-width: 58rem;
+    margin: 0 auto;
+    padding: 6.5rem 1.5rem 3rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.admin-title {
+    font-size: 3rem;
+    font-weight: normal;
+    text-align: center;
+    color: var(--color-main);
+    text-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.8), 0 0 1.25rem var(--shadow-strong);
+    margin-bottom: 2rem;
+}
+
+.admin-card {
+    width: 100%;
+    background-color: rgba(20, 30, 48, 0.7);
+    border: 0.125rem solid var(--color-btn-border);
+    border-radius: 1.5rem;
+    padding: 1.8rem 2.5rem 1.5rem 2.5rem;
+    margin-bottom: 2.2rem;
+    box-shadow: 0 0.5rem 1.25rem var(--shadow-strong);
+    backdrop-filter: blur(0.25rem);
+}
+
+body.light-mode .admin-card {
+    background-color: rgba(60, 40, 35, 0.7);
+}
+
+.card-title {
+    font-size: 1.8rem;
+    font-weight: normal;
+    text-align: center;
+    color: var(--color-main);
+    text-shadow: var(--shadow-text);
+    margin-bottom: 1rem;
+}
+
+.line-separator-title {
+    width: 100%;
+    max-width: 36rem;
+    margin: 0 auto 1.5rem auto;
+    border-top: 0.1rem solid var(--color-main);
+}
+
+.line-separator-field {
+    width: 100%;
+    max-width: 36rem;
+    margin: 0.5rem auto 1.2rem auto;
+    border-top: 0.1rem solid var(--color-main);
+}
+
+.admin-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.form-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-bottom: 1rem;
+    width: 100%;
+    max-width: 36rem;
+}
+
+.form-label {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    font-size: 1.25rem;
+    color: var(--color-main);
+    text-shadow: var(--shadow-text);
+    white-space: nowrap;
+}
+
+.form-input {
+    flex: 1;
+    width: 100%;
+    max-width: 18rem;
+    height: 2.6rem;
+    padding: 0 1.2rem;
+    font-family: var(--font-main);
+    font-size: 1.05rem;
+    color: var(--color-main);
+    background-color: transparent;
+    border: 0.125rem solid var(--color-main);
+    border-radius: 1.5rem;
+    outline: none;
+}
+
+.form-input::placeholder {
+    color: var(--color-main);
+    opacity: 0.6;
+}
+
+.form-input:focus {
+    border-color: var(--color-accent);
+}
+
+.msg-status-placeholder {
+    color: var(--color-main);
+    text-align: center;
+    font-size: 1.15rem;
+    margin: 0.8rem 0;
+    text-shadow: var(--shadow-text);
+    min-height: 1.5rem;
+}
+
+.msg-status-placeholder.msg-error {
+    color: #C53F54;
+}
+
+.msg-status-placeholder.msg-exito {
+    color: #8C9C3F;
+}
+
+.btn-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 0.2rem;
+}
+
+.btn-admin {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    height: 2.8rem;
+    padding: 0 2rem;
+    font-family: var(--font-main);
+    font-size: 1.2rem;
+    color: var(--color-main);
+    text-decoration: none;
+    border-radius: 1.25rem;
+    cursor: pointer;
+    box-shadow: 0 0.25rem 0.625rem var(--shadow-light);
+    text-shadow: var(--shadow-text);
+    transition: transform 0.1s ease, background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.btn-admin:active {
+    transform: scale(0.97);
+}
+
+.btn-alta {
+    background-color: rgba(140, 156, 63, 0.3);
+    border: 0.125rem solid var(--color-accent);
+}
+
+.btn-alta:hover {
+    background-color: var(--color-accent);
+}
+
+.btn-modificar {
+    background-color: rgba(63, 55, 142, 0.3);
+    border: 0.125rem solid #3F378E;
+}
+
+.btn-modificar:hover {
+    background-color: #3F378E;
+}
+
+.btn-eliminar {
+    background-color: rgba(197, 63, 84, 0.3);
+    border: 0.125rem solid #C53F54;
+}
+
+.btn-eliminar:hover {
+    background-color: #C53F54;
+}
+
+.volver-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.btn-volver {
+    background-color: rgba(45, 61, 87, 0.3);
+    border: 0.125rem solid var(--color-btn-border);
+    width: 9rem;
+}
+
+.btn-volver:hover {
+    background-color: var(--color-btn-border);
+}
+
+@media (max-width: 768px) {
+    .admin-title {
+        font-size: 2rem;
+    }
+
+    .admin-card {
+        padding: 1.2rem;
+    }
+
+    .form-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.4rem;
+    }
+
+    .form-label {
+        justify-content: flex-start;
+        font-size: 1rem;
+    }
+
+    .form-input {
+        max-width: 100%;
+        width: 100%;
+        height: 2.5rem;
+    }
+}
