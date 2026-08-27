@@ -86,8 +86,13 @@ class PersistenciaUsuario implements IPersistenciaUsuario {
             try {
                 $stmt = $this->conn->prepare($sql);
                 $stmt->execute([$idUsuario, $nombre, $email, $contra, $monedas, $bajaLogica]);
+                $row = $stmt->fetch(\PDO::FETCH_ASSOC);
+                if ($row && isset($row['mensaje'])) {
+                    $res = false;
+                } else {
+                    $res = true;
+                }
                 $stmt->closeCursor();
-                $res = true;
             } catch (\PDOException $e) {
                 $res = false;
             }
@@ -103,8 +108,13 @@ class PersistenciaUsuario implements IPersistenciaUsuario {
             try {
                 $stmt = $this->conn->prepare($sql);
                 $stmt->execute([$idUsuario]);
+                $row = $stmt->fetch(\PDO::FETCH_ASSOC);
+                if ($row && isset($row['mensaje'])) {
+                    $res = false;
+                } else {
+                    $res = true;
+                }
                 $stmt->closeCursor();
-                $res = true;
             } catch (\PDOException $e) {
                 $res = false;
             }
