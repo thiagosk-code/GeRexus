@@ -4,6 +4,13 @@ require_once __DIR__ . '/../Scripts/lang.php';
 require_once __DIR__ . '/../../Logica/FachadaLogica.php';
 require_once __DIR__ . '/../../DTO/UsuarioDTO.php';
 
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+
 $msgAlta = '';
 $msgMod = '';
 $msgElim = '';
@@ -16,6 +23,11 @@ $fachadaLogica = new FachadaLogica();
 $logicaUsuario = $fachadaLogica->retornoILogicaUsuario();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $tokenEnviado = $_POST['csrf_token'] ?? '';
+    if (!hash_equals($_SESSION['csrf_token'], $tokenEnviado)) {
+        die('Solicitud rechazada: Token de seguridad no válido (CSRF).');
+    }
+
     $resForm = $logicaUsuario->procesarFormularioAdmin($_POST, $idAdminLogueado);
     $key = $resForm['mensaje_key'] ?? '';
     $mensajeTexto = isset($txt[$key]) ? $txt[$key] : ($resForm['mensaje'] ?? '');
@@ -35,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $usuariosLista = $logicaUsuario->obtenerTodosLosUsuariosL();
 ?>
 <!DOCTYPE html>
-<html lang="<?php echo $lang; ?>">
+<html lang="<?php echo htmlspecialchars($lang, ENT_QUOTES, 'UTF-8'); ?>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -76,7 +88,7 @@ $usuariosLista = $logicaUsuario->obtenerTodosLosUsuariosL();
             </button>
 
             <div class="user-profile">
-                <span class="user-name"><?php echo $nombreUsuarioLogueado; ?></span>
+                <span class="user-name"><?php echo htmlspecialchars($nombreUsuarioLogueado, ENT_QUOTES, 'UTF-8'); ?></span>
                 <span class="user-avatar-img"></span>
             </div>
         </div>
@@ -124,17 +136,19 @@ $usuariosLista = $logicaUsuario->obtenerTodosLosUsuariosL();
                                 <?php if (is_array($usuariosLista) && count($usuariosLista) > 0): ?>
                                     <?php foreach ($usuariosLista as $usr): ?>
                                         <?php 
-                                            $uId = $usr->getIdUsuario();
-                                            $uNombre = htmlspecialchars($usr->getNombre(), ENT_QUOTES, 'UTF-8');
-                                            $uEmail = htmlspecialchars($usr->getEmail(), ENT_QUOTES, 'UTF-8');
-                                            $uDracmas = $usr->getMonedas();
-                                            $uGanadas = $usr->getPartidasGanadas();
+                                            $uId = (int)$usr->getIdUsuario();
+                                            $uNombreRaw = $usr->getNombre();
+                                            $uEmailRaw = $usr->getEmail();
+                                            $uNombre = htmlspecialchars($uNombreRaw, ENT_QUOTES, 'UTF-8');
+                                            $uEmail = htmlspecialchars($uEmailRaw, ENT_QUOTES, 'UTF-8');
+                                            $uDracmas = (int)$usr->getMonedas();
+                                            $uGanadas = (int)$usr->getPartidasGanadas();
                                             $uBaja = ($usr->getBajaLogica() === true || $usr->getBajaLogica() === 1) ? '1' : '0';
                                             $uEsAdmin = $usr->getEsAdmin();
                                             
                                             $puedeEliminar = ($uEsAdmin === false || $uId === $idAdminLogueado);
                                         ?>
-                                        <tr data-id="<?php echo $uId; ?>" data-nombre="<?php echo strtolower($uNombre); ?>" data-email="<?php echo strtolower($uEmail); ?>">
+                                        <tr data-id="<?php echo $uId; ?>" data-nombre="<?php echo htmlspecialchars(strtolower($uNombreRaw), ENT_QUOTES, 'UTF-8'); ?>" data-email="<?php echo htmlspecialchars(strtolower($uEmailRaw), ENT_QUOTES, 'UTF-8'); ?>">
                                             <td><?php echo $uId; ?></td>
                                             <td><?php echo $uNombre; ?></td>
                                             <td><?php echo $uEmail; ?></td>
@@ -143,7 +157,8 @@ $usuariosLista = $logicaUsuario->obtenerTodosLosUsuariosL();
                                             <td><?php echo $uBaja; ?></td>
                                             <td class="actions-cell">
                                                 <?php if ($puedeEliminar === true): ?>
-                                                    <form action="" method="POST" class="inline-form" onsubmit="return confirm('¿Seguro que deseas dar de baja a este usuario?');">
+                                                    <form action="" method="POST" class="inline-form form-eliminar">
+                                                        <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                                                         <input type="hidden" name="accion" value="eliminar">
                                                         <input type="hidden" name="id_eliminar" value="<?php echo $uId; ?>">
                                                         <button type="submit" class="action-icon btn-delete" title="Eliminar (Baja Lógica)">
@@ -156,7 +171,13 @@ $usuariosLista = $logicaUsuario->obtenerTodosLosUsuariosL();
                                                     </button>
                                                 <?php endif; ?>
 
-                                                <button type="button" class="action-icon btn-edit" title="Modificar" onclick="cargarParaModificar(<?php echo $uId; ?>, '<?php echo $uNombre; ?>', '<?php echo $uEmail; ?>', <?php echo $uDracmas; ?>)">
+                                                <button type="button" 
+                                                        class="action-icon btn-edit" 
+                                                        title="Modificar"
+                                                        data-id="<?php echo $uId; ?>"
+                                                        data-nombre="<?php echo $uNombre; ?>"
+                                                        data-email="<?php echo $uEmail; ?>"
+                                                        data-dracmas="<?php echo $uDracmas; ?>">
                                                     <span class="material-symbols-outlined">edit</span>
                                                 </button>
                                             </td>
@@ -178,6 +199,7 @@ $usuariosLista = $logicaUsuario->obtenerTodosLosUsuariosL();
                     <h2 class="card-title" data-i18n="alta_usuario"><?php echo $txt['alta_usuario'] ?? 'Alta Usuario'; ?></h2>
                     <div class="line-separator-title"></div>
                     <form class="admin-form" action="" method="POST">
+                        <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                         <input type="hidden" name="accion" value="alta">
 
                         <div class="form-row">
@@ -211,6 +233,7 @@ $usuariosLista = $logicaUsuario->obtenerTodosLosUsuariosL();
                     <h2 class="card-title" data-i18n="modificar_usuario"><?php echo $txt['modificar_usuario'] ?? 'Modificar Usuario'; ?></h2>
                     <div class="line-separator-title"></div>
                     <form class="admin-form" action="" method="POST">
+                        <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                         <input type="hidden" name="accion" value="modificar">
 
                         <div class="form-row">
