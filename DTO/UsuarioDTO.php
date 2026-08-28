@@ -1,7 +1,6 @@
 <?php
 
 class UsuarioDTO {
-    // Atributos
     private int $idUsuario;
     private string $nombre;
     private string $email;
@@ -9,9 +8,18 @@ class UsuarioDTO {
     private int $partidasGanadas;
     private int $monedas;
     private bool $esAdmin;
+    private bool $bajaLogica;
 
-    // Constructor
-    public function __construct(int $idUsuario, string $nombre, string $email, string $password, int $partidasGanadas, int $monedas, bool $esAdmin) {
+    public function __construct(
+        int $idUsuario = 0,
+        string $nombre = '',
+        string $email = '',
+        string $password = '',
+        int $partidasGanadas = 0,
+        int $monedas = 0,
+        bool $esAdmin = false,
+        bool $bajaLogica = false
+    ) {
         $this->idUsuario = $idUsuario;
         $this->nombre = $nombre;
         $this->email = $email;
@@ -19,69 +27,71 @@ class UsuarioDTO {
         $this->partidasGanadas = $partidasGanadas;
         $this->monedas = $monedas;
         $this->esAdmin = $esAdmin;
+        $this->bajaLogica = $bajaLogica;
     }
 
-    // idUsuario
+    //Usuario
+    public function getIdUsuario(): int {
+        return $this->idUsuario;
+    }
     public function setIdUsuario(int $idUsuario): void {
         $this->idUsuario = $idUsuario;
     }
 
-    public function getIdUsuario(): int {
-        return $this->idUsuario;
+    //Nombre
+    public function getNombre(): string {
+        return $this->nombre;
     }
-
-    // nombre
     public function setNombre(string $nombre): void {
         $this->nombre = $nombre;
     }
 
-    public function getNombre(): string {
-        return $this->nombre;
+    //Email
+    public function getEmail(): string {
+        return $this->email;
     }
-
-    // email
     public function setEmail(string $email): void {
         $this->email = $email;
     }
 
-    public function getEmail(): string {
-        return $this->email;
+    //Password
+    public function getPassword(): string {
+        return $this->password;
     }
-
-    // password
     public function setPassword(string $password): void {
         $this->password = $password;
     }
 
-    public function getPassword(): string {
-        return $this->password;
-    }
-
-    // partidasGanadas
-    public function setPartidasGanadas(int $cantidad): void {
-        $this->partidasGanadas = $cantidad;
-    }
-
+    //Partidas Ganadas
     public function getPartidasGanadas(): int {
         return $this->partidasGanadas;
     }
-
-    // monedas
-    public function setMonedas(int $cantidad): void {
-        $this->monedas = $cantidad;
+    public function setPartidasGanadas(int $partidasGanadas): void {
+        $this->partidasGanadas = $partidasGanadas;
     }
 
+    //Monedas
     public function getMonedas(): int {
         return $this->monedas;
     }
+    public function setMonedas(int $monedas): void {
+        $this->monedas = $monedas;
+    }
 
-    // esAdmin
+    //EsAdmin
+    public function getEsAdmin(): bool {
+        return $this->esAdmin;
+    }
     public function setEsAdmin(bool $esAdmin): void {
         $this->esAdmin = $esAdmin;
     }
 
-    public function getEsAdmin(): bool {
-        return $this->esAdmin;
+    //BajaLogica
+    public function getBajaLogica(): bool {
+        return $this->bajaLogica;
     }
-
+    public function setBajaLogica(bool $bajaLogica): void {
+        $this->bajaLogica = $bajaLogica;
+    }
 }
+?>

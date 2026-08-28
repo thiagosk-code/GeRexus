@@ -257,7 +257,7 @@ body.light-mode .tema-toggle .material-symbols-outlined {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 2rem; 
+    margin-top: 0rem; 
     padding-top: 0.5rem; 
     padding-bottom: min(1rem, 2vh);
 }
