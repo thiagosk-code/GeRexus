@@ -38,7 +38,7 @@ class PersistenciaUsuario implements IPersistenciaUsuario {
                 $conteo = (int) $stmt->fetchColumn();
                 $stmt->closeCursor();
 
-                $res = $conteo > 0;
+                $res = ($conteo > 0);
             } catch (\PDOException $e) {
                 $res = false;
             }
@@ -56,11 +56,17 @@ class PersistenciaUsuario implements IPersistenciaUsuario {
             $contra = $usuarioDTO->getPassword();
             $monedas = $usuarioDTO->getMonedas();
             $esAdmin = $usuarioDTO->getEsAdmin() ? 1 : 0;
-            $bajaLogica = 0;
+            $bajaLogica = false;
 
             try {
                 $stmt = $this->conn->prepare($sql);
-                $stmt->execute([$nombre, $email, $contra, $monedas, $esAdmin, $bajaLogica]);
+                $stmt->bindValue(1, $nombre, \PDO::PARAM_STR);
+                $stmt->bindValue(2, $email, \PDO::PARAM_STR);
+                $stmt->bindValue(3, $contra, \PDO::PARAM_STR);
+                $stmt->bindValue(4, $monedas, \PDO::PARAM_INT);
+                $stmt->bindValue(5, $esAdmin, \PDO::PARAM_INT);
+                $stmt->bindValue(6, $bajaLogica, \PDO::PARAM_BOOL);
+                $stmt->execute();
                 $stmt->closeCursor();
 
                 $idGenerado = (int) $this->conn->query("SELECT LAST_INSERT_ID()")->fetchColumn();
@@ -85,7 +91,13 @@ class PersistenciaUsuario implements IPersistenciaUsuario {
 
             try {
                 $stmt = $this->conn->prepare($sql);
-                $stmt->execute([$idUsuario, $nombre, $email, $contra, $monedas, $bajaLogica]);
+                $stmt->bindValue(1, $idUsuario, \PDO::PARAM_INT);
+                $stmt->bindValue(2, $nombre, \PDO::PARAM_STR);
+                $stmt->bindValue(3, $email, \PDO::PARAM_STR);
+                $stmt->bindValue(4, $contra, \PDO::PARAM_STR);
+                $stmt->bindValue(5, $monedas, \PDO::PARAM_INT);
+                $stmt->bindValue(6, $bajaLogica, \PDO::PARAM_BOOL);
+                $stmt->execute();
                 $stmt->closeCursor();
                 $res = true;
             } catch (\PDOException $e) {
@@ -149,7 +161,7 @@ class PersistenciaUsuario implements IPersistenciaUsuario {
             $sql = "CALL sp_ObtenerTodosLosUsuarios()";
             $stmt = $this->conn->prepare($sql);
             $stmt->execute();
-            $resultado = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $resultado = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
             foreach ($resultado as $fila) {
                 $dto = new UsuarioDTO();
