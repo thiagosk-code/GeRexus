@@ -1,6 +1,7 @@
 <?php
 
 class UsuarioDTO {
+
     private int $idUsuario;
     private string $nombre;
     private string $email;
@@ -12,9 +13,9 @@ class UsuarioDTO {
 
     public function __construct(
         int $idUsuario = 0,
-        string $nombre = '',
-        string $email = '',
-        string $password = '',
+        string $nombre = "",
+        string $email = "",
+        string $password = "",
         int $partidasGanadas = 0,
         int $monedas = 0,
         bool $esAdmin = false,
@@ -30,66 +31,66 @@ class UsuarioDTO {
         $this->bajaLogica = $bajaLogica;
     }
 
-    //Usuario
     public function getIdUsuario(): int {
         return $this->idUsuario;
     }
+
     public function setIdUsuario(int $idUsuario): void {
         $this->idUsuario = $idUsuario;
     }
 
-    //Nombre
     public function getNombre(): string {
         return $this->nombre;
     }
+
     public function setNombre(string $nombre): void {
         $this->nombre = $nombre;
     }
 
-    //Email
     public function getEmail(): string {
         return $this->email;
     }
+
     public function setEmail(string $email): void {
         $this->email = $email;
     }
 
-    //Password
     public function getPassword(): string {
         return $this->password;
     }
+
     public function setPassword(string $password): void {
         $this->password = $password;
     }
 
-    //Partidas Ganadas
     public function getPartidasGanadas(): int {
         return $this->partidasGanadas;
     }
+
     public function setPartidasGanadas(int $partidasGanadas): void {
         $this->partidasGanadas = $partidasGanadas;
     }
 
-    //Monedas
     public function getMonedas(): int {
         return $this->monedas;
     }
+
     public function setMonedas(int $monedas): void {
         $this->monedas = $monedas;
     }
 
-    //EsAdmin
     public function getEsAdmin(): bool {
         return $this->esAdmin;
     }
+
     public function setEsAdmin(bool $esAdmin): void {
         $this->esAdmin = $esAdmin;
     }
 
-    //BajaLogica
     public function getBajaLogica(): bool {
         return $this->bajaLogica;
     }
+
     public function setBajaLogica(bool $bajaLogica): void {
         $this->bajaLogica = $bajaLogica;
     }

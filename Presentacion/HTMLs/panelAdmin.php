@@ -144,9 +144,9 @@ $usuariosLista = $logicaUsuario->obtenerTodosLosUsuariosL();
                                             $uDracmas = (int)$usr->getMonedas();
                                             $uGanadas = (int)$usr->getPartidasGanadas();
                                             $uBaja = ($usr->getBajaLogica() === true || $usr->getBajaLogica() === 1) ? '1' : '0';
-                                            $uEsAdmin = $usr->getEsAdmin();
+                                            $uEsAdmin = $usr->getEsAdmin() === true || $usr->getEsAdmin() === 1;
                                             
-                                            $puedeEliminar = ($uEsAdmin === false || $uId === $idAdminLogueado);
+                                            $puedeEliminar = ($uEsAdmin === false);
                                         ?>
                                         <tr data-id="<?php echo $uId; ?>" data-nombre="<?php echo htmlspecialchars(strtolower($uNombreRaw), ENT_QUOTES, 'UTF-8'); ?>" data-email="<?php echo htmlspecialchars(strtolower($uEmailRaw), ENT_QUOTES, 'UTF-8'); ?>">
                                             <td><?php echo $uId; ?></td>
@@ -166,7 +166,7 @@ $usuariosLista = $logicaUsuario->obtenerTodosLosUsuariosL();
                                                         </button>
                                                     </form>
                                                 <?php else: ?>
-                                                    <button class="action-icon btn-disabled" title="No se puede eliminar a otro admin" disabled>
+                                                    <button class="action-icon btn-disabled" title="No se puede eliminar a un usuario administrador" disabled>
                                                         <span class="material-symbols-outlined">block</span>
                                                     </button>
                                                 <?php endif; ?>
@@ -175,8 +175,8 @@ $usuariosLista = $logicaUsuario->obtenerTodosLosUsuariosL();
                                                         class="action-icon btn-edit" 
                                                         title="Modificar"
                                                         data-id="<?php echo $uId; ?>"
-                                                        data-nombre="<?php echo $uNombre; ?>"
-                                                        data-email="<?php echo $uEmail; ?>"
+                                                        data-nombre="<?php echo $uNombreRaw; ?>"
+                                                        data-email="<?php echo $uEmailRaw; ?>"
                                                         data-dracmas="<?php echo $uDracmas; ?>">
                                                     <span class="material-symbols-outlined">edit</span>
                                                 </button>
@@ -204,17 +204,17 @@ $usuariosLista = $logicaUsuario->obtenerTodosLosUsuariosL();
 
                         <div class="form-row">
                             <label for="alta-nombre" class="form-label" data-i18n="nombre"><?php echo $txt['nombre'] ?? 'Nombre'; ?>:</label>
-                            <input type="text" id="alta-nombre" name="username" class="form-input" placeholder="<?php echo $txt['placeholder_nombre'] ?? 'Ejemplo123'; ?>" data-i18n-placeholder="placeholder_nombre">
+                            <input type="text" id="alta-nombre" name="username" class="form-input" placeholder="<?php echo $txt['placeholder_nombre'] ?? 'Ejemplo123'; ?>" data-i18n-placeholder="placeholder_nombre" required>
                         </div>
 
                         <div class="form-row">
                             <label for="alta-email" class="form-label" data-i18n="correo"><?php echo $txt['correo'] ?? 'Email'; ?>:</label>
-                            <input type="email" id="alta-email" name="email" class="form-input" placeholder="<?php echo $txt['placeholder_email'] ?? 'Ejemplo@gmail.com'; ?>" data-i18n-placeholder="placeholder_email">
+                            <input type="email" id="alta-email" name="email" class="form-input" placeholder="<?php echo $txt['placeholder_email'] ?? 'Ejemplo@gmail.com'; ?>" data-i18n-placeholder="placeholder_email" required>
                         </div>
 
                         <div class="form-row">
                             <label for="alta-password" class="form-label" data-i18n="contrasena"><?php echo $txt['contrasena'] ?? 'Contraseña'; ?>:</label>
-                            <input type="password" id="alta-password" name="password" class="form-input" placeholder="*********">
+                            <input type="password" id="alta-password" name="password" class="form-input" placeholder="*********" required>
                         </div>
 
                         <?php if ($msgAlta !== ''): ?>
@@ -238,7 +238,7 @@ $usuariosLista = $logicaUsuario->obtenerTodosLosUsuariosL();
 
                         <div class="form-row">
                             <label for="mod-id" class="form-label" data-i18n="id_usuario_mod"><?php echo $txt['id_usuario_mod'] ?? 'ID Usuario:'; ?></label>
-                            <input type="number" id="mod-id" name="id_usuario" class="form-input" placeholder="<?php echo $txt['placeholder_mod_id'] ?? 'Escribe un ID o usa el icono de edición'; ?>" data-i18n-placeholder="placeholder_mod_id">
+                            <input type="number" id="mod-id" name="id_usuario" class="form-input" placeholder="<?php echo $txt['placeholder_mod_id'] ?? 'Escribe un ID o usa el icono de edición'; ?>" data-i18n-placeholder="placeholder_mod_id" required>
                         </div>
 
                         <div class="line-separator-field"></div>
@@ -255,7 +255,7 @@ $usuariosLista = $logicaUsuario->obtenerTodosLosUsuariosL();
 
                         <div class="form-row">
                             <label for="mod-password" class="form-label" data-i18n="nueva_contrasena"><?php echo $txt['nueva_contrasena'] ?? 'Nueva Contraseña'; ?>:</label>
-                            <input type="password" id="mod-password" name="nueva_password" class="form-input" placeholder="*********">
+                            <input type="password" id="mod-password" name="nueva_password" class="form-input" placeholder="Opcional (dejar en blanco para mantener la actual)">
                         </div>
 
                         <div class="form-row">

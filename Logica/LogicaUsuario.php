@@ -81,8 +81,8 @@ class LogicaUsuario implements ILogicaUsuario {
             }
         }
 
-        $nom = trim(htmlspecialchars($usuario->getNombre(), ENT_QUOTES, 'UTF-8'));
-        $email = filter_var(trim($usuario->getEmail()), FILTER_SANITIZE_EMAIL);
+        $nom = trim($usuario->getNombre());
+        $email = trim($usuario->getEmail());
         $contraPlana = $usuario->getPassword();
 
         if ($nom === '' || $email === '' || $contraPlana === '') {
@@ -144,6 +144,10 @@ class LogicaUsuario implements ILogicaUsuario {
             return ['exito' => false, 'mensaje_key' => 'err_id_invalido', 'mensaje' => 'Debe ingresar un ID valido.'];
         }
 
+        if ($idElim === $idAdminEjecutor) {
+            return ['exito' => false, 'mensaje_key' => 'err_auto_eliminacion', 'mensaje' => 'No puedes darte de baja a ti mismo.'];
+        }
+
         $fachadaPersistencia = new FachadaPersistencia();
         $persistencia = $fachadaPersistencia->retornoIPersistenciaUsuario();
 
@@ -152,8 +156,8 @@ class LogicaUsuario implements ILogicaUsuario {
             return ['exito' => false, 'mensaje_key' => 'err_usuario_no_existe', 'mensaje' => 'El usuario no existe.'];
         }
 
-        if ($target->getEsAdmin() === true && $idElim !== $idAdminEjecutor) {
-            return ['exito' => false, 'mensaje_key' => 'err_admin_no_eliminar', 'mensaje' => 'No se puede eliminar la cuenta de otro administrador.'];
+        if ($target->getEsAdmin() === true) {
+            return ['exito' => false, 'mensaje_key' => 'err_admin_no_eliminar', 'mensaje' => 'No se puede eliminar una cuenta de administrador.'];
         }
 
         $ok = $persistencia->bajaUsuario($idElim);
@@ -185,11 +189,34 @@ class LogicaUsuario implements ILogicaUsuario {
             return ['exito' => false, 'mensaje_key' => 'err_admin_no_modificar', 'mensaje' => 'No se puede modificar la cuenta de otro administrador.'];
         }
 
-        $nomFinal = $nomMod !== '' ? trim(htmlspecialchars($nomMod, ENT_QUOTES, 'UTF-8')) : $target->getNombre();
-        $emailFinal = $emailMod !== '' ? filter_var(trim($emailMod), FILTER_SANITIZE_EMAIL) : $target->getEmail();
+        $nomMod = trim($nomMod);
+        $emailMod = trim($emailMod);
+        $contraMod = trim($contraMod);
+
+        $nomFinal = $nomMod !== '' ? $nomMod : $target->getNombre();
+        $emailFinal = $emailMod !== '' ? $emailMod : $target->getEmail();
         $dracmasFinal = $dracmasMod !== null ? $dracmasMod : $target->getMonedas();
 
+        if ($nomFinal === '' || mb_strlen($nomFinal) > 16) {
+            return ['exito' => false, 'mensaje_key' => 'err_nombre_largo', 'mensaje' => 'El nombre no puede superar los 16 caracteres.'];
+        }
+
+        if (filter_var($emailFinal, FILTER_VALIDATE_EMAIL) === false || strlen($emailFinal) > 100) {
+            return ['exito' => false, 'mensaje_key' => 'err_email_invalido', 'mensaje' => 'El formato del correo electronico no es valido.'];
+        }
+
+        if ($emailFinal !== $target->getEmail() && $persistencia->existeEmail($emailFinal) === true) {
+            return ['exito' => false, 'mensaje_key' => 'err_email_registrado', 'mensaje' => 'El correo electronico ya esta registrado.'];
+        }
+
+        if ($dracmasFinal < 0) {
+            return ['exito' => false, 'mensaje_key' => 'err_datos_invalidos', 'mensaje' => 'Los datos ingresados no son validos.'];
+        }
+
         if ($contraMod !== '') {
+            if (strlen($contraMod) < 8 || strlen($contraMod) > 64) {
+                return ['exito' => false, 'mensaje_key' => 'err_password_largo', 'mensaje' => 'La contrasenia debe tener entre 8 y 64 caracteres.'];
+            }
             $contraConPimienta = $contraMod . PEPPER_SECRET;
             $opciones = [
                 'memory_cost' => 65536,
