@@ -28,8 +28,44 @@ class LogicaUsuario implements ILogicaUsuario {
         return ($admin !== null && $admin->getEsAdmin() === true);
     }
 
-    public function altaUsuarioL(UsuarioDTO $usuario, ?string $captchaToken = null, int $idAdminEjecutor = 0): array {
+    public function procesarFormularioAdmin(array $postData, int $idAdminEjecutor): array {
+        $accion = $postData['accion'] ?? '';
+        $res = ['tipo' => '', 'exito' => false, 'mensaje_key' => '', 'mensaje' => ''];
 
+        if ($accion === 'alta') {
+            $nom = trim($postData['username'] ?? '');
+            $email = trim($postData['email'] ?? '');
+            $contra = $postData['password'] ?? '';
+
+            $dtoAlta = new UsuarioDTO(0, $nom, $email, $contra, 0, 0, false);
+            $respuesta = $this->altaUsuarioL($dtoAlta, null, $idAdminEjecutor);
+            $respuesta['tipo'] = 'alta';
+            return $respuesta;
+        }
+
+        if ($accion === 'modificar') {
+            $idMod = (int)($postData['id_usuario'] ?? 0);
+            $nomMod = trim($postData['nuevo_nombre'] ?? '');
+            $emailMod = trim($postData['nuevo_email'] ?? '');
+            $contraMod = $postData['nueva_password'] ?? '';
+            $dracmasMod = isset($postData['dracmas']) && $postData['dracmas'] !== '' ? (int)$postData['dracmas'] : null;
+
+            $respuesta = $this->modificarUsuarioL($idMod, $nomMod, $emailMod, $contraMod, $dracmasMod, $idAdminEjecutor);
+            $respuesta['tipo'] = 'modificar';
+            return $respuesta;
+        }
+
+        if ($accion === 'eliminar') {
+            $idElim = (int)($postData['id_eliminar'] ?? 0);
+            $respuesta = $this->bajaUsuarioL($idElim, $idAdminEjecutor);
+            $respuesta['tipo'] = 'eliminar';
+            return $respuesta;
+        }
+
+        return $res;
+    }
+
+    public function altaUsuarioL(UsuarioDTO $usuario, ?string $captchaToken = null, int $idAdminEjecutor = 0): array {
         if ($idAdminEjecutor > 0 && $this->esAdminEjecutor($idAdminEjecutor) === false) {
             return ['exito' => false, 'mensaje_key' => 'err_acceso_denegado', 'mensaje' => 'Acceso denegado. Se requieren permisos de administrador.'];
         }
@@ -116,8 +152,8 @@ class LogicaUsuario implements ILogicaUsuario {
             return ['exito' => false, 'mensaje_key' => 'err_usuario_no_existe', 'mensaje' => 'El usuario no existe.'];
         }
 
-        if ($target->getEsAdmin() === true) {
-            return ['exito' => false, 'mensaje_key' => 'err_admin_no_eliminar', 'mensaje' => 'No se puede eliminar una cuenta de administrador.'];
+        if ($target->getEsAdmin() === true && $idElim !== $idAdminEjecutor) {
+            return ['exito' => false, 'mensaje_key' => 'err_admin_no_eliminar', 'mensaje' => 'No se puede eliminar la cuenta de otro administrador.'];
         }
 
         $ok = $persistencia->bajaUsuario($idElim);
@@ -145,8 +181,8 @@ class LogicaUsuario implements ILogicaUsuario {
             return ['exito' => false, 'mensaje_key' => 'err_usuario_no_existe', 'mensaje' => 'El usuario no existe.'];
         }
 
-        if ($target->getEsAdmin() === true) {
-            return ['exito' => false, 'mensaje_key' => 'err_admin_no_modificar', 'mensaje' => 'No se puede modificar una cuenta de administrador.'];
+        if ($target->getEsAdmin() === true && $idMod !== $idAdminEjecutor) {
+            return ['exito' => false, 'mensaje_key' => 'err_admin_no_modificar', 'mensaje' => 'No se puede modificar la cuenta de otro administrador.'];
         }
 
         $nomFinal = $nomMod !== '' ? trim(htmlspecialchars($nomMod, ENT_QUOTES, 'UTF-8')) : $target->getNombre();
@@ -168,7 +204,7 @@ class LogicaUsuario implements ILogicaUsuario {
             $hashSeguro = $target->getPassword();
         }
 
-        $dtoMod = new UsuarioDTO($idMod, $nomFinal, $emailFinal, $hashSeguro, $target->getPartidasGanadas(), $dracmasFinal, false);
+        $dtoMod = new UsuarioDTO($idMod, $nomFinal, $emailFinal, $hashSeguro, $target->getPartidasGanadas(), $dracmasFinal, $target->getEsAdmin());
         $ok = $persistencia->modificarUsuario($dtoMod);
 
         if ($ok === true) {
@@ -187,6 +223,11 @@ class LogicaUsuario implements ILogicaUsuario {
         }
 
         return $res;
+    }
+
+    public function obtenerTodosLosUsuariosL(): array {
+        $fachadaPersistencia = new FachadaPersistencia();
+        return $fachadaPersistencia->retornoIPersistenciaUsuario()->obtenerTodosLosUsuarios();
     }
 }
 ?>

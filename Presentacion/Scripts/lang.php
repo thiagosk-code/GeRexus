@@ -4,10 +4,16 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 if (isset($_GET['lang'])) {
-    $_SESSION['lang'] = ($_GET['lang'] === 'en') ? 'en' : 'es';
+    $lang = ($_GET['lang'] === 'en') ? 'en' : 'es';
+} elseif (isset($_COOKIE['lang'])) {
+    $lang = ($_COOKIE['lang'] === 'en') ? 'en' : 'es';
+} elseif (isset($_SESSION['lang'])) {
+    $lang = ($_SESSION['lang'] === 'en') ? 'en' : 'es';
+} else {
+    $lang = 'es';
 }
 
-$lang = (isset($_SESSION['lang']) && $_SESSION['lang'] === 'en') ? 'en' : 'es';
+$_SESSION['lang'] = $lang;
 
 $rutaJson = __DIR__ . "/../Diccionarios/{$lang}.json";
 

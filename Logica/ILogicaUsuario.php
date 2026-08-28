@@ -1,5 +1,4 @@
 <?php
-
 require_once (__DIR__ . '/../DTO/UsuarioDTO.php');
 
 interface ILogicaUsuario {
@@ -7,5 +6,7 @@ interface ILogicaUsuario {
     public function bajaUsuarioL(int $idElim, int $idAdminEjecutor = 0): array;
     public function modificarUsuarioL(int $idMod, string $nomMod, string $emailMod, string $contraMod, ?int $dracmasMod, int $idAdminEjecutor = 0): array;
     public function buscarUsuarioL(UsuarioDTO $usuario): ?UsuarioDTO;
+    public function obtenerTodosLosUsuariosL(): array;
+    public function procesarFormularioAdmin(array $postData, int $idAdminEjecutor): array;
 }
 ?>

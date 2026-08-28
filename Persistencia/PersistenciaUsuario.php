@@ -86,13 +86,8 @@ class PersistenciaUsuario implements IPersistenciaUsuario {
             try {
                 $stmt = $this->conn->prepare($sql);
                 $stmt->execute([$idUsuario, $nombre, $email, $contra, $monedas, $bajaLogica]);
-                $row = $stmt->fetch(\PDO::FETCH_ASSOC);
-                if ($row && isset($row['mensaje'])) {
-                    $res = false;
-                } else {
-                    $res = true;
-                }
                 $stmt->closeCursor();
+                $res = true;
             } catch (\PDOException $e) {
                 $res = false;
             }
@@ -108,13 +103,8 @@ class PersistenciaUsuario implements IPersistenciaUsuario {
             try {
                 $stmt = $this->conn->prepare($sql);
                 $stmt->execute([$idUsuario]);
-                $row = $stmt->fetch(\PDO::FETCH_ASSOC);
-                if ($row && isset($row['mensaje'])) {
-                    $res = false;
-                } else {
-                    $res = true;
-                }
                 $stmt->closeCursor();
+                $res = true;
             } catch (\PDOException $e) {
                 $res = false;
             }
@@ -139,8 +129,10 @@ class PersistenciaUsuario implements IPersistenciaUsuario {
                     $contra = $reader['Contra'];
                     $monedas = (int)$reader['Monedas'];
                     $esAdmin = (bool)$reader['esAdmin'];
+                    $baja = isset($reader['Baja_logica']) ? (bool)$reader['Baja_logica'] : false;
 
                     $usuario = new UsuarioDTO($id, $nombre, $email, $contra, 0, $monedas, $esAdmin);
+                    $usuario->setBajaLogica($baja);
                 }
                 $stmt->closeCursor();
             } catch (\PDOException $e) {
@@ -148,6 +140,33 @@ class PersistenciaUsuario implements IPersistenciaUsuario {
             }
         }
         return $usuario;
+    }
+
+    public function obtenerTodosLosUsuarios(): array {
+        $lista = [];
+
+        if ($this->conn !== null) {
+            $sql = "CALL sp_ObtenerTodosLosUsuarios()";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute();
+            $resultado = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            foreach ($resultado as $fila) {
+                $dto = new UsuarioDTO();
+                $dto->setIdUsuario((int)$fila['idUsuario']);
+                $dto->setNombre($fila['Nombre']);
+                $dto->setEmail($fila['Email']);
+                $dto->setPassword($fila['Contra']);
+                $dto->setMonedas((int)$fila['Monedas']);
+                $dto->setEsAdmin((bool)$fila['esAdmin']);
+                $dto->setBajaLogica((bool)$fila['Baja_logica']);
+                $dto->setPartidasGanadas((int)$fila['PartidasGanadas']);
+
+                $lista[] = $dto;
+            }
+        }
+
+        return $lista;
     }
 }
 ?>
