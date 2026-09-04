@@ -18,7 +18,6 @@ class PersistenciaUsuario implements IPersistenciaUsuario {
 
     private function __clone() {}
     public function __wakeup() {}
-
     private function __construct() {
         try {
             $conexionBD = new ConexionBD();

@@ -340,7 +340,7 @@ class LogicaUsuario implements ILogicaUsuario {
 
         return ['exito' => false, 'mensaje_key' => 'err_mod_db', 'mensaje' => 'Error al modificar usuario.'];
     }
-
+    
     public function buscarUsuarioL(UsuarioDTO $usuario): ?UsuarioDTO {
         $res = null;
 
