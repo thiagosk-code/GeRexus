@@ -1,0 +1,19 @@
+{
+  "id": "diogenes",
+  "corriente_id": "cinismo",
+  "img_cuadro": "../../Assets/DiogenesCuadro.png",
+  "img_adepto_normal": "../../Assets/DiogenesPerro.png",
+  "img_adepto_shiny": "../../Assets/DiogenesPerroShiny.png",
+  "i18n": {
+    "es": {
+      "nombre": "Diógenes de Sinope",
+      "corriente": "Cinismo",
+      "descripcion": "Diógenes de Sinope, conocido también como Diógenes el Cínico, fue uno de los filósofos más singulares y radicales de la Antigua Grecia. Llevó la filosofía cínica al extremo, rechazando las convenciones sociales, las posesiones materiales y las normas arbitrarias de la civilización.\n\nVivía en las calles de Atenas dentro de una gran vasija de barro (o tinaja) y predicaba con el ejemplo una vida de absoluta autosuficiencia, honestidad sin filtros y cercanía a la naturaleza. A través de la sátira, la provocación constante y actos públicos desafiantes, buscaba exponer la hipocresía de la sociedad de su tiempo.\n\nPara Diógenes, la verdadera libertad y la virtud no se encontraban en el estatus ni en las riquezas, sino en la capacidad de vivir libre de deseos innecesarios y apegos superficiales."
+    },
+    "en": {
+      "nombre": "Diogenes of Sinope",
+      "corriente": "Cynicism",
+      "descripcion": "Diogenes of Sinope, also known as Diogenes the Cynic, was one of the most unique and radical philosophers of Ancient Greece. He took Cynic philosophy to the extreme, rejecting social conventions, material possessions, and the arbitrary rules of civilization.\n\nLiving in the streets of Athens inside a large clay jar (or tub), he practiced what he preached: a life of absolute self-sufficiency, unfiltered honesty, and closeness to nature. Through satire, constant provocation, and defiant public acts, he sought to expose the hypocrisy of the society of his time.\n\nFor Diogenes, true freedom and virtue were not found in status or wealth, but in the ability to live free from unnecessary desires and superficial attachments."
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "id": "nietzsche",
+  "corriente_id": "vitalismo",
+  "img_cuadro": "../../Assets/NietzscheCuadro.png",
+  "img_adepto_normal": "../../Assets/sinAdepto.png",
+  "img_adepto_shiny": "../../Assets/sinAdepto.png",
+  "i18n": {
+    "es": {
+      "nombre": "Friedrich Nietzsche",
+      "corriente": "Vitalismo / Nihilismo Crítico",
+      "descripcion": "Friedrich Nietzsche fue uno de los pensadores alemanes más influyentes y provocadores del siglo XIX. Con un estilo aforístico y enérgico, llevó a cabo una crítica radical de la religión, la moral tradicional y la metafísica occidental.\n\nConceptos como la 'voluntad de poder', la 'muerte de Dios', el 'eterno retorno' y la figura del 'Übermensch' (Superhombre) constituyen el núcleo de su pensamiento, orientado a afirmar la vida y superar el nihilismo pasivo de la sociedad moderna.\n\nSu llamado a la transvaloración de todos los valores buscaba que el individuo libre se convirtiera en creador de sus propios sentidos, abrazando la existencia con toda su complejidad y sufrimiento."
+    },
+    "en": {
+      "nombre": "Friedrich Nietzsche",
+      "corriente": "Vitalism / Critical Nihilism",
+      "descripcion": "Friedrich Nietzsche was one of the most influential and provocative German thinkers of the 19th century. With an aphoristic and energetic style, he carried out a radical critique of religion, traditional morality, and Western metaphysics.\n\nConcepts such as the 'will to power', the 'death of God', the 'eternal recurrence', and the figure of the 'Übermensch' (Overman) form the core of his philosophy, aimed at affirming life and overcoming the passive nihilism of modern society.\n\nHis call for the transvaluation of all values sought to enable the free individual to become the creator of their own meaning, fully embracing existence in all its complexity and suffering."
+    }
+  }
+}

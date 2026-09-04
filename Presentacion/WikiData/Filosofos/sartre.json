@@ -1,0 +1,19 @@
+{
+  "id": "sartre",
+  "corriente_id": "existencialismo",
+  "img_cuadro": "../../Assets/SartreCuadro.png",
+  "img_adepto_normal": "../../Assets/sinAdepto.png",
+  "img_adepto_shiny": "../../Assets/sinAdepto.png",
+  "i18n": {
+    "es": {
+      "nombre": "Jean-Paul Sartre",
+      "corriente": "Existencialismo Ateo",
+      "descripcion": "Jean-Paul Sartre fue un filósofo, dramaturgo y ensayista francés, una de las figuras más destacadas del existencialismo del siglo XX. Defendió con firmeza la premisa de que 'la existencia precede a la esencia', lo que significa que el ser humano primero existe y luego se define a sí mismo a través de sus elecciones.\n\nPara Sartre, la libertad no es un privilegio, sino una condición ineludible que conlleva una profunda responsabilidad individual y la angustia de elegir sin garantías ni excusas externas, concepto que denominaba actuar sin 'mala fe'.\n\nAdemás de su labor académica, mantuvo un compromiso político activo e intelectual que impregnó toda su producción literaria y filosófica, llegando incluso a rechazar el Premio Nobel de Literatura en 1964."
+    },
+    "en": {
+      "nombre": "Jean-Paul Sartre",
+      "corriente": "Atheistic Existentialism",
+      "descripcion": "Jean-Paul Sartre was a French philosopher, playwright, and essayist, one of the most prominent figures of 20th-century existentialism. He firmly defended the premise that 'existence precedes essence', meaning human beings first exist and only then define themselves through their choices.\n\nFor Sartre, freedom is not a privilege but an inescapable condition that carries profound individual responsibility and the angst of choosing without external guarantees or excuses—a concept he framed against acting in 'bad faith'.\n\nBeyond his academic work, he maintained an active political and intellectual engagement that permeated his literary and philosophical output, famously rejecting the Nobel Prize in Literature in 1964."
+    }
+  }
+}

@@ -28,6 +28,19 @@ class LogicaUsuario implements ILogicaUsuario {
         return ($admin !== null && $admin->getEsAdmin() === true);
     }
 
+    private function esEmailValido(string $email): bool {
+        if ($email === '' || strlen($email) > 100) {
+            return false;
+        }
+
+        // Si se requiere estrictamente que sea dominio @gmail.com:
+        if (preg_match('/^[a-zA-Z0-9._%+-]+@gmail\.com$/i', $email) !== 1) {
+            return false;
+        }
+
+        return (filter_var($email, FILTER_VALIDATE_EMAIL) !== false);
+    }
+
     public function procesarFormularioAdmin(array $postData, int $idAdminEjecutor): array {
         $accion = $postData['accion'] ?? '';
         $res = ['tipo' => '', 'exito' => false, 'mensaje_key' => '', 'mensaje' => ''];
@@ -65,6 +78,92 @@ class LogicaUsuario implements ILogicaUsuario {
         return $res;
     }
 
+    public function procesarModificacionNombrePropio(int $idUsuario, string $nuevoNombre): array {
+        if ($idUsuario <= 0) {
+            return ['exito' => false, 'mensaje_key' => 'err_id_invalido', 'mensaje' => 'Sesión no válida.'];
+        }
+
+        $nuevoNombre = trim($nuevoNombre);
+        if ($nuevoNombre === '' || mb_strlen($nuevoNombre) > 16) {
+            return ['exito' => false, 'mensaje_key' => 'err_nombre_largo', 'mensaje' => 'El nombre no puede superar los 16 caracteres.'];
+        }
+
+        $fachadaPersistencia = new FachadaPersistencia();
+        $persistencia = $fachadaPersistencia->retornoIPersistenciaUsuario();
+
+        $target = $persistencia->buscarUsuario($idUsuario);
+        if ($target === null) {
+            return ['exito' => false, 'mensaje_key' => 'err_usuario_no_existe', 'mensaje' => 'El usuario no existe.'];
+        }
+
+        $dtoMod = new UsuarioDTO(
+            $idUsuario,
+            $nuevoNombre,
+            $target->getEmail(),
+            $target->getPassword(),
+            $target->getPartidasGanadas(),
+            $target->getMonedas(),
+            $target->getEsAdmin()
+        );
+        $dtoMod->setBajaLogica($target->getBajaLogica());
+
+        $ok = $persistencia->modificarUsuario($dtoMod);
+        if ($ok === true) {
+            return ['exito' => true, 'mensaje_key' => 'msg_mod_exito', 'mensaje' => 'Nombre actualizado con éxito.'];
+        }
+
+        return ['exito' => false, 'mensaje_key' => 'err_mod_db', 'mensaje' => 'Error al modificar usuario.'];
+    }
+
+    public function procesarBajaCuentaPropia(int $idUsuario): array {
+        if ($idUsuario <= 0) {
+            return ['exito' => false, 'mensaje_key' => 'err_id_invalido', 'mensaje' => 'Sesión no válida.'];
+        }
+
+        $fachadaPersistencia = new FachadaPersistencia();
+        $persistencia = $fachadaPersistencia->retornoIPersistenciaUsuario();
+
+        $target = $persistencia->buscarUsuario($idUsuario);
+        if ($target === null) {
+            return ['exito' => false, 'mensaje_key' => 'err_usuario_no_existe', 'mensaje' => 'El usuario no existe.'];
+        }
+
+        if ($target->getEsAdmin() === true) {
+            return ['exito' => false, 'mensaje_key' => 'err_admin_no_eliminar', 'mensaje' => 'No se puede eliminar una cuenta de administrador.'];
+        }
+
+        $ok = $persistencia->bajaUsuario($idUsuario);
+        if ($ok === true) {
+            $this->procesarCierreSesion();
+            return ['exito' => true, 'mensaje_key' => 'msg_baja_exito', 'mensaje' => 'Cuenta eliminada con éxito.'];
+        }
+
+        return ['exito' => false, 'mensaje_key' => 'err_baja_db', 'mensaje' => 'Error al eliminar usuario.'];
+    }
+
+    public function procesarCierreSesion(): void {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        $_SESSION = array();
+
+        if (ini_get("session.use_cookies")) {
+            $params = session_get_cookie_params();
+            setcookie(
+                session_name(),
+                '',
+                time() - 42000,
+                $params["path"],
+                $params["domain"],
+                $params["secure"],
+                $params["httponly"]
+            );
+        }
+
+        session_destroy();
+    }
+
     public function altaUsuarioL(UsuarioDTO $usuario, ?string $captchaToken = null, int $idAdminEjecutor = 0): array {
         if ($idAdminEjecutor > 0 && $this->esAdminEjecutor($idAdminEjecutor) === false) {
             return ['exito' => false, 'mensaje_key' => 'err_acceso_denegado', 'mensaje' => 'Acceso denegado. Se requieren permisos de administrador.'];
@@ -93,7 +192,7 @@ class LogicaUsuario implements ILogicaUsuario {
             return ['exito' => false, 'mensaje_key' => 'err_nombre_largo', 'mensaje' => 'El nombre no puede superar los 16 caracteres.'];
         }
 
-        if (filter_var($email, FILTER_VALIDATE_EMAIL) === false || strlen($email) > 100) {
+        if ($this->esEmailValido($email) === false) {
             return ['exito' => false, 'mensaje_key' => 'err_email_invalido', 'mensaje' => 'El formato del correo electronico no es valido.'];
         }
 
@@ -201,7 +300,7 @@ class LogicaUsuario implements ILogicaUsuario {
             return ['exito' => false, 'mensaje_key' => 'err_nombre_largo', 'mensaje' => 'El nombre no puede superar los 16 caracteres.'];
         }
 
-        if (filter_var($emailFinal, FILTER_VALIDATE_EMAIL) === false || strlen($emailFinal) > 100) {
+        if ($this->esEmailValido($emailFinal) === false) {
             return ['exito' => false, 'mensaje_key' => 'err_email_invalido', 'mensaje' => 'El formato del correo electronico no es valido.'];
         }
 

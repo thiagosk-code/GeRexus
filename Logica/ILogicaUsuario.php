@@ -8,5 +8,8 @@ interface ILogicaUsuario {
     public function buscarUsuarioL(UsuarioDTO $usuario): ?UsuarioDTO;
     public function obtenerTodosLosUsuariosL(): array;
     public function procesarFormularioAdmin(array $postData, int $idAdminEjecutor): array;
+    public function procesarModificacionNombrePropio(int $idUsuario, string $nuevoNombre): array;
+    public function procesarBajaCuentaPropia(int $idUsuario): array;
+    public function procesarCierreSesion(): void;
 }
 ?>

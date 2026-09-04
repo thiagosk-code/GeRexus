@@ -1,0 +1,19 @@
+{
+  "id": "hypatia",
+  "corriente_id": "neoplatonismo",
+  "img_cuadro": "../../Assets/HypatiaCuadro.png",
+  "img_adepto_normal": "../../Assets/HypatiaAbeja.png",
+  "img_adepto_shiny": "../../Assets/HypatiaAbejaShiny.png",
+  "i18n": {
+    "es": {
+      "nombre": "Hypatia de Alejandría",
+      "corriente": "Neoplatonismo",
+      "descripcion": "Hypatia de Alejandría fue una destacada matemática, astrónoma y filósofa neoplatónica que ejerció una profunda influencia en el mundo académico de la Alejandría tardía. Hija del matemático Teón, superó con frecuencia los conocimientos de su maestro y se convirtió en la cabeza de la Escuela Neoplatónica de la ciudad.\n\nDedicó su vida a la enseñanza de la geometría, la astronomía y la filosofía, recibiendo a estudiantes de diversas procedencias políticas y religiosas. Además de redactar importantes comentarios sobre obras de álgebra y secciones cónicas, diseñó instrumentos científicos como astrolabios e hidrómetros.\n\nSu pensamiento combinaba el rigor lógico del análisis matemático con la búsqueda neoplatónica de la verdad espiritual, convirtiéndola en un símbolo perdurable del saber clásico y la libertad intelectual."
+    },
+    "en": {
+      "nombre": "Hypatia of Alexandria",
+      "corriente": "Neoplatonism",
+      "descripcion": "Hypatia of Alexandria was a prominent mathematician, astronomer, and Neoplatonist philosopher who exerted a profound influence on the academic world of late Alexandria. Daughter of the mathematician Theon, she frequently surpassed her master's knowledge and became head of the Neoplatonic School in the city.\n\nShe dedicated her life to teaching geometry, astronomy, and philosophy, welcoming students from diverse political and religious backgrounds. In addition to writing important commentaries on works of algebra and conic sections, she designed scientific instruments such as astrolabes and hydrometers.\n\nHer thought combined the logical rigor of mathematical analysis with the Neoplatonic pursuit of spiritual truth, making her an enduring symbol of classical knowledge and intellectual freedom."
+    }
+  }
+}
