@@ -1,8 +1,9 @@
 <?php
 
+require_once (__DIR__ . '/../Conexion/ConexionBD.php');
 require_once (__DIR__ . '/../DTO/AdeptoDTO.php');
-require_once ('IPersistenciaAdepto.php');
-require_once '../Conexion/ConexionBD.php';
+require_once (__DIR__ . '/IPersistenciaAdepto.php');
+
 
 class PersistenciaAdepto implements IPersistenciaAdepto {
 
@@ -29,20 +30,20 @@ class PersistenciaAdepto implements IPersistenciaAdepto {
     }
     
     public function modificarAdepto(AdeptoDTO $adepto): bool {
-
+        $res = false;
         if ($this->conn != null) {
 
             if ($adepto != null) {
                
                 $sql = "UPDATE Adeptos SET Especie = ?, esShiny = ?, Corriente = ?, Descripcion = ? WHERE idAdepto = ?;";
-                $idAdepto = $adepto->getIdAdepto();
                 $especie = $adepto->getEspecie();
                 $esShiny = $adepto->getEsShiny();
                 $corriente = $adepto->getCorriente();
                 $descripcion = $adepto->getDescripcion();
+                $idAdepto = $adepto->getIdAdepto();
                 try {
                     $stmt = $this->conn->prepare($sql);
-                    $stmt->execute([$idAdepto, $especie, $esShiny, $corriente, $descripcion]);
+                    $stmt->execute([$especie, $esShiny, $corriente, $descripcion, $idAdepto]);
                     $stmt->closeCursor();
                     $res = true;
                 } catch (\PDOException $e) {
@@ -56,19 +57,21 @@ class PersistenciaAdepto implements IPersistenciaAdepto {
 
 
     public function altaAdepto(AdeptoDTO $adepto): bool {
-
+        $res = false;
         if ($this->conn != null) {
 
             if ($adepto != null) {
                 $sql = "INSERT INTO Adeptos (Especie, esShiny, Descripcion, Corriente, Baja_logica) VALUES (?, ?, ?, ?, ?);";
                 $especie = $adepto->getEspecie();
-                $esShiny = $adepto->getEsShiny();
-                $corriente = $adepto->getCorriente();
+                $esShiny = $adepto->getEsShiny()? 1 : 0;
                 $descripcion = $adepto->getDescripcion();
+                $corriente = $adepto->getCorriente();
                 $bajaLogica = 0;
                 try {
                     $stmt = $this->conn->prepare($sql);
-                    $stmt->execute([$especie, $esShiny, $corriente, $descripcion, $bajaLogica]);
+                    $stmt->execute([
+                        
+                    $especie, $esShiny, $descripcion, $corriente, $bajaLogica]);
                     $stmt->closeCursor();
                     $res = true;
                 } catch (\PDOException $e) {
@@ -116,10 +119,10 @@ class PersistenciaAdepto implements IPersistenciaAdepto {
                     $idAdepto = $reader['idAdepto'];
                     $especie = $reader['Especie'];
                     $esShiny = $reader['esShiny'];
-                    $descripcion = $reader['Descripcion'];
                     $corriente = $reader['Corriente'];
+                    $descripcion = $reader['Descripcion'];
                     //cada nombre dentro de los []
-                    $adepto = new AdeptoDTO($idAdepto, $especie, $esShiny, $descripcion, $corriente);
+                    $adepto = new AdeptoDTO($idAdepto, $especie, $esShiny, $corriente, $descripcion);
                 }
                 $stmt->closeCursor();
                 return $adepto;

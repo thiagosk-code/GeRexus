@@ -13,8 +13,8 @@ class AdeptoDTO {
         $this->idAdepto = $idAdepto;
         $this->especie = $especie;
         $this->esShiny = $esShiny;
-        $this->corriente = $corriente;
         $this->descripcion = $descripcion;
+        $this->corriente = $corriente;
     }
 
     // idAdepto

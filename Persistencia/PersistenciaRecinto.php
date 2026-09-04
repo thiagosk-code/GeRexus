@@ -1,8 +1,8 @@
 <?php
 
+require_once (__DIR__ . '/../Conexion/ConexionBD.php');
 require_once (__DIR__ . '/../DTO/RecintoDTO.php');
-require_once ('IPersistenciaRecinto.php');
-require_once '../Conexion/ConexionBD.php';
+require_once (__DIR__ . '/IPersistenciaRecinto.php');
 
 class PersistenciaRecinto implements IPersistenciaRecinto {
 
@@ -80,7 +80,7 @@ class PersistenciaRecinto implements IPersistenciaRecinto {
         return $res;
     }
 
-    public function bajaRecintoP(string $idRecinto): bool {
+    public function bajaRecinto(string $idRecinto): bool {
         $res = false;
         if ($this->conn != null) {
 

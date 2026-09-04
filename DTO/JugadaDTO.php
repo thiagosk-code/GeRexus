@@ -7,8 +7,7 @@ class JugadaDTO {
     private RecintoDTO $recinto;
     private AdeptoDTO $adepto;
     private PartidaDTO $partida;
-    private int $turno;
-    private int $ronda;
+
 
     // Constructor tradicional que inicializa todas las propiedades
     public function __construct(int $idJugada, UsuarioDTO $usuario, RecintoDTO $recinto, AdeptoDTO $adepto, int $turno, int $ronda) {
@@ -53,5 +52,5 @@ class JugadaDTO {
     public function getAdepto(): AdeptoDTO {
         return $this->adepto;
     }
-    
+
 }

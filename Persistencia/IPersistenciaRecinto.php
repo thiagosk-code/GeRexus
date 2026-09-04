@@ -1,6 +1,6 @@
 <?php
 
-interface IPersistenciaAdepto {
+interface IPersistenciaRecinto {
 
     public function altaRecinto(RecintoDTO $recinto): bool;
     public function bajaRecinto(string $idRecinto): bool;

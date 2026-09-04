@@ -1,8 +1,8 @@
 <?php
 
+require_once (__DIR__ . '/../Conexion/ConexionBD.php');
 require_once (__DIR__ . '/../DTO/JugadaDTO.php');
-require_once ('IPersistenciaJugada.php');
-require_once '../Conexion/ConexionBD.php';
+require_once (__DIR__ . '/IPersistenciaJugada.php');
 
 class PersistenciaJugada implements IPersistenciaJugada {
 

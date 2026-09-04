@@ -1,0 +1,297 @@
+.icon-draftowiki { background-image: var(--url-img-draftowiki); }
+.icon-asistente  { background-image: var(--url-img-asistente); }
+.icon-digital    { background-image: var(--url-img-digital); }
+.icon-gacha      { background-image: var(--url-img-gacha); }
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+}
+
+.user-name {
+    font-family: var(--font-main);
+    font-size: 1.75rem;
+    color: var(--color-accent);
+    text-shadow: var(--shadow-text);
+}
+
+.user-avatar-img {
+    display: inline-block;
+    width: 2.5rem;
+    height: 2.5rem;
+    background-image: var(--url-img-diogenes);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    filter: drop-shadow(0 0.1875rem 0.375rem var(--shadow-strong));
+}
+
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6.8rem 2rem 1.25rem 2rem;
+    max-width: 92rem;
+    margin: 0 auto;
+    width: 100%;
+    height: 100vh;
+    box-sizing: border-box;
+}
+
+.hero-section {
+    position: relative;
+    width: 100%;
+    text-align: center;
+    margin-top: 0;
+}
+
+.gacha-bar {
+    position: absolute;
+    left: 0;
+    top: 0;
+    display: flex;
+    align-items: center;
+}
+
+.main-title {
+    font-size: 3.8rem;
+    font-weight: normal;
+    letter-spacing: 0.125rem;
+    margin-bottom: 0.2rem;
+    color: var(--color-main);
+    text-shadow: var(--shadow-text);
+}
+
+.main-description {
+    font-size: 1.5rem;
+    color: var(--color-main);
+    text-shadow: var(--shadow-text);
+}
+
+.modes-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    width: 100%;
+    align-items: stretch;
+    margin-bottom: 0rem;
+}
+
+.mode-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    text-align: center;
+    width: 100%;
+    padding: 0 0.5rem;
+}
+
+.mode-column.card-gacha-mobile {
+    display: none;
+}
+
+.mode-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 10.5rem;
+    height: 10.5rem;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    margin-bottom: 0.5rem;
+    filter: drop-shadow(0 0.25rem 0.5rem var(--shadow-strong));
+}
+
+.mode-title {
+    font-size: 2.5rem;
+    font-weight: normal;
+    color: var(--color-main);
+    margin-bottom: 0.4rem;
+    text-shadow: var(--shadow-text);
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mode-text {
+    font-size: 1.2rem;
+    line-height: 1.4;
+    color: var(--color-main);
+    width: 100%;
+    max-width: 26rem;
+    padding: 0 0.25rem;
+    margin-bottom: auto;
+    text-shadow: var(--shadow-text);
+}
+
+.btn-card {
+    width: 100%;
+    max-width: 21rem;
+    height: 4rem;
+    display: flex;
+    margin-top: 1rem;
+    justify-content: center;
+    align-items: center;
+    font-family: var(--font-main);
+    font-size: 1.7rem;
+    color: var(--color-main);
+    text-decoration: none;
+    background-color: var(--bg-btn-jugar);
+    border: 0.1875rem solid var(--color-btn-border);
+    border-radius: 1.25rem;
+    cursor: pointer;
+    box-shadow: 0 0.25rem 0.625rem var(--shadow-light);
+    text-shadow: var(--shadow-text);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.1s ease;
+}
+
+.btn-card:hover {
+    background-color: var(--bg-btn-hover);
+    box-shadow: 0 0.375rem 0.875rem var(--shadow-medium);
+}
+
+.btn-card:active {
+    transform: scale(0.98);
+}
+
+.btn-gacha {
+    width: 10rem;
+    height: 3.2rem;
+    font-size: 1.3rem;
+    border-radius: 1rem;
+}
+
+@media (max-width: 1024px) {
+    .main-title { font-size: 3rem; }
+    .main-description { font-size: 1.3rem; }
+    .mode-title { font-size: 2rem; }
+    .mode-icon { width: 8.5rem; height: 8.5rem; }
+    .btn-card { max-width: 16rem; height: 3.5rem; font-size: 1.4rem; }
+}
+
+@media (max-width: 768px) {
+    body {
+        overflow-y: auto;
+    }
+
+    .main-header {
+        padding: 0.5rem 0.75rem;
+    }
+
+    .logo-text {
+        font-size: 1.05rem;
+    }
+
+    .logo-img {
+        width: 1.8rem;
+        height: 1.8rem;
+    }
+
+    .header-actions {
+        gap: 0.5rem;
+    }
+
+    .leng-switcher {
+        font-size: 0.8rem;
+    }
+
+    .user-profile {
+        gap: 0.35rem;
+    }
+
+    .user-name {
+        font-size: 0.85rem;
+    }
+
+    .user-avatar-img {
+        width: 1.6rem;
+        height: 1.6rem;
+    }
+
+    .tema-toggle {
+        padding: 0.1rem;
+    }
+
+    .tema-toggle .material-symbols-outlined {
+        font-size: 1.2rem;
+    }
+
+    .main-content {
+        height: auto;
+        min-height: 100vh;
+        padding: 4.5rem 1rem 2rem 1rem;
+        justify-content: flex-start;
+        gap: 1.2rem;
+    }
+
+    .gacha-bar {
+        display: none;
+    }
+
+    .main-title {
+        font-size: 2.2rem;
+    }
+
+    .main-description {
+        font-size: 1.25rem;
+    }
+
+    .modes-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.8rem;
+        max-width: 22rem;
+        margin: 0 auto;
+    }
+
+    .mode-column.card-gacha-mobile {
+        display: flex;
+    }
+
+    .mode-column {
+        position: relative;
+        background-color: var(--bg-btn-jugar);
+        border: 0.125rem solid var(--color-btn-border);
+        border-radius: 1.25rem;
+        padding: 0.8rem 0.5rem 0.5rem 0.5rem;
+        justify-content: space-between;
+        aspect-ratio: 1 / 1;
+        box-shadow: 0 0.25rem 0.625rem var(--shadow-light);
+        box-sizing: border-box;
+    }
+
+    .mode-icon {
+        width: 4.5rem;
+        height: 4.5rem;
+        margin-bottom: 0.2rem;
+    }
+
+    .mode-title {
+        width: 90%;
+        font-size: 1.05rem;
+        height: auto;
+        padding-top: 0.35rem;
+        margin-bottom: 0;
+        border-top: 0.1rem solid var(--color-main);
+    }
+
+    .mode-text {
+        display: none;
+    }
+
+    .btn-card {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        max-width: none;
+        margin: 0;
+        opacity: 0;
+        border-radius: 1.25rem;
+    }
+}

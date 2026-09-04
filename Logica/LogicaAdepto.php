@@ -1,6 +1,8 @@
 <?php
 
-require_once 'AdeptoDTO.php';
+require_once (__DIR__ . '/../DTO/AdeptoDTO.php');
+require_once (__DIR__ . '/../Logica/ILogicaAdepto.php');
+require_once (__DIR__ . '/../Logica/LogicaAdepto.php');
 
 class LogicaAdepto implements ILogicaAdepto {
     
@@ -27,4 +29,49 @@ class LogicaAdepto implements ILogicaAdepto {
             $adepto->setShiny(false);
         }
     }
+
+    public function altaAdeptoL(AdeptoDTO $Adepto): bool {
+        $res = false;
+     
+        if ($Adepto !== null) {
+            $persistenciaAdepto = new FachadaPersistencia();
+            $res = $persistenciaAdepto->retornoIPersistenciaAdepto()->altaAdepto($Adepto);
+        }
+
+        return $res;
+    }
+
+    public function bajaAdeptoL(AdeptoDTO $Adepto): bool {
+        $res = false;
+     
+        if ($Adepto !== null) {
+            $persistenciaAdepto = new FachadaPersistencia();
+            $res = $persistenciaAdepto->retornoIPersistenciaAdepto()->bajaAdepto($Adepto->getIdAdepto());
+        }
+
+        return $res;
+    }
+
+    public function modificarAdeptoL(AdeptoDTO $Adepto): bool {
+        $res = false;
+     
+        if ($Adepto !== null) {
+            $persistenciaAdepto = new FachadaPersistencia();
+            $res = $persistenciaAdepto->retornoIPersistenciaAdepto()->modificarAdepto($Adepto);
+        }
+
+        return $res;
+    }
+
+    public function buscarAdeptoL(AdeptoDTO $Adepto): ?AdeptoDTO {
+        $res = null;
+     
+        if ($Adepto !== null) {
+            $persistenciaAdepto = new FachadaPersistencia();
+            $res = $persistenciaAdepto->retornoIPersistenciaAdepto()->buscarAdepto($Adepto->getIdAdepto());
+        }
+
+        return $res;
+    }
+
 }
