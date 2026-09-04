@@ -52,7 +52,7 @@ $usuariosLista = $logicaUsuario->obtenerTodosLosUsuariosL();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GeRexus - <?php echo $txt['panel_admin'] ?? 'Panel de Administración'; ?></title>
-    <link rel="icon" type="image/png" href="../Assets/SocratesPNG.png">
+    <link rel="icon" type="image/png" href="../../Assets/Socrates.png">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -87,10 +87,12 @@ $usuariosLista = $logicaUsuario->obtenerTodosLosUsuariosL();
                 <span class="material-symbols-outlined">light_mode</span>
             </button>
 
-            <div class="user-profile">
-                <span class="user-name"><?php echo htmlspecialchars($nombreUsuarioLogueado, ENT_QUOTES, 'UTF-8'); ?></span>
-                <span class="user-avatar-img"></span>
-            </div>
+            <a href="cuenta.php" class="user-profile-link" style="text-decoration: none; color: inherit;">
+                <div class="user-profile">
+                    <span class="user-name"><?php echo $nombreUsuarioLogueado; ?></span>
+                    <span class="user-avatar-img" id="header-avatar-img"></span>
+                </div>
+            </a>
         </div>
     </header>
 
@@ -298,6 +300,7 @@ $usuariosLista = $logicaUsuario->obtenerTodosLosUsuariosL();
 
     <script src="../Scripts/lang.js"></script>
     <script src="../Scripts/Temas.js"></script>
+    <script src="../Scripts/header.js" defer></script>
     <script src="../Scripts/panelAdmin.js" defer></script>
 </body>
 </html>

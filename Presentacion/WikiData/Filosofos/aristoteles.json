@@ -1,0 +1,19 @@
+{
+  "id": "aristoteles",
+  "corriente_id": "naturalismo",
+  "img_cuadro": "../../Assets/AristotelesCuadro.png",
+  "img_adepto_normal": "../../Assets/AristotelesTortuga.png",
+  "img_adepto_shiny": "../../Assets/AristotelesTortugaShiny.png",
+  "i18n": {
+    "es": {
+      "nombre": "Aristóteles",
+      "corriente": "Naturalista",
+      "descripcion": "Aristóteles fue un pensador clave de la Antigua Grecia, alumno de Platón y tutor de Alejandro Magno. Fundó el Liceo y dedicó su vida a investigar casi todas las áreas del saber, desde la biología hasta la política.\n\nAristóteles no actuaba impulsado por una etiqueta preestablecida: fue su práctica constante de observar el mundo físico, clasificar seres vivos y buscar respuestas en lo perceptible lo que terminó definiendo su pensamiento. Al priorizar el estudio de los fenómenos reales y los procesos de la materia por encima de las ideas abstractas, su obra construyó de forma orgánica lo que hoy reconocemos como una corriente naturalista.\n\nGracias a este enfoque empírico, se lo considera el padre de la biología y del método científico. Para él, comprender la naturaleza era la clave para todo lo demás, incluso para entender la felicidad y la ética humana."
+    },
+    "en": {
+      "nombre": "Aristotle",
+      "corriente": "Naturalist",
+      "descripcion": "Aristotle was a key thinker of Ancient Greece, a student of Plato, and tutor to Alexander the Great. He founded the Lyceum and dedicated his life to researching nearly all fields of knowledge, from biology to politics.\n\nAristotle did not act driven by a pre-established label: it was his constant practice of observing the physical world, classifying living beings, and seeking answers in the perceptible that defined his thought. By prioritizing the study of real phenomena and material processes over abstract ideas, his work organically built what we recognize today as a naturalist school of thought.\n\nThanks to this empirical approach, he is considered the father of biology and the scientific method. For him, understanding nature was the key to everything else, even to understanding happiness and human ethics."
+    }
+  }
+}

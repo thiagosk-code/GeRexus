@@ -1,0 +1,19 @@
+{
+  "id": "socrates",
+  "corriente_id": "mayeutica",
+  "img_cuadro": "../../Assets/SocratesCuadro.png",
+  "img_adepto_normal": "../../Assets/SocratesHyrax.png",
+  "img_adepto_shiny": "../../Assets/SocratesHyraxShiny.png",
+  "i18n": {
+    "es": {
+      "nombre": "Sócrates",
+      "corriente": "Mayéutica / Filosofía Moral",
+      "descripcion": "Sócrates fue una figura fundamental de la filosofía griega, considerado uno de los pensadores más influyentes de la historia occidental. A diferencia de otros filósofos de su época, no dejó escritos propios; su pensamiento perduró gracias a las obras de sus discípulos, principalmente Platón.\n\nSu método de enseñanza, la mayéutica, consistía en formular preguntas incisivas para guiar a sus interlocutores a cuestionar sus propias certezas y descubrir la verdad por sí mismos. Centró su atención en la ética, la virtud y la búsqueda del conocimiento interior, popularizando la célebre premisa de reconocer los límites de la propia sabiduría.\n\nSu firme compromiso con la verdad y la integridad intelectual lo llevó a enfrentarse al juicio de la ciudad de Atenas, aceptando la condena a muerte antes que renunciar a sus principios filosóficos."
+    },
+    "en": {
+      "nombre": "Socrates",
+      "corriente": "Maieutics / Moral Philosophy",
+      "descripcion": "Socrates was a foundational figure in Greek philosophy, considered one of the most influential thinkers in Western history. Unlike other philosophers of his era, he left no written works; his thought survived through the writings of his disciples, mainly Plato.\n\nHis teaching method, maieutics, involved asking incisive questions to guide his interlocutors into questioning their own assumptions and discovering the truth for themselves. He focused his attention on ethics, virtue, and the pursuit of inner knowledge, popularizing the famous principle of recognizing the limits of one's own wisdom.\n\nHis steadfast commitment to truth and intellectual integrity led him to face trial in the city of Athens, accepting the death sentence rather than renouncing his philosophical principles."
+    }
+  }
+}

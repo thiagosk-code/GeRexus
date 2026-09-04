@@ -1,0 +1,359 @@
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+}
+
+.user-name {
+    font-family: var(--font-main);
+    font-size: 1.75rem;
+    color: var(--color-accent);
+    text-shadow: var(--shadow-text);
+}
+
+.user-avatar-img {
+    display: inline-block;
+    width: 2.5rem;
+    height: 2.5rem;
+    background-image: var(--url-img-diogenes);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    filter: drop-shadow(0 0.1875rem 0.375rem var(--shadow-strong));
+}
+
+.main-content {
+    position: relative;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 6.5rem 2rem 1.25rem 2rem;
+    max-width: 92rem;
+    margin: 0 auto;
+    width: 100%;
+    height: 100vh;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.hero-section {
+    position: relative;
+    width: 100%;
+    text-align: center;
+    margin-bottom: 0.8rem;
+    flex-shrink: 0;
+}
+
+.main-title {
+    font-size: 3.5rem;
+    font-weight: normal;
+    letter-spacing: 0.125rem;
+    margin-bottom: 0.2rem;
+    color: var(--color-main);
+    text-shadow: var(--shadow-text);
+}
+
+.main-description {
+    font-size: 1.4rem;
+    color: var(--color-main);
+    text-shadow: var(--shadow-text);
+}
+
+.search-container {
+    position: relative;
+    width: 100%;
+    max-width: 50rem;
+    margin-bottom: 1rem;
+    flex-shrink: 0;
+}
+
+.search-input {
+    width: 100%;
+    height: 2.8rem;
+    padding: 0 1rem 0 3rem;
+    font-family: var(--font-main);
+    font-size: 1.1rem;
+    color: var(--color-main);
+    background-color: rgba(255, 255, 255, 0.08);
+    border: 0.125rem solid var(--color-btn-border);
+    border-radius: 1rem;
+    outline: none;
+    box-sizing: border-box;
+    box-shadow: 0 0.25rem 0.625rem var(--shadow-light);
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.search-input::placeholder {
+    color: var(--color-main);
+    opacity: 0.6;
+}
+
+.search-input:focus {
+    background-color: rgba(255, 255, 255, 0.12);
+    border-color: var(--color-accent);
+}
+
+.search-icon {
+    position: absolute;
+    left: 0.8rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--color-main);
+    font-size: 1.5rem;
+    pointer-events: none;
+    opacity: 0.8;
+}
+
+.corrientes-scroll-container {
+    width: 100%;
+    max-width: 52rem;
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 0.8rem;
+    margin-bottom: 1rem;
+    box-sizing: border-box;
+}
+
+.corrientes-scroll-container::-webkit-scrollbar {
+    width: 8px;
+}
+.corrientes-scroll-container::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+.corrientes-scroll-container::-webkit-scrollbar-thumb {
+    background: var(--color-main);
+    border-radius: 4px;
+}
+
+.corrientes-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.2rem;
+    width: 100%;
+}
+
+.corriente-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 0.125rem solid var(--color-btn-border);
+    border-radius: 1.25rem;
+    padding: 1rem;
+    text-decoration: none;
+    transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 0.25rem 0.625rem var(--shadow-light);
+}
+
+.corriente-card:hover {
+    background-color: var(--bg-btn-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 0.375rem 0.875rem var(--shadow-medium);
+}
+
+.card-avatars {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.6rem;
+}
+
+.avatar-img {
+    display: inline-block;
+    width: 5.5rem;
+    height: 5.5rem;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    filter: drop-shadow(0 0.25rem 0.5rem var(--shadow-strong));
+}
+
+.card-info {
+    width: 100%;
+    border-top: 0.1rem solid var(--color-main);
+    padding-top: 0.4rem;
+    text-align: center;
+}
+
+.corriente-nombre {
+    font-size: 1.75rem;
+    font-weight: normal;
+    color: var(--color-main);
+    text-shadow: var(--shadow-text);
+    margin: 0;
+}
+
+.gacha-bar {
+    position: absolute;
+    left: 2rem;
+    bottom: 1.25rem;
+    z-index: 10;
+}
+
+.btn-card {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: var(--font-main);
+    color: var(--color-main);
+    text-decoration: none;
+    background-color: var(--bg-btn-jugar);
+    border: 0.1875rem solid var(--color-btn-border);
+    cursor: pointer;
+    box-shadow: 0 0.25rem 0.625rem var(--shadow-light);
+    text-shadow: var(--shadow-text);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.1s ease;
+}
+
+.btn-card:hover {
+    background-color: var(--bg-btn-hover);
+    box-shadow: 0 0.375rem 0.875rem var(--shadow-medium);
+    transform: translateY(-2px);
+}
+
+.btn-card:active {
+    transform: translateY(0);
+    box-shadow: 0 0.125rem 0.375rem var(--shadow-light);
+}
+
+.btn-gacha {
+    width: 10rem;
+    height: 3.2rem;
+    font-size: 1.3rem;
+    border-radius: 1rem;
+}
+
+@media (max-width: 768px) {
+    html, body {
+        height: 100vh;
+        height: 100dvh;
+        overflow: hidden;
+    }
+
+    .main-header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        padding: 0.4rem 0.5rem;
+        box-sizing: border-box;
+        z-index: 100;
+    }
+
+    .logo-container {
+        gap: 0.3rem;
+    }
+
+    .logo-text { font-size: 0.9rem; }
+    .logo-img { width: 1.5rem; height: 1.5rem; }
+    .header-actions { gap: 0.3rem; }
+    .leng-switcher { font-size: 0.75rem; }
+    .user-profile { gap: 0.2rem; }
+    .user-name { font-size: 0.75rem; }
+    .user-avatar-img { width: 1.4rem; height: 1.4rem; }
+
+    .main-content {
+        height: 100vh;
+        height: 100dvh;
+        padding: 3.2rem 0.6rem 0.6rem 0.6rem;
+        box-sizing: border-box;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .hero-section {
+        margin-bottom: 0.3rem;
+    }
+
+    .main-title {
+        font-size: 1.6rem;
+    }
+
+    .main-description {
+        display: none;
+    }
+
+    .search-container {
+        max-width: 100%;
+        margin-bottom: 0.5rem;
+    }
+
+    .search-input {
+        height: 2.2rem;
+        font-size: 0.85rem;
+        padding: 0 0.8rem 0 2.3rem;
+        border-radius: 0.75rem;
+    }
+
+    .search-icon {
+        left: 0.6rem;
+        font-size: 1.1rem;
+    }
+
+    .corrientes-scroll-container {
+        flex: 1;
+        width: 100%;
+        max-width: 100%;
+        padding-right: 0.2rem;
+        margin-bottom: 0.4rem;
+        overflow-y: auto;
+        min-height: 0;
+    }
+
+    .corrientes-grid {
+        grid-template-columns: 1fr;
+        gap: 0.4rem;
+    }
+
+    .corriente-card {
+        flex-direction: row;
+        justify-content: flex-start;
+        padding: 0.3rem 0.6rem;
+        border-radius: 1.1rem;
+        height: 3.2rem;
+        box-sizing: border-box;
+    }
+
+    .card-avatars {
+        margin-bottom: 0;
+        margin-right: 0.6rem;
+    }
+
+    .avatar-img {
+        width: 2rem;
+        height: 2rem;
+    }
+
+    .card-info {
+        border-top: none;
+        padding-top: 0;
+        text-align: left;
+    }
+
+    .corriente-nombre {
+        font-size: 1.05rem;
+    }
+
+    .gacha-bar {
+        position: relative;
+        left: auto;
+        bottom: auto;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        flex-shrink: 0;
+        margin-top: auto;
+        padding-top: 0.2rem;
+    }
+
+    .btn-gacha {
+        width: 8.5rem;
+        height: 2.4rem;
+        font-size: 0.95rem;
+        border-radius: 0.75rem;
+    }
+}

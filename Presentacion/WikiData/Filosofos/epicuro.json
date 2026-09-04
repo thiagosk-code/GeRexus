@@ -1,0 +1,19 @@
+{
+  "id": "epicuro",
+  "corriente_id": "epicureismo",
+  "img_cuadro": "../../Assets/EpicuroCuadro.png",
+  "img_adepto_normal": "../../Assets/EpicuroKoala.png",
+  "img_adepto_shiny": "../../Assets/EpicuroKoalaShiny.png",
+  "i18n": {
+    "es": {
+      "nombre": "Epicuro de Samos",
+      "corriente": "Epicureísmo / Atomismo",
+      "descripcion": "Epicuro fue un filósofo griego fundador del epicureísmo, una escuela caracterizada por la búsqueda de la tranquilidad mental (ataraxia) y la ausencia de dolor físico (aponía) como vías para alcanzar la felicidad verdadera.\n\nFundó 'El Jardín', una comunidad filosófica innovadora para su época, pues permitía la entrada de mujeres y esclavos. Contrario a las malas interpretaciones sobre el hedonismo, Epicuro promovía un placer moderado, basado en la amistad, la reflexión filosófica y la eliminación de temores irracionales como el miedo a los dioses y a la muerte.\n\nSu visión materialista del cosmos, sustentada en el atomismo, proponía que todo en el universo está compuesto por átomos y vacío, liberando a la humanidad del peso de las supersticiones."
+    },
+    "en": {
+      "nombre": "Epicurus of Samos",
+      "corriente": "Epicureanism / Atomism",
+      "descripcion": "Epicurus was a Greek philosopher and the founder of Epicureanism, a school characterized by the pursuit of peace of mind (ataraxia) and freedom from physical pain (aponia) as the path to true happiness.\n\nHe founded 'The Garden', an innovative philosophical community for its time that welcomed both women and enslaved people. Contrary to common misunderstandings about hedonism, Epicurus advocated for moderate pleasure rooted in friendship, philosophical reflection, and the removal of irrational fears such as fear of the gods and death.\n\nHis materialistic view of the cosmos, grounded in atomism, proposed that everything in the universe is made of atoms and void, liberating humanity from the burden of superstition."
+    }
+  }
+}

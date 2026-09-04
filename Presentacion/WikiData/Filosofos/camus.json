@@ -1,0 +1,19 @@
+{
+  "id": "camus",
+  "corriente_id": "absurdismo",
+  "img_cuadro": "../../Assets/CamusCuadro.png",
+  "img_adepto_normal": "../../Assets/sinAdepto.png",
+  "img_adepto_shiny": "../../Assets/sinAdepto.png",
+  "i18n": {
+    "es": {
+      "nombre": "Albert Camus",
+      "corriente": "Absurdismo",
+      "descripcion": "Albert Camus fue un novelista, ensayista y filósofo franco-argelino, galardonado con el Premio Nobel de Literatura en 1957. Es el principal exponente de la filosofía del absurdo, la cual aborda el conflicto inherente entre la búsqueda humana de sentido y el silencio indiferente del universo.\n\nA diferencia de las respuestas nihilistas o de la fe ciega, Camus propuso aceptar el absurdo y rebelarse ante él viviendo con pasión, libertad y lucidez. A través de obras icónicas como 'El extranjero' y 'El mito de Sísifo', ilustró la capacidad de hallar la dignidad humana en la perseverancia cotidiana.\n\nAunque a menudo se le vinculó con el existencialismo, siempre mantuvo una postura crítica y diferenciada frente a esta corriente, priorizando la ética del hombre rebelde."
+    },
+    "en": {
+      "nombre": "Albert Camus",
+      "corriente": "Absurdism",
+      "descripcion": "Albert Camus was a French-Algerian novelist, essayist, and philosopher who was awarded the Nobel Prize in Literature in 1957. He is the principal exponent of the philosophy of the absurd, which addresses the inherent tension between humanity's search for meaning and the indifferent silence of the universe.\n\nUnlike nihilistic responses or blind faith, Camus proposed accepting the absurd and rebelling against it by living with passion, freedom, and clarity. Through iconic works like 'The Stranger' and 'The Myth of Sisyphus', he illustrated the capacity to find human dignity in daily perseverance.\n\nAlthough often linked to existentialism, he maintained a critical and distinct stance from that movement, prioritizing the ethics of the rebel."
+    }
+  }
+}

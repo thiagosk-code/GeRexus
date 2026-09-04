@@ -1,0 +1,19 @@
+{
+  "id": "platon",
+  "corriente_id": "idealismo",
+  "img_cuadro": "../../Assets/PlatonCuadro.png",
+  "img_adepto_normal": "../../Assets/PlatonPato.png",
+  "img_adepto_shiny": "../../Assets/PlatonPatoShiny.png",
+  "i18n": {
+    "es": {
+      "nombre": "Platón",
+      "corriente": "Idealismo / Platónica",
+      "descripcion": "Platón fue uno de los filósofos más influyentes de la Grecia clásica, discípulo de Sócrates y maestro de Aristóteles. Fundó la Academia de Atenas, considerada la primera institución de educación superior en el mundo occidental.\n\nSu contribución central a la filosofía es la Teoría de las Ideas o Formas, según la cual el mundo sensible e imperfeto que percibimos con los sentidos es solo un reflejo o sombra del mundo inteligible, donde habitan las verdades eternas e inmutables.\n\nA través de sus célebres diálogos y alegorías, como la de la Caverna, Platón exploró temas clave sobre la justicia, la política, el conocimiento y el alma humana, sentando las bases de la metafísica occidental."
+    },
+    "en": {
+      "nombre": "Plato",
+      "corriente": "Idealism / Platonism",
+      "descripcion": "Plato was one of the most influential philosophers of Classical Greece, a student of Socrates and teacher of Aristotle. He founded the Academy of Athens, considered the first institution of higher learning in the Western world.\n\nHis central contribution to philosophy is the Theory of Forms, according to which the sensible and imperfect world we perceive through the senses is merely a reflection or shadow of the intelligible world, where eternal and immutable truths reside.\n\nThrough his famous dialogues and allegories, such as the Allegory of the Cave, Plato explored key topics on justice, politics, knowledge, and the human soul, laying the foundations of Western metaphysics."
+    }
+  }
+}
