@@ -18,7 +18,6 @@ class PersistenciaUsuario implements IPersistenciaUsuario {
 
     private function __clone() {}
     public function __wakeup() {}
-
     private function __construct() {
         try {
             $conexionBD = new ConexionBD();
@@ -31,14 +30,13 @@ class PersistenciaUsuario implements IPersistenciaUsuario {
     public function existeEmail(string $email): bool {
         $res = false;
         if ($this->conn !== null) {
-            $sql = "CALL sp_ExisteEmailActivo(?);";
+            $sql = "SELECT COUNT(*) FROM Usuarios WHERE Email = ? AND (Baja_logica IS NULL OR Baja_logica = false);";
             try {
                 $stmt = $this->conn->prepare($sql);
                 $stmt->execute([$email]);
                 $conteo = (int) $stmt->fetchColumn();
                 $stmt->closeCursor();
-
-                $res = ($conteo > 0);
+                $res = $conteo > 0;
             } catch (\PDOException $e) {
                 $res = false;
             }
@@ -46,8 +44,8 @@ class PersistenciaUsuario implements IPersistenciaUsuario {
         return $res;
     }
 
-    public function altaUsuario(UsuarioDTO $usuarioDTO): int {
-        $idGenerado = 0;
+    public function altaUsuario(UsuarioDTO $usuarioDTO): bool {
+        $res = false;
         if ($this->conn !== null && $usuarioDTO !== null) {
             $sql = "CALL sp_InsertarUsuario(?, ?, ?, ?, ?, ?);";
 
@@ -56,25 +54,19 @@ class PersistenciaUsuario implements IPersistenciaUsuario {
             $contra = $usuarioDTO->getPassword();
             $monedas = $usuarioDTO->getMonedas();
             $esAdmin = $usuarioDTO->getEsAdmin() ? 1 : 0;
-            $bajaLogica = false;
+            $bajaLogica = 0;
 
             try {
                 $stmt = $this->conn->prepare($sql);
-                $stmt->bindValue(1, $nombre, \PDO::PARAM_STR);
-                $stmt->bindValue(2, $email, \PDO::PARAM_STR);
-                $stmt->bindValue(3, $contra, \PDO::PARAM_STR);
-                $stmt->bindValue(4, $monedas, \PDO::PARAM_INT);
-                $stmt->bindValue(5, $esAdmin, \PDO::PARAM_INT);
-                $stmt->bindValue(6, $bajaLogica, \PDO::PARAM_BOOL);
-                $stmt->execute();
+                $stmt->execute([$nombre, $email, $contra, $monedas, $esAdmin, $bajaLogica]);
                 $stmt->closeCursor();
-
-                $idGenerado = (int) $this->conn->query("SELECT LAST_INSERT_ID()")->fetchColumn();
+                $res = true;
             } catch (\PDOException $e) {
-                $idGenerado = 0;
+                print "Error al guardar en la base de datos: " . $e->getMessage();
+                $res = false;
             }
         }
-        return $idGenerado;
+        return $res;
     }
 
     public function modificarUsuario(UsuarioDTO $usuario): bool {
@@ -91,16 +83,11 @@ class PersistenciaUsuario implements IPersistenciaUsuario {
 
             try {
                 $stmt = $this->conn->prepare($sql);
-                $stmt->bindValue(1, $idUsuario, \PDO::PARAM_INT);
-                $stmt->bindValue(2, $nombre, \PDO::PARAM_STR);
-                $stmt->bindValue(3, $email, \PDO::PARAM_STR);
-                $stmt->bindValue(4, $contra, \PDO::PARAM_STR);
-                $stmt->bindValue(5, $monedas, \PDO::PARAM_INT);
-                $stmt->bindValue(6, $bajaLogica, \PDO::PARAM_BOOL);
-                $stmt->execute();
+                $stmt->execute([$idUsuario, $nombre, $email, $contra, $monedas, $bajaLogica]);
                 $stmt->closeCursor();
                 $res = true;
             } catch (\PDOException $e) {
+                print "Error al actualizar en la base de datos: " . $e->getMessage();
                 $res = false;
             }
         }
@@ -118,6 +105,7 @@ class PersistenciaUsuario implements IPersistenciaUsuario {
                 $stmt->closeCursor();
                 $res = true;
             } catch (\PDOException $e) {
+                print "Error al dar de baja en la base de datos: " . $e->getMessage();
                 $res = false;
             }
         }
@@ -141,14 +129,67 @@ class PersistenciaUsuario implements IPersistenciaUsuario {
                     $contra = $reader['Contra'];
                     $monedas = (int)$reader['Monedas'];
                     $esAdmin = (bool)$reader['esAdmin'];
-                    $baja = isset($reader['Baja_logica']) ? (bool)$reader['Baja_logica'] : false;
 
                     $usuario = new UsuarioDTO($id, $nombre, $email, $contra, 0, $monedas, $esAdmin);
-                    $usuario->setBajaLogica($baja);
                 }
                 $stmt->closeCursor();
             } catch (\PDOException $e) {
+                print "Error al recuperar datos en la base de datos: " . $e->getMessage();
                 $usuario = null;
+            }
+        }
+        return $usuario;
+    }
+
+    public function buscarPartidasGanadas(int $idUsuario): int {
+        $partidasGanadas = 0;
+        if ($this->conn !== null) {
+            try {
+                $sql = "CALL sp_buscarPartidasGanadas(?, @partidas)";
+                $stmt = $this->conn->prepare($sql);
+                $stmt->execute([$idUsuario]);
+                $stmt->closeCursor();
+
+                $stmtResult = $this->conn->query("SELECT @partidas AS partidas");
+                $row = $stmtResult->fetch(\PDO::FETCH_ASSOC);
+
+                if ($row) {
+                    $partidasGanadas = (int)$row['partidas'];
+                }
+                $stmtResult->closeCursor();
+            } catch (\PDOException $e) {
+                print "Error al consultar partidas ganadas: " . $e->getMessage();
+            }
+        }
+
+        return $partidasGanadas;
+    }
+
+    public function buscarEmail (string $email): ?UsuarioDTO {
+        $usuario = null;
+        if ($this->conn !== null){
+            $sql = "SELECT * FROM Usuarios WHERE Email = ? AND (Baja_logica IS NULL OR Baja_logica = FALSE)";
+
+            try {
+                $stmt = $this->conn->prepare($sql);
+                $stmt->execute([$email]);
+                $reader = $stmt->fetch(\PDO::FETCH_ASSOC);
+                $stmt->closeCursor();
+
+                if ($reader !== false){
+                    $idUsuario = (int)$reader['idUsuario'];
+                    $nombre = $reader['Nombre'];
+                    $email = $reader['Email'];
+                    $contra = $reader['Contra'];
+                    $monedas = (int)$reader['Monedas'];
+                    $esAdmin = (bool)$reader['esAdmin'];
+
+                    $usuario = new UsuarioDTO ($idUsuario, $nombre, $email, $contra, 0, $monedas, $esAdmin);
+                }
+                $stmt->closeCursor();
+            } catch (\PDOException $e) {
+                print "Error al recuperar datos en la base de datos: " . $e->getMessage();
+                return $usuario = null;
             }
         }
         return $usuario;

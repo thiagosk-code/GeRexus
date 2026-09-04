@@ -1,5 +1,4 @@
 <?php
-require_once (__DIR__ . '/../DTO/UsuarioDTO.php');
 
 interface ILogicaUsuario {
     public function altaUsuarioL(UsuarioDTO $usuario, ?string $captchaToken = null, int $idAdminEjecutor = 0): array;
@@ -11,5 +10,8 @@ interface ILogicaUsuario {
     public function procesarModificacionNombrePropio(int $idUsuario, string $nuevoNombre): array;
     public function procesarBajaCuentaPropia(int $idUsuario): array;
     public function procesarCierreSesion(): void;
+    public function buscarPartidasGanadasL(UsuarioDTO $usuario): int;
+    public function IniciarSesionL(string $email, string $contra, string $captchaToken): array;   
 }
+
 ?>

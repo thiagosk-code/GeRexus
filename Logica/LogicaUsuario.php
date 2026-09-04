@@ -8,6 +8,7 @@ require_once (__DIR__ . '/../Servicios/ICaptchaService.php');
 require_once (__DIR__ . '/../Servicios/GoogleReCaptchaService.php');
 require_once (__DIR__ . '/../config.php');
 
+
 class LogicaUsuario implements ILogicaUsuario {
 
     private ICaptchaService $captchaService;
@@ -339,7 +340,7 @@ class LogicaUsuario implements ILogicaUsuario {
 
         return ['exito' => false, 'mensaje_key' => 'err_mod_db', 'mensaje' => 'Error al modificar usuario.'];
     }
-
+    
     public function buscarUsuarioL(UsuarioDTO $usuario): ?UsuarioDTO {
         $res = null;
 
@@ -355,5 +356,45 @@ class LogicaUsuario implements ILogicaUsuario {
         $fachadaPersistencia = new FachadaPersistencia();
         return $fachadaPersistencia->retornoIPersistenciaUsuario()->obtenerTodosLosUsuarios();
     }
+
+    public function buscarPartidasGanadasL(UsuarioDTO $usuario): int {
+        $partidasGanadas = null;
+
+        if ($usuario !== null) {
+            $persistenciaUsuario = new FachadaPersistencia();
+            $partidasGanadas = $persistenciaUsuario->retornoIPersistenciaUsuario()->buscarPartidasGanadas($usuario->getIdUsuario());
+        }  
+
+        return $partidasGanadas;
+    }
+
+    public function iniciarSesionL(string $email, string $contra, ?string $captchaToken = null): array {
+
+        $ip = $_SERVER['REMOTE_ADDR'] ?? null;
+        if ($this->captchaService->verificar($captchaToken, $ip) === false){
+            return ['exito' => false, 'mensaje' => 'La verificacion de reCAPTCHA ha fallado.'];
+        }
+        
+        if ($email !== null && $contra !== null) {
+            $persistenciaUsuario = new FachadaPersistencia();
+
+            $uDTO = $persistenciaUsuario->retornoIpersistenciaUsuario()->buscarEmail($email);
+
+            if ($uDTO !== null) {
+                $contraBD = $uDTO->getPassword();
+                $contra = $contra . PEPPER_SECRET;
+                
+                if (password_verify($contra, $contraBD)){
+                    $idUsuario = $uDTO->getIdUsuario();
+                    if (session_status() === PHP_SESSION_NONE) {
+                        session_start();
+                    }
+                    return ['exito' => true, 'mensaje' => 'Inicio de sesión exitoso', 'idUsuario' => $idUsuario];
+                }
+                return ['exito' => false, 'mensaje' => 'Email o contraseña incorrecta'];
+            }
+            return ['exito' => false, 'mensaje' => 'Email o contraseña incorrecta'];
+        }
+        return ['exito' => false, 'mensaje' => 'Los campos no están completos'];
+    }
 }
-?>
