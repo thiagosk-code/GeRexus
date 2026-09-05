@@ -34,7 +34,6 @@ class LogicaUsuario implements ILogicaUsuario {
             return false;
         }
 
-        // Si se requiere estrictamente que sea dominio @gmail.com:
         if (preg_match('/^[a-zA-Z0-9._%+-]+@gmail\.com$/i', $email) !== 1) {
             return false;
         }
