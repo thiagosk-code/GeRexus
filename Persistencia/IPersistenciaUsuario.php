@@ -1,16 +1,14 @@
 <?php
 
-interface IPersistenciaUsuario {
+require_once (__DIR__ . '/../DTO/UsuarioDTO.php');
 
-    public function altaUsuario(UsuarioDTO $usuario): bool;
+interface IPersistenciaUsuario {
+    public function existeEmail(string $email): bool;
+    public function altaUsuario(UsuarioDTO $usuarioDTO): int;
+    public function modificarUsuario(UsuarioDTO $usuario): bool;
     public function bajaUsuario(int $idUsuario): bool;
     public function buscarUsuario(int $idUsuario): ?UsuarioDTO;
-    public function modificarUsuario(UsuarioDTO $usuario): bool;
-    public function existeEmail(string $email): bool;
-    public function obtenerTodosLosUsuarios(): array;
-    public function buscarPartidasGanadas(int $usuario): int;
+    public function buscarPartidasGanadas(int $idUsuario): int;
     public function buscarEmail(string $email): ?UsuarioDTO;
+    public function obtenerTodosLosUsuarios(): array;
 }
-
-
-?>
