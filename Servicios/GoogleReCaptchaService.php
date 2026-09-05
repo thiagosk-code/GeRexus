@@ -20,23 +20,41 @@ class GoogleReCaptchaService implements ICaptchaService {
             'response' => $token
         ];
 
-        if ($ipCliente !== null && trim($ipCliente) !== '') {
+        if ($ipCliente !== null && trim($ipCliente) !== '' && $ipCliente !== '::1' && $ipCliente !== '127.0.0.1') {
             $datos['remoteip'] = $ipCliente;
         }
 
-        $opciones = [
-            'http' => [
-                'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
-                'method'  => 'POST',
-                'content' => http_build_query($datos),
-                'timeout' => 10
-            ]
-        ];
+        if (function_exists('curl_init') === true) {
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($datos));
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 3);
+            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
 
-        $contexto = stream_context_create($opciones);
-        $respuesta = @file_get_contents($url, false, $contexto);
+            $respuesta = curl_exec($ch);
+            curl_close($ch);
+        } else {
+            $opciones = [
+                'http' => [
+                    'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
+                    'method'  => 'POST',
+                    'content' => http_build_query($datos),
+                    'timeout' => 3
+                ],
+                'ssl' => [
+                    'verify_peer'      => false,
+                    'verify_peer_name' => false
+                ]
+            ];
+            $contexto = stream_context_create($opciones);
+            $respuesta = @file_get_contents($url, false, $contexto);
+        }
 
-        if ($respuesta === false) {
+        if ($respuesta === false || $respuesta === '') {
             return false;
         }
 

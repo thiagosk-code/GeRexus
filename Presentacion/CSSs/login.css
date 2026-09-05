@@ -44,6 +44,13 @@ body {
     margin-bottom: 0.5rem;  
 }
 
+.recaptcha-wrapper {
+    display: flex;
+    justify-content: center;
+    margin: 1.8rem 0 0 0;
+    width: 100%;
+}
+
 @media (max-width: 1200px) {
     .login-title { font-size: 3.8rem; }
 }
