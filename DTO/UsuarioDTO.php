@@ -8,7 +8,7 @@ class UsuarioDTO {
     private string $password;
     private int $partidasGanadas;
     private int $monedas;
-    private bool $esAdmin;
+    private int $idRol;
     private bool $bajaLogica;
 
     public function __construct(
@@ -18,7 +18,7 @@ class UsuarioDTO {
         string $password = "",
         int $partidasGanadas = 0,
         int $monedas = 0,
-        bool $esAdmin = false,
+        int $idRol = 0,
         bool $bajaLogica = false
     ) {
         $this->idUsuario = $idUsuario;
@@ -27,14 +27,13 @@ class UsuarioDTO {
         $this->password = $password;
         $this->partidasGanadas = $partidasGanadas;
         $this->monedas = $monedas;
-        $this->esAdmin = $esAdmin;
+        $this->idRol = $idRol;
         $this->bajaLogica = $bajaLogica;
     }
 
     public function getIdUsuario(): int {
         return $this->idUsuario;
     }
-
     public function setIdUsuario(int $idUsuario): void {
         $this->idUsuario = $idUsuario;
     }
@@ -42,7 +41,6 @@ class UsuarioDTO {
     public function getNombre(): string {
         return $this->nombre;
     }
-
     public function setNombre(string $nombre): void {
         $this->nombre = $nombre;
     }
@@ -50,7 +48,6 @@ class UsuarioDTO {
     public function getEmail(): string {
         return $this->email;
     }
-
     public function setEmail(string $email): void {
         $this->email = $email;
     }
@@ -58,7 +55,6 @@ class UsuarioDTO {
     public function getPassword(): string {
         return $this->password;
     }
-
     public function setPassword(string $password): void {
         $this->password = $password;
     }
@@ -66,7 +62,6 @@ class UsuarioDTO {
     public function getPartidasGanadas(): int {
         return $this->partidasGanadas;
     }
-
     public function setPartidasGanadas(int $partidasGanadas): void {
         $this->partidasGanadas = $partidasGanadas;
     }
@@ -74,23 +69,20 @@ class UsuarioDTO {
     public function getMonedas(): int {
         return $this->monedas;
     }
-
     public function setMonedas(int $monedas): void {
         $this->monedas = $monedas;
     }
 
-    public function getEsAdmin(): bool {
-        return $this->esAdmin;
+    public function getIdRol(): int {
+        return $this->idRol;
     }
-
-    public function setEsAdmin(bool $esAdmin): void {
-        $this->esAdmin = $esAdmin;
+    public function setIdRol(int $idRol): void {
+        $this->idRol = $idRol;
     }
 
     public function getBajaLogica(): bool {
         return $this->bajaLogica;
     }
-
     public function setBajaLogica(bool $bajaLogica): void {
         $this->bajaLogica = $bajaLogica;
     }

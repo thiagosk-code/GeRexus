@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($contra !== $confirmContra) {
             $mensajeError = 'Las contrasenias no coinciden.';
         } else {
-            $dto = new UsuarioDTO(0, $nom, $email, $contra, 0, 0, false);
+            $dto = new UsuarioDTO(0, $nom, $email, $contra, 0, 0, 0);
             $fachadaLogica = new FachadaLogica();
             $logicaUsuario = $fachadaLogica->retornoILogicaUsuario();
             $res = $logicaUsuario->altaUsuarioL($dto, $captchaToken);
@@ -39,7 +39,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 $_SESSION['idUsuario']  = (int)$res['idUsuario']; 
                 $_SESSION['nom']        = $nom;
-                $_SESSION['esAdmin']    = false;
                 $_SESSION['login_time'] = time();
 
                 $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
