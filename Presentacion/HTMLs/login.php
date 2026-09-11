@@ -31,7 +31,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 session_regenerate_id(true);
 
                 $_SESSION['idUsuario'] = $res['idUsuario'];
-                $_SESSION['esAdmin'] = false;
                 $_SESSION['login_time'] = time();
 
                 header("Location: base.php");

@@ -56,12 +56,12 @@ class PersistenciaUsuario implements IPersistenciaUsuario {
             $email = $usuarioDTO->getEmail();
             $contra = $usuarioDTO->getPassword();
             $monedas = $usuarioDTO->getMonedas();
-            $esAdmin = $usuarioDTO->getEsAdmin() ? 1 : 0;
+            $idRol = $usuarioDTO->getIdRol();
             $bajaLogica = 0;
 
             try {
                 $stmt = $this->conn->prepare($sql);
-                $stmt->execute([$nom, $email, $contra, $monedas, $esAdmin, $bajaLogica]);
+                $stmt->execute([$nom, $email, $contra, $monedas, $idRol, $bajaLogica]);
                 $stmt->closeCursor();
 
                 $idGenerado = (int) $this->conn->query("SELECT LAST_INSERT_ID()")->fetchColumn();
@@ -82,7 +82,7 @@ class PersistenciaUsuario implements IPersistenciaUsuario {
             $email = $usuario->getEmail();
             $contra = $usuario->getPassword();
             $monedas = $usuario->getMonedas();
-            $bajaLogica = $usuario->getBajaLogica();
+            $bajaLogica = $usuario->getBajaLogica() ? 1 : 0;
 
             try {
                 $stmt = $this->conn->prepare($sql);
@@ -124,14 +124,14 @@ class PersistenciaUsuario implements IPersistenciaUsuario {
 
                 $reader = $stmt->fetch(\PDO::FETCH_ASSOC);
                 if ($reader !== false) {
-                    $id = (int)$reader['idUsuario'];
-                    $nom = $reader['Nombre'];
-                    $email = $reader['Email'];
-                    $contra = $reader['Contra'];
-                    $monedas = (int)$reader['Monedas'];
-                    $esAdmin = (bool)$reader['esAdmin'];
-
-                    $usuario = new UsuarioDTO($id, $nom, $email, $contra, 0, $monedas, $esAdmin);
+                    $usuario = new UsuarioDTO();
+                    $usuario->setIdUsuario((int)$reader['idUsuario']);
+                    $usuario->setNombre($reader['Nombre']);
+                    $usuario->setEmail($reader['Email']);
+                    $usuario->setPassword($reader['Contra']);
+                    $usuario->setMonedas((int)$reader['Monedas']);
+                    $usuario->setIdRol((int)$reader['idRol']);
+                    $usuario->setBajaLogica((bool)$reader['Baja_logica']);
                 }
                 $stmt->closeCursor();
             } catch (\PDOException $e) {
@@ -176,14 +176,14 @@ class PersistenciaUsuario implements IPersistenciaUsuario {
                 $reader = $stmt->fetch(\PDO::FETCH_ASSOC);
 
                 if ($reader !== false) {
-                    $idUsuario = (int)$reader['idUsuario'];
-                    $nom = $reader['Nombre'];
-                    $emailRes = $reader['Email'];
-                    $contra = $reader['Contra'];
-                    $monedas = (int)$reader['Monedas'];
-                    $esAdmin = (bool)$reader['esAdmin'];
-
-                    $usuario = new UsuarioDTO($idUsuario, $nom, $emailRes, $contra, 0, $monedas, $esAdmin);
+                    $usuario = new UsuarioDTO();
+                    $usuario->setIdUsuario((int)$reader['idUsuario']);
+                    $usuario->setNombre($reader['Nombre']);
+                    $usuario->setEmail($reader['Email']);
+                    $usuario->setPassword($reader['Contra']);
+                    $usuario->setMonedas((int)$reader['Monedas']);
+                    $usuario->setIdRol((int)$reader['idRol']);
+                    $usuario->setBajaLogica((bool)$reader['Baja_logica']);
                 }
                 $stmt->closeCursor();
             } catch (\PDOException $e) {
@@ -209,7 +209,7 @@ class PersistenciaUsuario implements IPersistenciaUsuario {
                 $dto->setEmail($fila['Email']);
                 $dto->setPassword($fila['Contra']);
                 $dto->setMonedas((int)$fila['Monedas']);
-                $dto->setEsAdmin((bool)$fila['esAdmin']);
+                $dto->setIdRol((int)$fila['idRol']);
                 $dto->setBajaLogica((bool)$fila['Baja_logica']);
                 $dto->setPartidasGanadas((int)$fila['PartidasGanadas']);
 

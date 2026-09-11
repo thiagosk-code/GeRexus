@@ -2,6 +2,8 @@
 
 require_once (__DIR__ . '/../DTO/UsuarioDTO.php');
 require_once (__DIR__ . '/ILogicaUsuario.php');
+require_once (__DIR__ . '/ILogicaAutorizacion.php');
+require_once (__DIR__ . '/LogicaAutorizacion.php');
 require_once (__DIR__ . '/../Persistencia/PersistenciaUsuario.php');
 require_once (__DIR__ . '/../Persistencia/FachadaPersistencia.php');
 require_once (__DIR__ . '/../Servicios/ICaptchaService.php');
@@ -10,22 +12,26 @@ require_once (__DIR__ . '/../config.php');
 
 class LogicaUsuario implements ILogicaUsuario {
 
-    private ICaptchaService $captchaService;
+    private const ROL_JUGADOR_POR_DEFECTO = 1;
 
-    public function __construct(?ICaptchaService $captchaService = null) {
+    private ICaptchaService $captchaService;
+    private ILogicaAutorizacion $logicaAutorizacion;
+
+    public function __construct(?ICaptchaService $captchaService = null, ?ILogicaAutorizacion $logicaAutorizacion = null) {
         $this->captchaService = $captchaService ?? new GoogleReCaptchaService();
+        $this->logicaAutorizacion = $logicaAutorizacion ?? new LogicaAutorizacion();
     }
 
-    private function esAdminEjecutor(int $idAdminEjecutor): bool {
-        if ($idAdminEjecutor <= 0) {
+    private function ejecutorTienePermiso(int $idEjecutor, string $permiso): bool {
+        if ($idEjecutor <= 0) {
             return false;
         }
 
         $fachadaPersistencia = new FachadaPersistencia();
         $persistencia = $fachadaPersistencia->retornoIPersistenciaUsuario();
-        $admin = $persistencia->buscarUsuario($idAdminEjecutor);
+        $ejecutor = $persistencia->buscarUsuario($idEjecutor);
 
-        return ($admin !== null && $admin->getEsAdmin() === true);
+        return $this->logicaAutorizacion->tienePermiso($ejecutor, $permiso);
     }
 
     private function esEmailValido(string $email): bool {
@@ -49,7 +55,7 @@ class LogicaUsuario implements ILogicaUsuario {
             $email = trim($postData['email'] ?? '');
             $contra = $postData['password'] ?? '';
 
-            $dtoAlta = new UsuarioDTO(0, $nom, $email, $contra, 0, 0, false);
+            $dtoAlta = new UsuarioDTO(0, $nom, $email, $contra, 0, 0, self::ROL_JUGADOR_POR_DEFECTO);
             $respuesta = $this->altaUsuarioL($dtoAlta, null, $idAdminEjecutor);
             $respuesta['tipo'] = 'alta';
             return $respuesta;
@@ -102,7 +108,7 @@ class LogicaUsuario implements ILogicaUsuario {
             $target->getPassword(),
             $target->getPartidasGanadas(),
             $target->getMonedas(),
-            $target->getEsAdmin()
+            $target->getIdRol()
         );
         $dtoMod->setBajaLogica($target->getBajaLogica());
 
@@ -127,7 +133,7 @@ class LogicaUsuario implements ILogicaUsuario {
             return ['exito' => false, 'mensaje_key' => 'err_usuario_no_existe', 'mensaje' => 'El usuario no existe.'];
         }
 
-        if ($target->getEsAdmin() === true) {
+        if ($this->logicaAutorizacion->esRolProtegido($target->getIdRol()) === true) {
             return ['exito' => false, 'mensaje_key' => 'err_admin_no_eliminar', 'mensaje' => 'No se puede eliminar una cuenta de administrador.'];
         }
 
@@ -164,7 +170,7 @@ class LogicaUsuario implements ILogicaUsuario {
     }
 
     public function altaUsuarioL(UsuarioDTO $usuario, ?string $captchaToken = null, int $idAdminEjecutor = 0): array {
-        if ($idAdminEjecutor > 0 && $this->esAdminEjecutor($idAdminEjecutor) === false) {
+        if ($idAdminEjecutor > 0 && $this->ejecutorTienePermiso($idAdminEjecutor, 'gestionar_usuarios') === false) {
             return ['exito' => false, 'mensaje_key' => 'err_acceso_denegado', 'mensaje' => 'Acceso denegado. Se requieren permisos de administrador.'];
         }
 
@@ -218,7 +224,7 @@ class LogicaUsuario implements ILogicaUsuario {
             return ['exito' => false, 'mensaje_key' => 'err_cifrado', 'mensaje' => 'Error al procesar el cifrado de la contrasenia.'];
         }
 
-        $nuevoDTO = new UsuarioDTO(0, $nom, $email, $hashSeguro, 0, 0, false);
+        $nuevoDTO = new UsuarioDTO(0, $nom, $email, $hashSeguro, 0, 0, self::ROL_JUGADOR_POR_DEFECTO);
         $idNuevo = $persistencia->altaUsuario($nuevoDTO);
 
         if ($idNuevo > 0) {
@@ -234,7 +240,7 @@ class LogicaUsuario implements ILogicaUsuario {
     }
 
     public function bajaUsuarioL(int $idElim, int $idAdminEjecutor = 0): array {
-        if ($this->esAdminEjecutor($idAdminEjecutor) === false) {
+        if ($this->ejecutorTienePermiso($idAdminEjecutor, 'gestionar_usuarios') === false) {
             return ['exito' => false, 'mensaje_key' => 'err_acceso_denegado', 'mensaje' => 'Acceso denegado. Se requieren permisos de administrador.'];
         }
 
@@ -254,7 +260,7 @@ class LogicaUsuario implements ILogicaUsuario {
             return ['exito' => false, 'mensaje_key' => 'err_usuario_no_existe', 'mensaje' => 'El usuario no existe.'];
         }
 
-        if ($target->getEsAdmin() === true) {
+        if ($this->logicaAutorizacion->esRolProtegido($target->getIdRol()) === true) {
             return ['exito' => false, 'mensaje_key' => 'err_admin_no_eliminar', 'mensaje' => 'No se puede eliminar una cuenta de administrador.'];
         }
 
@@ -267,7 +273,7 @@ class LogicaUsuario implements ILogicaUsuario {
     }
 
     public function modificarUsuarioL(int $idMod, string $nomMod, string $emailMod, string $contraMod, ?int $dracmasMod, int $idAdminEjecutor = 0): array {
-        if ($this->esAdminEjecutor($idAdminEjecutor) === false) {
+        if ($this->ejecutorTienePermiso($idAdminEjecutor, 'gestionar_usuarios') === false) {
             return ['exito' => false, 'mensaje_key' => 'err_acceso_denegado', 'mensaje' => 'Acceso denegado. Se requieren permisos de administrador.'];
         }
 
@@ -283,7 +289,7 @@ class LogicaUsuario implements ILogicaUsuario {
             return ['exito' => false, 'mensaje_key' => 'err_usuario_no_existe', 'mensaje' => 'El usuario no existe.'];
         }
 
-        if ($target->getEsAdmin() === true && $idMod !== $idAdminEjecutor) {
+        if ($this->logicaAutorizacion->esRolProtegido($target->getIdRol()) === true && $idMod !== $idAdminEjecutor) {
             return ['exito' => false, 'mensaje_key' => 'err_admin_no_modificar', 'mensaje' => 'No se puede modificar la cuenta de otro administrador.'];
         }
 
@@ -329,7 +335,7 @@ class LogicaUsuario implements ILogicaUsuario {
             $hashSeguro = $target->getPassword();
         }
 
-        $dtoMod = new UsuarioDTO($idMod, $nomFinal, $emailFinal, $hashSeguro, $target->getPartidasGanadas(), $dracmasFinal, $target->getEsAdmin());
+        $dtoMod = new UsuarioDTO($idMod, $nomFinal, $emailFinal, $hashSeguro, $target->getPartidasGanadas(), $dracmasFinal, $target->getIdRol());
         $ok = $persistencia->modificarUsuario($dtoMod);
 
         if ($ok === true) {

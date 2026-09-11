@@ -21,6 +21,7 @@ $esErrorElim = false;
 
 $fachadaLogica = new FachadaLogica();
 $logicaUsuario = $fachadaLogica->retornoILogicaUsuario();
+$logicaAutorizacion = $fachadaLogica->retornoILogicaAutorizacion();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $tokenEnviado = $_POST['csrf_token'] ?? '';
@@ -146,7 +147,7 @@ $usuariosLista = $logicaUsuario->obtenerTodosLosUsuariosL();
                                             $uDracmas = (int)$usr->getMonedas();
                                             $uGanadas = (int)$usr->getPartidasGanadas();
                                             $uBaja = ($usr->getBajaLogica() === true || $usr->getBajaLogica() === 1) ? '1' : '0';
-                                            $uEsAdmin = $usr->getEsAdmin() === true || $usr->getEsAdmin() === 1;
+                                            $uEsAdmin = $logicaAutorizacion->esRolProtegido($usr->getIdRol());
                                             
                                             $puedeEliminar = ($uEsAdmin === false);
                                         ?>

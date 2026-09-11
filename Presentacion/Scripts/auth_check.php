@@ -22,7 +22,7 @@ if (!isset($_SESSION['idUsuario'])) {
 $fachadaLogica = new FachadaLogica();
 $logicaUsuario = $fachadaLogica->retornoILogicaUsuario();
 
-$usuarioBusqueda = new UsuarioDTO((int)$_SESSION['idUsuario'], '', '', '', 0, 0, false);
+$usuarioBusqueda = new UsuarioDTO((int)$_SESSION['idUsuario'], '', '', '', 0, 0, 0);
 $usuarioActual = $logicaUsuario->buscarUsuarioL($usuarioBusqueda);
 
 if ($usuarioActual === null) {

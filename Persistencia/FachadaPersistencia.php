@@ -7,17 +7,21 @@ require_once (__DIR__ . '/../Persistencia/PersistenciaUsuario.php');
 require_once (__DIR__ . '/../Persistencia/IPersistenciaUsuario.php');
 require_once (__DIR__ . '/../Persistencia/PersistenciaHistorial.php');
 require_once (__DIR__ . '/../Persistencia/IPersistenciaHistorial.php');
+require_once (__DIR__ . '/../Persistencia/PersistenciaAutorizacion.php');
+require_once (__DIR__ . '/../Persistencia/IPersistenciaAutorizacion.php');
 
 class FachadaPersistencia {
 
-    // Usuario
     public function retornoIPersistenciaUsuario() : IPersistenciaUsuario{
         return PersistenciaUsuario::getInstancia();
     }
 
-    // Historial
     public function retornoIPersistenciaHistorial() : IPersistenciaHistorial {
         return PersistenciaHistorial::getInstancia();
+    }
+
+    public function retornoIPersistenciaAutorizacion() : IPersistenciaAutorizacion {
+        return PersistenciaAutorizacion::getInstancia();
     }
    
 }

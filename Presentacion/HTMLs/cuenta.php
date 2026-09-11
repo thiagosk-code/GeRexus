@@ -17,6 +17,7 @@ $esErrorCuenta = false;
 
 $fachadaLogica = new FachadaLogica();
 $logicaUsuario = $fachadaLogica->retornoILogicaUsuario();
+$logicaAutorizacion = $fachadaLogica->retornoILogicaAutorizacion();
 
 $idUsuarioLogueado = 0;
 if (isset($usuarioActual) && method_exists($usuarioActual, 'getIdUsuario')) {
@@ -69,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 $nom = $nombreUsuarioLogueado ?? ($_SESSION['usuario_nombre'] ?? 'User');
 $email = ($usuarioActual !== null && method_exists($usuarioActual, 'getEmail')) ? $usuarioActual->getEmail() : ($_SESSION['usuario_email'] ?? 'Ejemplo@gmail.com');
-$admin = ($usuarioActual !== null && method_exists($usuarioActual, 'getEsAdmin')) ? ($usuarioActual->getEsAdmin() === true || $usuarioActual->getEsAdmin() === 1) : false;
+$admin = ($usuarioActual !== null) ? $logicaAutorizacion->tienePermiso($usuarioActual, 'ver_panel_admin') : false;
 $wins = ($usuarioActual !== null && method_exists($usuarioActual, 'getPartidasGanadas')) ? $usuarioActual->getPartidasGanadas() : 0;
 ?>
 <!DOCTYPE html>
