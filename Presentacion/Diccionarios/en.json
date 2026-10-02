@@ -104,5 +104,10 @@
   "epicuro": "Epicurus",
   "sartre": "Jean-Paul Sartre",
   "camus": "Albert Camus",
-  "nietzsche": "Friedrich Nietzsche"
+  "nietzsche": "Friedrich Nietzsche",
+  "recinto": "Room",
+  "puntaje": "Score:",
+  "total": "Total:",
+  "colocados": "Placed:",
+  "selector_adeptos": "Adepts Selector:"
 }
