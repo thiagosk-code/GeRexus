@@ -344,7 +344,7 @@
 }
 
 .status-defeat {
-    color: #C53F54;
+    color: var(--color-error);
 }
 
 .game-details {

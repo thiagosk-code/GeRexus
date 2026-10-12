@@ -1,6 +1,8 @@
 <?php
 
-require_once (__DIR__ . '/../../Logica/FachadaLogica.php');
+// Usar el mismo sistema de idiomas que register.php: lee la cookie lang y actualiza la sesión.
+require_once __DIR__ . '/../Scripts/lang.php';
+require_once __DIR__ . '/../../Logica/FachadaLogica.php';
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
@@ -46,34 +48,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
 }
 
-if (isset($_GET['lang'])) {
-    if ($_GET['lang'] === 'en') {
-        $_SESSION['lang'] = 'en';
-    } else {
-        $_SESSION['lang'] = 'es';
-    }
-}
-
-$lang = (isset($_SESSION['lang']) && $_SESSION['lang'] === 'en') ? 'en' : 'es';
-
-$dic = [
-    'es' => [
-        'registrarse' => 'Registrarse',
-        'iniciar_sesion' => 'Iniciar Sesion',
-        'correo' => 'Correo',
-        'contrasena' => 'Contraseña',
-        'no_cuenta' => '¿No tienes una cuenta?'
-    ],
-    'en' => [
-        'registrarse' => 'Sign up',
-        'iniciar_sesion' => 'Log in',
-        'correo' => 'Email',
-        'contrasena' => 'Password',
-        'no_cuenta' => "Don't have an account?"
-    ]
-];
-
-$txt = $dic[$lang];
+// Compatibilidad con las claves del diccionario compartido.
+$txt['correo'] = $txt['correo'] ?? $txt['correo_elec'] ?? ($lang === 'en' ? 'Email' : 'Correo');
+$txt['no_cuenta'] = $txt['no_cuenta'] ?? ($lang === 'en' ? "Don't have an account?" : '¿No tienes una cuenta?');
+$txt['registrarse'] = $txt['registrarse'] ?? ($lang === 'en' ? 'Sign up' : 'Registrarse');
+$txt['iniciar_sesion'] = $txt['iniciar_sesion'] ?? ($lang === 'en' ? 'Log in' : 'Iniciar sesión');
+$txt['contrasena'] = $txt['contrasena'] ?? ($lang === 'en' ? 'Password' : 'Contraseña');
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo $lang; ?>">

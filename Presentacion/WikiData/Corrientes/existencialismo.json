@@ -1,0 +1,32 @@
+{
+  "id": "existencialismo",
+  "i18n": {
+    "es": {
+      "nombre": "Existencialismo",
+      "descripcion": "El existencialismo es una corriente de los siglos XIX y XX que parte de la experiencia concreta de la existencia humana: la libertad, la angustia, la finitud y el sentido de la vida. Sus precursores fueron Kierkegaard y Nietzsche, y alcanzó su apogeo en la Europa de posguerra con Jean-Paul Sartre y Albert Camus.\n\nPara Sartre «la existencia precede a la esencia»: no hay una naturaleza humana dada de antemano, y cada persona se define por sus elecciones, de las que es plenamente responsable. Esa libertad radical genera angustia, pero también la tarea de dar sentido a la propia vida.\n\nCamus, aunque rechazó ese rótulo, planteó el absurdo: el choque entre la búsqueda humana de sentido y el silencio del mundo. Propuso responder a él con la rebeldía y no con la resignación."
+    },
+    "en": {
+      "nombre": "Existentialism",
+      "descripcion": "Existentialism is a movement of the 19th and 20th centuries that starts from the concrete experience of human existence: freedom, anguish, finitude and the meaning of life. Its precursors were Kierkegaard and Nietzsche, and it reached its peak in postwar Europe with Jean-Paul Sartre and Albert Camus.\n\nFor Sartre, \"existence precedes essence\": there is no human nature given in advance, and each person is defined by their choices, for which they are fully responsible. This radical freedom produces anguish, but also the task of giving meaning to one's own life.\n\nCamus, although he rejected the label, raised the problem of the absurd: the clash between the human search for meaning and the silence of the world. He proposed answering it with revolt rather than resignation."
+    }
+  },
+  "exponentes": [
+    {
+      "id": "sartre",
+      "img_autor": "../../Assets/Sartre.png"
+    },
+    {
+      "id": "camus",
+      "img_autor": "../../Assets/Camus.png"
+    },
+    {
+      "id": "nietzsche",
+      "img_autor": "../../Assets/Nietzsche.png"
+    },
+    {
+      "id": "kierkegaard",
+      "nombre": "Søren Kierkegaard",
+      "img_autor": "../../Assets/sinAdepto.png"
+    }
+  ]
+}

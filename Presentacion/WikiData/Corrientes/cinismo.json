@@ -1,0 +1,29 @@
+{
+  "id": "cinismo",
+  "i18n": {
+    "es": {
+      "nombre": "Cinismo",
+      "descripcion": "El cinismo es una escuela filosófica surgida en la Grecia antigua, vinculada a Antístenes y llevada a su expresión más radical por Diógenes de Sinope. Sostiene que la virtud es lo único necesario para una vida buena, y que esta se alcanza viviendo conforme a la naturaleza y no según las convenciones sociales.\n\nPor eso los cínicos despreciaban la riqueza, el prestigio y las comodidades, y practicaban la autosuficiencia (autarquía) y la franqueza (parresía), dejando en evidencia con su conducta la hipocresía de las costumbres de su tiempo.\n\nMás que una doctrina teórica, el cinismo fue una forma de vida: se enseñaba con el ejemplo y con gestos provocadores. Su influencia fue decisiva en el estoicismo posterior."
+    },
+    "en": {
+      "nombre": "Cynicism",
+      "descripcion": "Cynicism is a philosophical school that emerged in ancient Greece, linked to Antisthenes and taken to its most radical expression by Diogenes of Sinope. It holds that virtue is the only thing needed for a good life, and that it is achieved by living in accordance with nature rather than social conventions.\n\nFor this reason the Cynics scorned wealth, prestige and comfort, and practiced self-sufficiency (autarkeia) and frank speech (parrhesia), exposing through their conduct the hypocrisy of the customs of their time.\n\nMore than a theoretical doctrine, Cynicism was a way of life: it was taught by example and through provocative gestures. Its influence on later Stoicism was decisive."
+    }
+  },
+  "exponentes": [
+    {
+      "id": "diogenes",
+      "img_autor": "../../Assets/Diogenes.png"
+    },
+    {
+      "id": "antistenes",
+      "nombre": "Antístenes",
+      "img_autor": "../../Assets/sinAdepto.png"
+    },
+    {
+      "id": "crates",
+      "nombre": "Crates de Tebas",
+      "img_autor": "../../Assets/sinAdepto.png"
+    }
+  ]
+}

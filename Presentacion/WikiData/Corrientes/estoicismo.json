@@ -1,0 +1,35 @@
+{
+  "id": "estoicismo",
+  "i18n": {
+    "es": {
+      "nombre": "Estoicismo",
+      "descripcion": "El estoicismo nació en Atenas hacia el 300 a. C. de la mano de Zenón de Citio, y recibe su nombre del pórtico (stoa) donde se enseñaba. Sostiene que el universo está regido por un orden racional, el logos, y que vivir bien consiste en vivir de acuerdo con esa razón y con la naturaleza.\n\nPara los estoicos la virtud es el único bien verdadero. Lo que no depende de nosotros —la riqueza, la fama, la salud, la opinión ajena— es indiferente; lo que sí depende de nosotros son nuestros juicios y nuestras acciones. De ahí el ideal de la ataraxia: una serenidad que no se altera por los golpes de la fortuna.\n\nSe desarrolló durante siglos, desde la Estoa antigua hasta el estoicismo romano de Séneca, Epicteto y Marco Aurelio, y su ética práctica sigue siendo muy leída hoy."
+    },
+    "en": {
+      "nombre": "Stoicism",
+      "descripcion": "Stoicism was born in Athens around 300 BC with Zeno of Citium, and takes its name from the painted porch (stoa) where it was taught. It holds that the universe is governed by a rational order, the logos, and that living well means living in accordance with that reason and with nature.\n\nFor the Stoics, virtue is the only true good. What is not up to us — wealth, fame, health, the opinion of others — is indifferent; what is up to us is our judgments and our actions. Hence the ideal of ataraxia: a serenity that is not shaken by the blows of fortune.\n\nIt developed over centuries, from the early Stoa to the Roman Stoicism of Seneca, Epictetus and Marcus Aurelius, and its practical ethics are still widely read today."
+    }
+  },
+  "exponentes": [
+    {
+      "id": "zenon",
+      "nombre": "Zenón de Citio",
+      "img_autor": "../../Assets/sinAdepto.png"
+    },
+    {
+      "id": "seneca",
+      "nombre": "Séneca",
+      "img_autor": "../../Assets/sinAdepto.png"
+    },
+    {
+      "id": "epicteto",
+      "nombre": "Epicteto",
+      "img_autor": "../../Assets/sinAdepto.png"
+    },
+    {
+      "id": "marco_aurelio",
+      "nombre": "Marco Aurelio",
+      "img_autor": "../../Assets/sinAdepto.png"
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "id": "aristotelismo",
+  "i18n": {
+    "es": {
+      "nombre": "Aristotelismo",
+      "descripcion": "El aristotelismo es la tradición filosófica surgida de Aristóteles y de su escuela, el Liceo. A diferencia de su maestro Platón, sostiene que las formas no existen separadas de las cosas: lo real son los individuos concretos, compuestos de materia y forma, y el conocimiento parte de la experiencia sensible.\n\nAristóteles sistematizó la lógica, explicó el cambio mediante las cuatro causas y propuso una ética basada en la virtud como término medio, orientada a la eudaimonía, la vida plena. Entendía al ser humano como un animal racional y político.\n\nSu obra abarcó la física, la biología, la política y la poética. Transmitida y comentada por pensadores árabes y cristianos, como Averroes y Tomás de Aquino, dominó la filosofía medieval."
+    },
+    "en": {
+      "nombre": "Aristotelianism",
+      "descripcion": "Aristotelianism is the philosophical tradition that grew out of Aristotle and his school, the Lyceum. Unlike his teacher Plato, it holds that forms do not exist apart from things: what is real are concrete individuals, composed of matter and form, and knowledge begins with sensory experience.\n\nAristotle systematized logic, explained change through the four causes, and proposed an ethics based on virtue as a mean, aimed at eudaimonia, the flourishing life. He understood the human being as a rational and political animal.\n\nHis work covered physics, biology, politics and poetics. Transmitted and commented on by Arab and Christian thinkers such as Averroes and Thomas Aquinas, it dominated medieval philosophy."
+    }
+  },
+  "exponentes": [
+    {
+      "id": "aristoteles",
+      "img_autor": "../../Assets/Aristoteles.png"
+    },
+    {
+      "id": "teofrasto",
+      "nombre": "Teofrasto",
+      "img_autor": "../../Assets/sinAdepto.png"
+    },
+    {
+      "id": "averroes",
+      "nombre": "Averroes",
+      "img_autor": "../../Assets/sinAdepto.png"
+    }
+  ]
+}

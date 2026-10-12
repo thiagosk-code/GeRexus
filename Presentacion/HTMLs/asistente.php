@@ -1,6 +1,30 @@
 <?php
 require_once __DIR__ . '/../Scripts/auth_check.php';
 require_once __DIR__ . '/../Scripts/lang.php';
+
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+
+$recintos = [
+    ['id' => 1, 'x' => 517, 'y' => 464, 'w' => 400, 'h' => 400, 'rey' => false],
+    ['id' => 2, 'x' => 515, 'y' => 775, 'w' => 350, 'h' => 350, 'rey' => false],
+    ['id' => 3, 'x' => 512, 'y' => 1041, 'w' => 380, 'h' => 380, 'rey' => false],
+    ['id' => 4, 'x' => 1110, 'y' => 522, 'w' => 360, 'h' => 360, 'rey' => true],
+    ['id' => 5, 'x' => 1102, 'y' => 780, 'w' => 370, 'h' => 370, 'rey' => false],
+    ['id' => 6, 'x' => 1112, 'y' => 1053, 'w' => 310, 'h' => 310, 'rey' => false],
+    ['id' => 7, 'x' => 810, 'y' => 760, 'w' => 250, 'h' => 1080, 'rey' => false]
+];
+$puntajes = [12, 3, 13, 20, 1, 0, 0];
+$adeptos = [
+    'DiogenesPerro.png' => 'Diógenes',
+    'SocratesHyrax.png' => 'Sócrates',
+    'HypatiaAbeja.png' => 'Hypatia',
+    'AristotelesTortuga.png' => 'Aristóteles',
+    'PlatonPato.png' => 'Platón',
+    'EpicuroKoala.png' => 'Epicuro'
+];
+$etiquetaRecinto = $txt['recinto'] ?? 'Recinto';
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo htmlspecialchars($lang ?? 'es', ENT_QUOTES, 'UTF-8'); ?>">
@@ -58,53 +82,41 @@ require_once __DIR__ . '/../Scripts/lang.php';
         </section>
 
         <div class="asistente-grid">
-            <div class="recintos-grid" id="recintos-grid">
-                <?php for ($i = 1; $i <= 6; $i++): ?>
-                    <button type="button" class="recinto-box" data-recinto="<?php echo $i; ?>" aria-label="Recinto <?php echo $i; ?>">
-                        <svg class="recinto-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M6 24 L32 8 L58 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-                            <line x1="4" y1="24" x2="60" y2="24" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
-                            <line x1="10" y1="28" x2="10" y2="50" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
-                            <line x1="20" y1="28" x2="20" y2="50" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
-                            <line x1="32" y1="28" x2="32" y2="50" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
-                            <line x1="44" y1="28" x2="44" y2="50" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
-                            <line x1="54" y1="28" x2="54" y2="50" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
-                            <line x1="4" y1="54" x2="60" y2="54" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
-                        </svg>
-                    </button>
-                <?php endfor; ?>
+            <div class="mapa-recintos" id="mapa-recintos">
+                <img src="../../Assets/MapaAsistente.png" alt="" class="mapa-img" draggable="false">
+                <?php foreach ($recintos as $recinto): ?>
+                    <button type="button" class="recinto-hotspot" data-recinto="<?php echo (int)$recinto['id']; ?>"<?php echo $recinto['rey'] ? ' data-rey="1"' : ''; ?> aria-label="<?php echo htmlspecialchars($etiquetaRecinto, ENT_QUOTES, 'UTF-8'); ?> <?php echo (int)$recinto['id']; ?>" style="left: <?php echo round($recinto['x'] / 16, 2); ?>%; top: <?php echo round($recinto['y'] / 16, 2); ?>%; width: <?php echo round($recinto['w'] / 16, 2); ?>%; height: <?php echo round($recinto['h'] / 16, 2); ?>%;"></button>
+                <?php endforeach; ?>
             </div>
 
             <div class="glass-box puntaje-box">
                 <h2 class="section-subtitle center" data-i18n="puntos"><?php echo htmlspecialchars($txt['puntos'] ?? 'Puntos:', ENT_QUOTES, 'UTF-8'); ?></h2>
 
                 <ul class="puntaje-list">
-                    <li><span>Recinto 1:</span><span>12</span></li>
-                    <li><span>Recinto 2:</span><span>3</span></li>
-                    <li><span>Recinto 3:</span><span>13</span></li>
-                    <li><span>Recinto 4:</span><span>20</span></li>
-                    <li><span>Recinto 5:</span><span>1</span></li>
-                    <li><span>Recinto 6:</span><span>0</span></li>
+                    <?php foreach ($puntajes as $indice => $puntaje): ?>
+                        <li><span><?php echo htmlspecialchars($etiquetaRecinto, ENT_QUOTES, 'UTF-8'); ?> <?php echo $indice + 1; ?>:</span><span><?php echo (int)$puntaje; ?></span></li>
+                    <?php endforeach; ?>
                 </ul>
 
                 <div class="puntaje-divider"></div>
 
                 <div class="puntaje-total">
-                    <span data-i18n="puntos"><?php echo htmlspecialchars($txt['puntos'] ?? 'Puntos:', ENT_QUOTES, 'UTF-8'); ?></span>
-                    <span>36</span>
+                    <span data-i18n="total"><?php echo htmlspecialchars($txt['total'] ?? 'Total:', ENT_QUOTES, 'UTF-8'); ?></span>
+                    <span><?php echo (int)array_sum($puntajes); ?></span>
                 </div>
             </div>
         </div>
 
         <div class="volver-container">
             <a href="base.php" class="btn-nav btn-volver-asistente" data-i18n="volver"><?php echo htmlspecialchars($txt['volver'] ?? 'Volver', ENT_QUOTES, 'UTF-8'); ?></a>
+            <button type="button" class="btn-nav" data-open="modal-reiniciar" data-i18n="reiniciar_tablero"><?php echo htmlspecialchars($txt['reiniciar_tablero'] ?? 'Reiniciar Tablero', ENT_QUOTES, 'UTF-8'); ?></button>
         </div>
     </main>
 
-    <div class="modal-overlay" id="modal-recinto">
+    <div class="modal-overlay" id="modal-recinto" data-recinto-label="<?php echo htmlspecialchars($etiquetaRecinto, ENT_QUOTES, 'UTF-8'); ?>">
         <div class="modal-window modal-wide">
             <button type="button" class="modal-close-btn" data-close="modal-recinto">&times;</button>
-            <h2 class="modal-header-title" id="recinto-modal-title">Recinto 1</h2>
+            <h2 class="modal-header-title" id="recinto-modal-title"><?php echo htmlspecialchars($etiquetaRecinto, ENT_QUOTES, 'UTF-8'); ?> 1</h2>
 
             <div class="recinto-panel-section">
                 <h3 class="panel-subtitle" data-i18n="adepto"><?php echo htmlspecialchars($txt['adepto'] ?? 'Adepto', ENT_QUOTES, 'UTF-8'); ?>s:</h3>
@@ -114,30 +126,35 @@ require_once __DIR__ . '/../Scripts/lang.php';
             <div class="recinto-panel-section">
                 <h3 class="panel-subtitle" data-i18n="seleccionar"><?php echo htmlspecialchars($txt['seleccionar'] ?? 'Seleccionar', ENT_QUOTES, 'UTF-8'); ?>:</h3>
                 <div class="adeptos-row">
-                    <button type="button" class="adepto-select-btn">
-                        <img src="../../Assets/DiogenesPerro.png" alt="Diógenes" class="adepto-icon">
-                    </button>
-                    <button type="button" class="adepto-select-btn">
-                        <img src="../../Assets/SocratesHyrax.png" alt="Sócrates" class="adepto-icon">
-                    </button>
-                    <button type="button" class="adepto-select-btn">
-                        <img src="../../Assets/HypatiaAbeja.png" alt="Hypatia" class="adepto-icon">
-                    </button>
-                    <button type="button" class="adepto-select-btn">
-                        <img src="../../Assets/AristotelesTortuga.png" alt="Aristóteles" class="adepto-icon">
-                    </button>
-                    <button type="button" class="adepto-select-btn">
-                        <img src="../../Assets/PlatonPato.png" alt="Platón" class="adepto-icon">
-                    </button>
-                    <button type="button" class="adepto-select-btn">
-                        <img src="../../Assets/EpicuroKoala.png" alt="Epicuro" class="adepto-icon">
-                    </button>
+                    <?php foreach ($adeptos as $archivo => $nombre): ?>
+                        <button type="button" class="adepto-select-btn">
+                            <img src="../../Assets/<?php echo htmlspecialchars($archivo, ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($nombre, ENT_QUOTES, 'UTF-8'); ?>" class="adepto-icon">
+                        </button>
+                    <?php endforeach; ?>
                 </div>
             </div>
+
+            <label class="bonus-row" id="bonus-row">
+                <input type="checkbox" id="bonus-rey" class="bonus-check">
+                <span data-i18n="bonus_rey_filosofo"><?php echo htmlspecialchars($txt['bonus_rey_filosofo'] ?? 'Bonus del Rey Filósofo', ENT_QUOTES, 'UTF-8'); ?></span>
+            </label>
 
             <div class="modal-footer-left">
                 <button type="button" class="btn-sub-pill" data-close="modal-recinto" data-i18n="cerrar_panel"><?php echo htmlspecialchars($txt['cerrar_panel'] ?? 'Cerrar Panel', ENT_QUOTES, 'UTF-8'); ?></button>
             </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modal-reiniciar">
+        <div class="modal-window">
+            <button type="button" class="modal-close-btn" data-close="modal-reiniciar" aria-label="<?php echo htmlspecialchars($txt['cerrar'] ?? 'Cerrar', ENT_QUOTES, 'UTF-8'); ?>">&times;</button>
+            <h2 class="modal-header-title" data-i18n="reiniciar_tablero"><?php echo htmlspecialchars($txt['reiniciar_tablero'] ?? 'Reiniciar Tablero', ENT_QUOTES, 'UTF-8'); ?></h2>
+            <p class="modal-body-txt" data-i18n="confirmar_reiniciar_tablero"><?php echo htmlspecialchars($txt['confirmar_reiniciar_tablero'] ?? '¿Seguro que desea reiniciar el tablero?', ENT_QUOTES, 'UTF-8'); ?></p>
+            <form action="" method="POST" class="modal-actions">
+                <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+                <input type="hidden" name="accion" value="reiniciar_tablero">
+                <button type="submit" class="btn-modal btn-danger"><?php echo htmlspecialchars($txt['confirmar'] ?? 'Confirmar', ENT_QUOTES, 'UTF-8'); ?></button>
+            </form>
         </div>
     </div>
 

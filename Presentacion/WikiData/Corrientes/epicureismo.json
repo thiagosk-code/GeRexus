@@ -1,0 +1,29 @@
+{
+  "id": "epicureismo",
+  "i18n": {
+    "es": {
+      "nombre": "Epicureísmo",
+      "descripcion": "El epicureísmo fue fundado por Epicuro en Atenas hacia el 306 a. C., en una comunidad conocida como el Jardín. Propone que el fin de la vida es el placer, entendido no como exceso sino como ausencia de dolor corporal (aponía) y de perturbación del alma (ataraxia).\n\nPara lograrlo distingue los deseos naturales y necesarios de los vanos, y recomienda moderación, amistad y una vida retirada. Su física, heredera del atomismo, explica el mundo por átomos y vacío, de modo que no hay que temer a los dioses, que no intervienen en los asuntos humanos, ni a la muerte, que no es nada para quien la vive.\n\nLucrecio difundió estas ideas en latín con su poema De rerum natura."
+    },
+    "en": {
+      "nombre": "Epicureanism",
+      "descripcion": "Epicureanism was founded by Epicurus in Athens around 306 BC, in a community known as the Garden. It holds that the goal of life is pleasure, understood not as excess but as the absence of bodily pain (aponia) and of disturbance of the soul (ataraxia).\n\nTo achieve it, it distinguishes natural and necessary desires from vain ones, and recommends moderation, friendship and a retired life. Its physics, inherited from atomism, explains the world through atoms and void, so there is no need to fear the gods, who do not intervene in human affairs, nor death, which is nothing to those who are alive.\n\nLucretius spread these ideas in Latin with his poem De rerum natura."
+    }
+  },
+  "exponentes": [
+    {
+      "id": "epicuro",
+      "img_autor": "../../Assets/Epicuro.png"
+    },
+    {
+      "id": "lucrecio",
+      "nombre": "Lucrecio",
+      "img_autor": "../../Assets/sinAdepto.png"
+    },
+    {
+      "id": "metrodoro",
+      "nombre": "Metrodoro de Lámpsaco",
+      "img_autor": "../../Assets/sinAdepto.png"
+    }
+  ]
+}

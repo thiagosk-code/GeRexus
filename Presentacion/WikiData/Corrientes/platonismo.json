@@ -1,0 +1,29 @@
+{
+  "id": "platonismo",
+  "i18n": {
+    "es": {
+      "nombre": "Platonismo",
+      "descripcion": "El platonismo es la corriente que continúa y desarrolla el pensamiento de Platón, fundada en torno a la Academia que él creó en Atenas. Su idea central es que la realidad sensible, siempre cambiante, es apenas una copia imperfecta de las Ideas o Formas, entidades eternas e inteligibles que solo la razón puede conocer.\n\nDe esa teoría se desprende una concepción del conocimiento como ascenso: el alma, que es inmortal, se libera de las apariencias contemplando el Bien, la Idea suprema, como muestra la alegoría de la caverna. En lo político, Platón defendió que gobiernen quienes conocen el Bien, es decir, los filósofos.\n\nSu influencia fue enorme: el neoplatonismo de Plotino lo reinterpretó siglos después y marcó al pensamiento cristiano y medieval."
+    },
+    "en": {
+      "nombre": "Platonism",
+      "descripcion": "Platonism is the tradition that continues and develops the thought of Plato, grounded in the Academy he founded in Athens. Its central idea is that the sensible world, always changing, is only an imperfect copy of the Ideas or Forms, eternal and intelligible entities that only reason can know.\n\nFrom this theory follows a view of knowledge as an ascent: the soul, which is immortal, frees itself from appearances by contemplating the Good, the supreme Idea, as the allegory of the cave shows. In politics, Plato argued that those who know the Good, that is, philosophers, should rule.\n\nIts influence was enormous: the Neoplatonism of Plotinus reinterpreted it centuries later and shaped Christian and medieval thought."
+    }
+  },
+  "exponentes": [
+    {
+      "id": "platon",
+      "img_autor": "../../Assets/Platon.png"
+    },
+    {
+      "id": "plotino",
+      "nombre": "Plotino",
+      "img_autor": "../../Assets/sinAdepto.png"
+    },
+    {
+      "id": "proclo",
+      "nombre": "Proclo",
+      "img_autor": "../../Assets/sinAdepto.png"
+    }
+  ]
+}

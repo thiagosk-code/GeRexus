@@ -1,0 +1,212 @@
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+}
+
+.user-name {
+    font-family: var(--font-main);
+    font-size: 1.75rem;
+    color: var(--color-accent);
+    text-shadow: var(--shadow-text);
+}
+
+.user-avatar-img {
+    display: inline-block;
+    width: 2.5rem;
+    height: 2.5rem;
+    background-image: var(--url-img-diogenes);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    filter: drop-shadow(0 0.1875rem 0.375rem var(--shadow-strong));
+}
+
+.unirse-content {
+    width: 100%;
+    padding: 5.2rem 1.5rem 0 1.5rem;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.main-title {
+    margin-bottom: 1.5rem;
+    font-size: clamp(1.4rem, 6.8vw, 3.8rem);
+    font-weight: normal;
+    letter-spacing: 0.125rem;
+    text-align: center;
+    text-wrap: balance;
+    color: var(--color-main);
+    text-shadow: var(--shadow-text);
+}
+
+.glass-box {
+    width: 100%;
+    max-width: 30rem;
+    box-sizing: border-box;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    background-color: var(--bg-btn-jugar);
+    border: 0.1875rem solid var(--color-btn-border);
+    border-radius: 1.25rem;
+    box-shadow: 0 0.25rem 0.625rem var(--shadow-light);
+}
+
+.card-title {
+    display: block;
+    padding-bottom: 0.7rem;
+    font-size: 1.05rem;
+    font-weight: normal;
+    line-height: 1.4;
+    text-align: center;
+    text-wrap: balance;
+    color: var(--color-main);
+    text-shadow: var(--shadow-text);
+    border-bottom: 0.1rem solid var(--color-main);
+}
+
+.input-pill {
+    width: 100%;
+    height: 2.8rem;
+    box-sizing: border-box;
+    padding: 0 1.2rem;
+    font-family: var(--font-main);
+    font-size: 1rem;
+    color: var(--color-main);
+    background-color: transparent;
+    border: 0.125rem solid var(--color-main);
+    border-radius: 1.5rem;
+    outline: none;
+}
+
+.input-pill::placeholder {
+    color: var(--color-main);
+    opacity: 0.7;
+}
+
+.input-pill:focus {
+    border-color: var(--color-accent);
+}
+
+.btn-unirse {
+    width: 100%;
+    height: 3rem;
+    font-family: var(--font-main);
+    font-size: 1.05rem;
+    color: var(--color-main);
+    background-color: var(--bg-btn-jugar);
+    border: 0.1875rem solid var(--color-btn-border);
+    border-radius: 1.25rem;
+    cursor: pointer;
+    text-shadow: var(--shadow-text);
+    box-shadow: 0 0.25rem 0.625rem var(--shadow-light);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.1s ease;
+}
+
+.btn-unirse:hover {
+    background-color: var(--bg-btn-hover);
+    box-shadow: 0 0.375rem 0.875rem var(--shadow-medium);
+}
+
+.btn-unirse:active {
+    transform: scale(0.98);
+}
+
+.volver-container {
+    position: fixed;
+    left: 2rem;
+    bottom: 1.25rem;
+    z-index: 5;
+}
+
+.btn-nav {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    height: 3.2rem;
+    padding: 0 1.8rem;
+    font-family: var(--font-main);
+    font-size: 1.05rem;
+    color: var(--color-main);
+    text-decoration: none;
+    background-color: var(--bg-btn-jugar);
+    border: 0.1875rem solid var(--color-btn-border);
+    border-radius: 1.25rem;
+    box-shadow: 0 0.25rem 0.625rem var(--shadow-light);
+    text-shadow: var(--shadow-text);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.1s ease;
+}
+
+.btn-nav:hover {
+    background-color: var(--bg-btn-hover);
+    box-shadow: 0 0.375rem 0.875rem var(--shadow-medium);
+}
+
+.btn-nav:active {
+    transform: scale(0.98);
+}
+
+@media (max-width: 900px), (max-height: 560px) {
+    body {
+        overflow-y: auto;
+    }
+
+    .unirse-content {
+        padding: 4.5rem 1rem 1.5rem 1rem;
+    }
+
+    .volver-container {
+        position: static;
+        width: 100%;
+        max-width: 30rem;
+        margin-top: 1.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .main-header {
+        padding: 0.5rem 0.75rem;
+    }
+
+    .logo-text {
+        font-size: 1.05rem;
+    }
+
+    .logo-img {
+        width: 1.8rem;
+        height: 1.8rem;
+    }
+
+    .tema-toggle {
+        padding: 0.1rem;
+    }
+
+    .tema-toggle .material-symbols-outlined {
+        font-size: 1.2rem;
+    }
+
+    .header-actions {
+        gap: 0.5rem;
+    }
+
+    .leng-switcher {
+        font-size: 0.8rem;
+    }
+
+    .user-profile {
+        gap: 0.35rem;
+    }
+
+    .user-name {
+        font-size: 0.85rem;
+    }
+
+    .user-avatar-img {
+        width: 1.6rem;
+        height: 1.6rem;
+    }
+}
