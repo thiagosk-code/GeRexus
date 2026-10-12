@@ -411,6 +411,16 @@ button.btn-nav {
 
     .main-title {
         font-size: 2.2rem;
+        padding: 5.5rem 1.25rem 2.5rem 1.25rem;
+    }
+
+    .hero-section {
+        height: auto;
+        margin-bottom: 0.5rem;
+    }
+
+    .main-title {
+        font-size: 2.2rem;
     }
 
     .asistente-grid {
@@ -502,3 +512,4 @@ button.btn-nav {
         width: 92%;
     }
 }
+
