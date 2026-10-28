@@ -133,5 +133,20 @@
   "anfitrion": "Host",
   "cerrar": "Close",
   "reiniciar_tablero": "Reset Board",
-  "confirmar_reiniciar_tablero": "Are you sure you want to reset the board? All progress will be lost."
+  "confirmar_reiniciar_tablero": "Are you sure you want to reset the board? All progress will be lost.",
+  "recinto_congreso": "The Congress",
+  "desc_congreso": "Adepts from the same current",
+  "recinto_profesorado": "Faculty",
+  "desc_profesorado": "Exactly 3 adepts (7 pts)",
+  "recinto_pradera_amor": "Meadow of Love",
+  "desc_pradera_amor": "Pairs of adepts (5 pts each)",
+  "recinto_rey_filosofo": "Philosopher King",
+  "desc_rey_filosofo": "Only philosopher of its species (7 pts)",
+  "recinto_agora": "The Agora",
+  "desc_agora": "Different currents (no repeats)",
+  "recinto_director": "Director",
+  "desc_director": "Majority of adepts of same species (7 pts)",
+  "recinto_pasillo": "The Hallway",
+  "desc_pasillo": "1 point for each adept",
+  "bonus_socratico": "Socratic Bonus (+1 pt)"
 }

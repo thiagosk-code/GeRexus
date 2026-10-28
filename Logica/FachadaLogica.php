@@ -4,6 +4,8 @@ require_once (__DIR__ . '/ILogicaUsuario.php');
 require_once (__DIR__ . '/LogicaUsuario.php');
 require_once (__DIR__ . '/ILogicaHistorial.php');
 require_once (__DIR__ . '/LogicaHistorial.php');
+require_once (__DIR__ . '/ILogicaRecintos.php');
+require_once (__DIR__ . '/LogicaRecintos.php');
 require_once (__DIR__ . '/ILogicaAutorizacion.php');
 require_once (__DIR__ . '/LogicaAutorizacion.php');
 
@@ -24,4 +26,8 @@ class FachadaLogica {
         return $unILA;
     }
 
+    public function retornoILogicaRecinto() : ILogicaRecintos {
+        $unILR = new LogicaRecintos();
+        return $unILR;
+    }
 }

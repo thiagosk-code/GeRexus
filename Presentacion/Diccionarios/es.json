@@ -133,5 +133,20 @@
   "anfitrion": "Anfitrión",
   "cerrar": "Cerrar",
   "reiniciar_tablero": "Reiniciar Tablero",
-  "confirmar_reiniciar_tablero": "¿Estás seguro de que quieres reiniciar el tablero? Todo el progreso se perderá."
+  "confirmar_reiniciar_tablero": "¿Estás seguro de que quieres reiniciar el tablero? Todo el progreso se perderá.",
+  "recinto_congreso": "El Congreso",
+  "desc_congreso": "Adeptos de la misma corriente",
+  "recinto_profesorado": "Profesorado",
+  "desc_profesorado": "Exactamente 3 adeptos (7 pts)",
+  "recinto_pradera_amor": "La Pradera del Amor",
+  "desc_pradera_amor": "Parejas de adeptos (5 pts c/u)",
+  "recinto_rey_filosofo": "Rey Filósofo",
+  "desc_rey_filosofo": "Único filósofo de su especie (7 pts)",
+  "recinto_agora": "El Ágora",
+  "desc_agora": "Corrientes diferentes (sin repetir)",
+  "recinto_director": "Director",
+  "desc_director": "Mayoría de adeptos de la misma especie (7 pts)",
+  "recinto_pasillo": "El Pasillo",
+  "desc_pasillo": "1 punto por cada adepto",
+  "bonus_socratico": "Bonus Socrático (+1 pt)"
 }

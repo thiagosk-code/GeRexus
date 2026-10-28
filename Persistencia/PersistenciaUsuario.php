@@ -31,7 +31,7 @@ class PersistenciaUsuario implements IPersistenciaUsuario {
     public function existeEmail(string $email): bool {
         $res = false;
         if ($this->conn !== null) {
-            $sql = "CALL sp_ExisteEmailActivo(?);";
+            $sql = "CALL sp_ExisteEmail(?);";
             try {
                 $stmt = $this->conn->prepare($sql);
                 $stmt->execute([$email]);
@@ -47,6 +47,60 @@ class PersistenciaUsuario implements IPersistenciaUsuario {
         return $res;
     }
 
+    public function esEmailBaja(string $email): bool {
+        $res = false;
+        if ($this->conn !== null) {
+            $sql = "CALL sp_EsEmailBaja(?);";
+            try {
+                $stmt = $this->conn->prepare($sql);
+                $stmt->execute([$email]);
+                $row = $stmt->fetch(\PDO::FETCH_ASSOC);
+                $stmt->closeCursor();
+                if ($row !== false && isset($row['total'])) {
+                    $res = ((int)$row['total'] > 0);
+                }
+            } catch (\PDOException $e) {
+                $res = false;
+            }
+        }
+        return $res;
+    }
+
+    public function buscarUsuarioBaja(string $email): int {
+        $idEncontrado = 0;
+        if ($this->conn !== null) {
+            $sql = "CALL sp_buscarUsuarioBaja(?);";
+            try {
+                $stmt = $this->conn->prepare($sql);
+                $stmt->execute([$email]);
+                $row = $stmt->fetch(\PDO::FETCH_ASSOC);
+                $stmt->closeCursor();
+                if ($row !== false) {
+                    $idEncontrado = (int)$row['idUsuario'];
+                }
+            } catch (\PDOException $e) {
+                $idEncontrado = 0;
+            }
+        }
+        return $idEncontrado;
+    }
+
+    public function restaurarHistorial(int $idUsuarioBaja): bool {
+        $res = false;
+        if($this->conn !== null) {
+            $sql = "CALL sp_RestaurarHistorial(?);";
+            try {
+                $stmt = $this->conn->prepare($sql);
+                $stmt->execute([$idUsuarioBaja]);
+                $stmt->closeCursor();
+                $res = true;
+            } catch (\PDOException $e) {
+                $res = false;
+            }
+        }
+        return $res;
+    }
+    
     public function altaUsuario(UsuarioDTO $usuarioDTO): int {
         $idGenerado = 0;
         if ($this->conn !== null && $usuarioDTO !== null) {
