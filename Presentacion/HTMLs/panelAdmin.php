@@ -84,7 +84,7 @@ $usuariosLista = $logicaUsuario->obtenerTodosLosUsuariosL();
                 <?php endif; ?>
             </div>
             
-            <button class="tema-toggle" aria-label="Cambiar tema">
+            <button class="tema-toggle" aria-label="<?php echo htmlspecialchars($txt['cambiar_modo_claro'], ENT_QUOTES, 'UTF-8'); ?>" data-label-light="<?php echo htmlspecialchars($txt['cambiar_modo_claro'], ENT_QUOTES, 'UTF-8'); ?>" data-label-dark="<?php echo htmlspecialchars($txt['cambiar_modo_oscuro'], ENT_QUOTES, 'UTF-8'); ?>">
                 <span class="material-symbols-outlined">light_mode</span>
             </button>
 
@@ -160,23 +160,23 @@ $usuariosLista = $logicaUsuario->obtenerTodosLosUsuariosL();
                                             <td><?php echo $uBaja; ?></td>
                                             <td class="actions-cell">
                                                 <?php if ($puedeEliminar === true): ?>
-                                                    <form action="" method="POST" class="inline-form form-eliminar">
+                                                    <form action="" method="POST" class="inline-form form-eliminar" data-confirmacion="<?php echo htmlspecialchars($txt['confirmar_baja_usuario'], ENT_QUOTES, 'UTF-8'); ?>">
                                                         <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                                                         <input type="hidden" name="accion" value="eliminar">
                                                         <input type="hidden" name="id_eliminar" value="<?php echo $uId; ?>">
-                                                        <button type="submit" class="action-icon btn-delete" title="Eliminar (Baja Lógica)">
+                                                        <button type="submit" class="action-icon btn-delete" title="<?php echo htmlspecialchars($txt['accion_eliminar_baja_logica'], ENT_QUOTES, 'UTF-8'); ?>">
                                                             <span class="material-symbols-outlined">delete</span>
                                                         </button>
                                                     </form>
                                                 <?php else: ?>
-                                                    <button class="action-icon btn-disabled" title="No se puede eliminar a un usuario administrador" disabled>
+                                                    <button class="action-icon btn-disabled" title="<?php echo htmlspecialchars($txt['err_admin_no_eliminar'], ENT_QUOTES, 'UTF-8'); ?>" disabled>
                                                         <span class="material-symbols-outlined">block</span>
                                                     </button>
                                                 <?php endif; ?>
 
                                                 <button type="button" 
                                                         class="action-icon btn-edit" 
-                                                        title="Modificar"
+                                                        title="<?php echo htmlspecialchars($txt['accion_modificar'], ENT_QUOTES, 'UTF-8'); ?>"
                                                         data-id="<?php echo $uId; ?>"
                                                         data-nombre="<?php echo $uNombreRaw; ?>"
                                                         data-email="<?php echo $uEmailRaw; ?>"
@@ -192,9 +192,9 @@ $usuariosLista = $logicaUsuario->obtenerTodosLosUsuariosL();
                     </div>
 
                     <div class="pagination-container" id="paginacion">
-                        <button class="pag-btn" id="pag-prev">&lt;</button>
+                        <button class="pag-btn" id="pag-prev" aria-label="<?php echo htmlspecialchars($txt['pagina_anterior'], ENT_QUOTES, 'UTF-8'); ?>">&lt;</button>
                         <div id="pag-numbers" class="pag-numbers"></div>
-                        <button class="pag-btn" id="pag-next">&gt;</button>
+                        <button class="pag-btn" id="pag-next" aria-label="<?php echo htmlspecialchars($txt['pagina_siguiente'], ENT_QUOTES, 'UTF-8'); ?>">&gt;</button>
                     </div>
                 </section>
 
@@ -258,7 +258,7 @@ $usuariosLista = $logicaUsuario->obtenerTodosLosUsuariosL();
 
                         <div class="form-row">
                             <label for="mod-password" class="form-label" data-i18n="nueva_contrasena"><?php echo $txt['nueva_contrasena'] ?? 'Nueva Contraseña'; ?>:</label>
-                            <input type="password" id="mod-password" name="nueva_password" class="form-input" placeholder="Opcional (dejar en blanco para mantener la actual)">
+                            <input type="password" id="mod-password" name="nueva_password" class="form-input" placeholder="<?php echo htmlspecialchars($txt['password_opcional'], ENT_QUOTES, 'UTF-8'); ?>" data-i18n-placeholder="password_opcional">
                         </div>
 
                         <div class="form-row">

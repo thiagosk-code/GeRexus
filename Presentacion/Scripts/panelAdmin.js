@@ -123,7 +123,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     document.addEventListener('submit', function(e) {
         if (e.target.classList.contains('form-eliminar')) {
-            const confirmacion = confirm('¿Seguro que deseas dar de baja a este usuario?');
+            const confirmacion = confirm(e.target.dataset.confirmacion || '');
             if (confirmacion === false) {
                 e.preventDefault();
             }

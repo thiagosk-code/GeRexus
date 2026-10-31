@@ -4,6 +4,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const temaGuardado = localStorage.getItem('tema');
 
+    const actualizarEtiqueta = (esClaro) => {
+        if (!temaToggleBtn) return;
+        const etiqueta = esClaro ? temaToggleBtn.dataset.labelDark : temaToggleBtn.dataset.labelLight;
+        if (etiqueta) temaToggleBtn.setAttribute('aria-label', etiqueta);
+    };
+
     if (temaGuardado === 'light') {
         document.body.classList.add('light-mode');
         if (icon) icon.textContent = 'light_mode';
@@ -11,6 +17,8 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.classList.remove('light-mode');
         if (icon) icon.textContent = 'dark_mode';
     }
+
+    actualizarEtiqueta(document.body.classList.contains('light-mode'));
 
     if (!temaToggleBtn) return;
 
@@ -25,6 +33,8 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.setItem('tema', 'dark');
             if (icon) icon.textContent = 'dark_mode';
         }
+
+        actualizarEtiqueta(esClaro);
 
         setTimeout(() => {
             temaToggleBtn.classList.remove('pop-effect');

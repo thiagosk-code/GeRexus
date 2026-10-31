@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $tokenEnviado = $_POST['csrf_token'] ?? '';
 
     if (!hash_equals($_SESSION['csrf_token'], $tokenEnviado)) {
-        $mensajeError = 'Peticion no valida (Error CSRF).';
+        $mensajeError = $txt['err_csrf'];
     } else {
         $tableroElegido = (int)($_POST['idTablero'] ?? 0);
         $idsAdeptos = array_map('intval', (array)($_POST['adeptos'] ?? []));
@@ -100,7 +100,7 @@ $etiquetaAdepto = $txt['adepto'] ?? 'Adepto';
                 <?php endif; ?>
             </div>
 
-            <button class="tema-toggle" aria-label="Cambiar tema">
+            <button class="tema-toggle" aria-label="<?php echo htmlspecialchars($txt['cambiar_modo_claro'], ENT_QUOTES, 'UTF-8'); ?>" data-label-light="<?php echo htmlspecialchars($txt['cambiar_modo_claro'], ENT_QUOTES, 'UTF-8'); ?>" data-label-dark="<?php echo htmlspecialchars($txt['cambiar_modo_oscuro'], ENT_QUOTES, 'UTF-8'); ?>">
                 <span class="material-symbols-outlined">light_mode</span>
             </button>
 

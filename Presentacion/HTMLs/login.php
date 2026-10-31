@@ -18,13 +18,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $tokenEnviado = $_POST['csrf_token'] ?? '';
 
     if (!hash_equals($_SESSION['csrf_token'], $tokenEnviado)) {
-        $mensajeError = "Peticion no valida (Error CSRF).";
+        $mensajeError = $txt['err_csrf'];
     }else {
         $email = $_POST['email'] ?? '';
         $contra = $_POST['password'] ?? '';
         $captchaToken = $_POST['g-recaptcha-response'] ?? '';
 
-        if (!($_POST['email'] === '' || $_POST['password'] === '')){
+        if ($email !== '' && $contra !== ''){
 
             $facha = new FachadaLogica();
             $res = $facha->retornoIlogicaUsuario()->IniciarSesionL($email, $contra, $captchaToken);
@@ -38,11 +38,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 header("Location: base.php");
                 exit();
             }else{
-                $mensajeError = $res['mensaje'];
+                $mensajeKey = $res['mensaje_key'] ?? '';
+                $mensajeError = $txt[$mensajeKey] ?? ($res['mensaje'] ?? $txt['err_login_incorrecto']);
             }
             
         }else{
-            $mensajeError = "Hay campos sin completar";
+            $mensajeError = $txt['err_campos_obligatorios'];
         }
     }
     
@@ -87,7 +88,7 @@ $txt['contrasena'] = $txt['contrasena'] ?? ($lang === 'en' ? 'Password' : 'Contr
                 <a href="?lang=en" class="<?php echo ($lang === 'en') ? 'active' : 'inactive'; ?>">Eng</a>
             </div>
             
-            <button class="tema-toggle" aria-label="Cambiar a modo claro">
+            <button class="tema-toggle" aria-label="<?php echo htmlspecialchars($txt['cambiar_modo_claro'], ENT_QUOTES, 'UTF-8'); ?>" data-label-light="<?php echo htmlspecialchars($txt['cambiar_modo_claro'], ENT_QUOTES, 'UTF-8'); ?>" data-label-dark="<?php echo htmlspecialchars($txt['cambiar_modo_oscuro'], ENT_QUOTES, 'UTF-8'); ?>">
                 <span class="material-symbols-outlined">light_mode</span>
             </button>
 
@@ -117,7 +118,7 @@ $txt['contrasena'] = $txt['contrasena'] ?? ($lang === 'en' ? 'Password' : 'Contr
             </div>
             <div class="bottom-container">
                 <?php if ($mensajeError !== ''): ?>
-                <p class="msg-status error"><?php echo $mensajeError; ?></p>
+                <p class="msg-status error"><?php echo htmlspecialchars($mensajeError, ENT_QUOTES, 'UTF-8'); ?></p>
                 <?php endif; ?>
                 <a href="register.php" class="register-link"><?php echo $txt['no_cuenta']; ?></a>
                 <input type="submit" name="btn_login" value="<?php echo $txt['iniciar_sesion']; ?>" class="btn-submit">

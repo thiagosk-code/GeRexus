@@ -33,7 +33,7 @@ require_once __DIR__ . '/../Scripts/lang.php';
                 <a href="?lang=en" class="<?php echo ($lang === 'en') ? 'active' : 'inactive'; ?>">Eng</a>
             </div>
             
-            <button class="tema-toggle" aria-label="Cambiar a modo claro">
+            <button class="tema-toggle" aria-label="<?php echo htmlspecialchars($txt['cambiar_modo_claro'], ENT_QUOTES, 'UTF-8'); ?>" data-label-light="<?php echo htmlspecialchars($txt['cambiar_modo_claro'], ENT_QUOTES, 'UTF-8'); ?>" data-label-dark="<?php echo htmlspecialchars($txt['cambiar_modo_oscuro'], ENT_QUOTES, 'UTF-8'); ?>">
                 <span class="material-symbols-outlined">light_mode</span>
             </button>
             
@@ -45,7 +45,7 @@ require_once __DIR__ . '/../Scripts/lang.php';
         <h1 class="main-title dev-title"><?php echo $txt['dev_title']; ?></h1>
         
         <div class="dev-container">
-            <div aria-label="Orange and tan hamster running in a metal wheel" role="img" class="wheel-and-hamster">
+            <div aria-label="<?php echo htmlspecialchars($txt['hamster_desarrollo'], ENT_QUOTES, 'UTF-8'); ?>" role="img" class="wheel-and-hamster">
                 <div class="wheel"></div>
                 <div class="hamster">
                     <div class="hamster__body">

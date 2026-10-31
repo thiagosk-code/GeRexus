@@ -390,13 +390,13 @@ class LogicaUsuario implements ILogicaUsuario {
         $contra = trim($contra);
 
         if ($email === '' || $contra === '') {
-            return ['exito' => false, 'mensaje' => 'Los campos no están completos'];
+            return ['exito' => false, 'mensaje_key' => 'err_campos_obligatorios', 'mensaje' => 'Los campos no están completos'];
         }
 
         if ($captchaToken !== null) {
             $ip = $_SERVER['REMOTE_ADDR'] ?? null;
             if ($this->captchaService->verificar($captchaToken, $ip) === false) {
-                return ['exito' => false, 'mensaje' => 'La verificacion de reCAPTCHA ha fallado.'];
+                return ['exito' => false, 'mensaje_key' => 'err_recaptcha', 'mensaje' => 'La verificacion de reCAPTCHA ha fallado.'];
             }
         }
 
@@ -414,10 +414,10 @@ class LogicaUsuario implements ILogicaUsuario {
                 if (session_status() === PHP_SESSION_NONE) {
                     session_start();
                 }
-                return ['exito' => true, 'mensaje' => 'Inicio de sesión exitoso', 'idUsuario' => $idUsuario];
+                return ['exito' => true, 'mensaje_key' => 'msg_login_exito', 'mensaje' => 'Inicio de sesión exitoso', 'idUsuario' => $idUsuario];
             }
         }
 
-        return ['exito' => false, 'mensaje' => 'Email o contraseña incorrecta'];
+        return ['exito' => false, 'mensaje_key' => 'err_login_incorrecto', 'mensaje' => 'Email o contraseña incorrecta'];
     }
 }

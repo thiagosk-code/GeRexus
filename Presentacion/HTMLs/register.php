@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $tokenEnviado = $_POST['csrf_token'] ?? '';
     
     if (!hash_equals($_SESSION['csrf_token'], $tokenEnviado)) {
-        $mensajeError = 'Peticion no valida (Error CSRF).';
+        $mensajeError = $txt['err_csrf'];
     } else {
         $nom = $_POST['username'] ?? '';
         $email = $_POST['email'] ?? '';
@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $captchaToken = $_POST['g-recaptcha-response'] ?? '';
 
         if ($contra !== $confirmContra) {
-            $mensajeError = 'Las contrasenias no coinciden.';
+            $mensajeError = $txt['err_contrasenas_no_coinciden'];
         } else {
             $dto = new UsuarioDTO(0, $nom, $email, $contra, 0, 0, 0);
             $fachadaLogica = new FachadaLogica();
@@ -46,7 +46,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 header('Location: base.php');
                 exit();
             } else {
-                $mensajeError = $res['mensaje'];
+                $mensajeKey = $res['mensaje_key'] ?? '';
+                $mensajeError = $txt[$mensajeKey] ?? ($res['mensaje'] ?? $txt['err_alta_db']);
             }
         }
     }
@@ -85,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <a href="?lang=en" class="<?php echo ($lang === 'en') ? 'active' : 'inactive'; ?>">Eng</a>
             </div>
             
-            <button class="tema-toggle" aria-label="Cambiar a modo claro">
+            <button class="tema-toggle" aria-label="<?php echo htmlspecialchars($txt['cambiar_modo_claro'], ENT_QUOTES, 'UTF-8'); ?>" data-label-light="<?php echo htmlspecialchars($txt['cambiar_modo_claro'], ENT_QUOTES, 'UTF-8'); ?>" data-label-dark="<?php echo htmlspecialchars($txt['cambiar_modo_oscuro'], ENT_QUOTES, 'UTF-8'); ?>">
                 <span class="material-symbols-outlined">light_mode</span>
             </button>
 
@@ -126,11 +127,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
 
             <?php if ($mensajeError !== ''): ?>
-                <p class="msg-status error"><?php echo $mensajeError; ?></p>
+                <p class="msg-status error"><?php echo htmlspecialchars($mensajeError, ENT_QUOTES, 'UTF-8'); ?></p>
             <?php endif; ?>
 
             <?php if ($mensajeExito !== ''): ?>
-                <p class="msg-status success"><?php echo $mensajeExito; ?></p>
+                <p class="msg-status success"><?php echo htmlspecialchars($mensajeExito, ENT_QUOTES, 'UTF-8'); ?></p>
             <?php endif; ?>
 
             <div class="bottom-container">

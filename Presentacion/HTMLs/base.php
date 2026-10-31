@@ -7,7 +7,7 @@ require_once __DIR__ . '/../Scripts/lang.php';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GeRexus - Base</title>
+    <title>GeRexus - <?php echo htmlspecialchars($txt['menu_principal'], ENT_QUOTES, 'UTF-8'); ?></title>
     <link rel="icon" type="image/png" href="../../Assets/Socrates.png">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -39,7 +39,7 @@ require_once __DIR__ . '/../Scripts/lang.php';
                 <?php endif; ?>
             </div>
             
-            <button class="tema-toggle" aria-label="Cambiar tema">
+            <button class="tema-toggle" aria-label="<?php echo htmlspecialchars($txt['cambiar_modo_claro'], ENT_QUOTES, 'UTF-8'); ?>" data-label-light="<?php echo htmlspecialchars($txt['cambiar_modo_claro'], ENT_QUOTES, 'UTF-8'); ?>" data-label-dark="<?php echo htmlspecialchars($txt['cambiar_modo_oscuro'], ENT_QUOTES, 'UTF-8'); ?>">
                 <span class="material-symbols-outlined">light_mode</span>
             </button>
 

@@ -168,7 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const turno = estado.turno;
         if (!turno) return;
         const activo = (estado.jugadores || []).find((j) => j.id_usuario === turno.id_activo);
-        elementos.activo.textContent = `${t('dado_de', 'Dado de')}: ${activo?.nombre || ''}`;
+        elementos.activo.textContent = reemplazar(t('dado_de', 'Dado de: {nombre}'), { nombre: activo?.nombre || '' });
         elementos.ronda.textContent = `${t('ronda', 'Ronda')} ${turno.ronda}`;
         elementos.turno.textContent = `${t('turno', 'Turno')} ${turno.numero}`;
         elementos.tirar.hidden = !estado.puede_tirar;
@@ -225,7 +225,7 @@ document.addEventListener('DOMContentLoaded', () => {
         elementos.clasificacion.replaceChildren();
         [...(estado.jugadores || [])].sort((a, b) => (a.puesto - b.puesto) || (b.puntos - a.puntos)).forEach((jugador) => {
             const li = document.createElement('li');
-            li.textContent = `${jugador.puesto}. ${jugador.nombre} — ${jugador.puntos} ${t('puntos', 'puntos')}`;
+            li.textContent = `${jugador.puesto}. ${jugador.nombre} — ${jugador.puntos} ${t('puntos_clasificacion', 'puntos')}`;
             if (jugador.ganador) li.classList.add('ganador');
             elementos.clasificacion.appendChild(li);
         });

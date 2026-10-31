@@ -30,6 +30,7 @@ $corrienteId = $filosofo['corriente_id'] ?? '';
 $imgCuadro = $filosofo['img_cuadro'] ?? '../../Assets/Socrates.png';
 $imgAdeptoNormal = $filosofo['img_adepto_normal'] ?? '../../Assets/sinAdepto.png';
 $imgAdeptoShiny = $filosofo['img_adepto_shiny'] ?? '../../Assets/sinAdepto.png';
+$altCuadro = str_replace('{nombre}', $nombre, $txt['cuadro_filosofo']);
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo htmlspecialchars($idiomaActual, ENT_QUOTES, 'UTF-8'); ?>">
@@ -68,7 +69,7 @@ $imgAdeptoShiny = $filosofo['img_adepto_shiny'] ?? '../../Assets/sinAdepto.png';
                 <?php endif; ?>
             </div>
             
-            <button class="tema-toggle" aria-label="Cambiar tema">
+            <button class="tema-toggle" aria-label="<?php echo htmlspecialchars($txt['cambiar_modo_claro'], ENT_QUOTES, 'UTF-8'); ?>" data-label-light="<?php echo htmlspecialchars($txt['cambiar_modo_claro'], ENT_QUOTES, 'UTF-8'); ?>" data-label-dark="<?php echo htmlspecialchars($txt['cambiar_modo_oscuro'], ENT_QUOTES, 'UTF-8'); ?>">
                 <span class="material-symbols-outlined">light_mode</span>
             </button>
 
@@ -105,7 +106,7 @@ $imgAdeptoShiny = $filosofo['img_adepto_shiny'] ?? '../../Assets/sinAdepto.png';
 
             <aside class="right-column">
                 <div class="cuadro-container">
-                    <img src="<?php echo htmlspecialchars($imgCuadro, ENT_QUOTES, 'UTF-8'); ?>" alt="Cuadro de <?php echo htmlspecialchars($nombre, ENT_QUOTES, 'UTF-8'); ?>" class="cuadro-img">
+                    <img src="<?php echo htmlspecialchars($imgCuadro, ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($altCuadro, ENT_QUOTES, 'UTF-8'); ?>" class="cuadro-img">
                 </div>
 
                 <div class="adeptos-card">
@@ -113,11 +114,11 @@ $imgAdeptoShiny = $filosofo['img_adepto_shiny'] ?? '../../Assets/sinAdepto.png';
                     <div class="adeptos-wrapper">
                         <div class="adepto-item">
                             <span class="adepto-label"><?php echo htmlspecialchars($txt['normal'] ?? 'Normal', ENT_QUOTES, 'UTF-8'); ?></span>
-                            <img src="<?php echo htmlspecialchars($imgAdeptoNormal, ENT_QUOTES, 'UTF-8'); ?>" alt="Adepto Normal" class="adepto-img">
+                            <img src="<?php echo htmlspecialchars($imgAdeptoNormal, ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($txt['adepto_normal_alt'], ENT_QUOTES, 'UTF-8'); ?>" class="adepto-img">
                         </div>
                         <div class="adepto-item">
                             <span class="adepto-label"><?php echo htmlspecialchars($txt['shiny'] ?? 'Shiny', ENT_QUOTES, 'UTF-8'); ?></span>
-                            <img src="<?php echo htmlspecialchars($imgAdeptoShiny, ENT_QUOTES, 'UTF-8'); ?>" alt="Adepto Shiny" class="adepto-img">
+                            <img src="<?php echo htmlspecialchars($imgAdeptoShiny, ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($txt['adepto_shiny_alt'], ENT_QUOTES, 'UTF-8'); ?>" class="adepto-img">
                         </div>
                     </div>
                 </div>

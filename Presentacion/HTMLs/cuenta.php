@@ -114,7 +114,7 @@ $resHistorial = $logicaHistorial->obtenerHistorialUsuarioL((int)$idUsuarioLoguea
                 <?php endif; ?>
             </div>
             
-            <button class="tema-toggle" aria-label="Cambiar tema">
+            <button class="tema-toggle" aria-label="<?php echo htmlspecialchars($txt['cambiar_modo_claro'], ENT_QUOTES, 'UTF-8'); ?>" data-label-light="<?php echo htmlspecialchars($txt['cambiar_modo_claro'], ENT_QUOTES, 'UTF-8'); ?>" data-label-dark="<?php echo htmlspecialchars($txt['cambiar_modo_oscuro'], ENT_QUOTES, 'UTF-8'); ?>">
                 <span class="material-symbols-outlined">light_mode</span>
             </button>
 
@@ -241,7 +241,7 @@ $resHistorial = $logicaHistorial->obtenerHistorialUsuarioL((int)$idUsuarioLoguea
 
     <div class="modal-overlay" id="modal-logout">
         <div class="modal-window">
-            <button type="button" class="modal-close-btn" data-close="modal-logout">&times;</button>
+            <button type="button" class="modal-close-btn" data-close="modal-logout" aria-label="<?php echo htmlspecialchars($txt['cerrar'], ENT_QUOTES, 'UTF-8'); ?>">&times;</button>
             <h2 class="modal-header-title text-danger"><?php echo htmlspecialchars($txt['cerrar_sesion'] ?? 'Cerrar Sesión', ENT_QUOTES, 'UTF-8'); ?></h2>
             <p class="modal-body-txt"><?php echo htmlspecialchars($txt['confirmar_cerrar_sesion'] ?? '¿Seguro que usted desea cerrar la sesión activa?', ENT_QUOTES, 'UTF-8'); ?></p>
             <form action="" method="POST">
@@ -254,7 +254,7 @@ $resHistorial = $logicaHistorial->obtenerHistorialUsuarioL((int)$idUsuarioLoguea
 
     <div class="modal-overlay" id="modal-delete">
         <div class="modal-window">
-            <button type="button" class="modal-close-btn" data-close="modal-delete">&times;</button>
+            <button type="button" class="modal-close-btn" data-close="modal-delete" aria-label="<?php echo htmlspecialchars($txt['cerrar'], ENT_QUOTES, 'UTF-8'); ?>">&times;</button>
             <h2 class="modal-header-title text-danger"><?php echo htmlspecialchars($txt['eliminar_cuenta'] ?? 'Eliminar Cuenta', ENT_QUOTES, 'UTF-8'); ?></h2>
             <p class="modal-body-txt"><?php echo $txt['confirmar_eliminar_cuenta'] ?? '¿Seguro que usted desea eliminar su cuenta?<br>Este proceso es irreversible.'; ?></p>
             <form action="" method="POST">
@@ -267,7 +267,7 @@ $resHistorial = $logicaHistorial->obtenerHistorialUsuarioL((int)$idUsuarioLoguea
 
     <div class="modal-overlay" id="modal-moves">
         <div class="modal-window modal-wide">
-            <button type="button" class="modal-close-btn" data-close="modal-moves">&times;</button>
+            <button type="button" class="modal-close-btn" data-close="modal-moves" aria-label="<?php echo htmlspecialchars($txt['cerrar'], ENT_QUOTES, 'UTF-8'); ?>">&times;</button>
             <h2 class="modal-header-title"><?php echo htmlspecialchars($txt['historial_jugadas'] ?? 'Historial de Jugadas', ENT_QUOTES, 'UTF-8'); ?></h2>
             <div class="moves-scroll-box" id="moves-content" data-cargando="<?php echo htmlspecialchars($txt['cargando'] ?? 'Cargando...', ENT_QUOTES, 'UTF-8'); ?>" data-error="<?php echo htmlspecialchars($txt['err_cargar'] ?? 'No se pudo cargar. Intentá de nuevo.', ENT_QUOTES, 'UTF-8'); ?>" data-vacio="<?php echo htmlspecialchars($txt['sin_jugadas'] ?? 'Esta partida no tiene jugadas registradas.', ENT_QUOTES, 'UTF-8'); ?>"></div>
             <button type="button" class="btn-sub-pill btn-full-width" data-close="modal-moves"><?php echo htmlspecialchars($txt['cerrar_panel'] ?? 'Cerrar Panel', ENT_QUOTES, 'UTF-8'); ?></button>

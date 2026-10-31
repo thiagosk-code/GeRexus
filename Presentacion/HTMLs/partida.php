@@ -23,7 +23,7 @@ if ($estadoInicial['exito'] === false) {
 $textosPartida = [];
 $claves = [
     'jugadores', 'historial_jugadas', 'tu_mano', 'dado_de', 'ronda', 'turno', 'tirar_dado',
-    'esperando_tirada', 'esperando_jugadores', 'colocados', 'seleccionar', 'cerrar', 'puntos',
+    'esperando_tirada', 'esperando_jugadores', 'colocados', 'seleccionar', 'cerrar', 'puntos', 'puntos_clasificacion',
     'partida_finalizada', 'volver_modo_digital', 'ver_historial', 'puesto', 'victoria', 'derrota',
     'registro_activo', 'registro_dado', 'registro_colocacion', 'registro_automatica',
     'restriccion_izquierda', 'restriccion_derecha', 'restriccion_maestros', 'restriccion_alumnos',
@@ -33,11 +33,11 @@ $claves = [
     'err_csrf', 'err_partida_accion', 'err_partida_no_autorizada', 'err_partida_no_existe',
     'err_partida_estado', 'err_partida_fase', 'err_partida_no_activo', 'err_partida_tiempo',
     'err_partida_ya_jugo', 'err_partida_ficha', 'err_partida_recinto', 'err_partida_restriccion_dado',
-    'err_partida_voto', 'votar_finalizacion', 'retirar_voto_finalizacion', 'votos_finalizacion_estado',
-    'voto_finalizacion_marcado',
+    'err_partida_voto', 'err_partida_metodo', 'err_bd', 'votar_finalizacion',
+    'retirar_voto_finalizacion', 'votos_finalizacion_estado', 'voto_finalizacion_marcado',
     'err_asistente_misma_corriente', 'err_asistente_congreso_lleno', 'err_asistente_profesorado_lleno',
     'err_asistente_pradera_llena', 'err_asistente_rey_lleno', 'err_asistente_agora_repetida',
-    'err_asistente_agora_llena', 'err_asistente_director_lleno', 'abrir_jugadores',
+    'err_asistente_agora_llena', 'err_asistente_director_lleno', 'err_asistente_recinto_invalido', 'abrir_jugadores',
     'abrir_historial', 'cerrar_panel'
 ];
 foreach (ConfiguracionRecintos::todas() as $recinto) {
@@ -70,7 +70,7 @@ foreach ($claves as $clave) { $textosPartida[$clave] = $txt[$clave] ?? $clave; }
                     <span class="active">Esp</span><span class="divider">|</span><a href="?id=<?php echo (int)$idPartida; ?>&lang=en" class="inactive">Eng</a>
                 <?php endif; ?>
             </div>
-            <button class="tema-toggle" aria-label="Cambiar tema"><span class="material-symbols-outlined">light_mode</span></button>
+            <button class="tema-toggle" aria-label="<?php echo htmlspecialchars($txt['cambiar_modo_claro'], ENT_QUOTES, 'UTF-8'); ?>" data-label-light="<?php echo htmlspecialchars($txt['cambiar_modo_claro'], ENT_QUOTES, 'UTF-8'); ?>" data-label-dark="<?php echo htmlspecialchars($txt['cambiar_modo_oscuro'], ENT_QUOTES, 'UTF-8'); ?>"><span class="material-symbols-outlined">light_mode</span></button>
             <a href="cuenta.php" class="user-profile-link"><div class="user-profile"><span class="user-name"><?php echo htmlspecialchars($nombreUsuarioLogueado ?? 'User', ENT_QUOTES, 'UTF-8'); ?></span><span class="user-avatar-img" id="header-avatar-img"></span></div></a>
         </div>
     </header>
@@ -93,9 +93,9 @@ foreach ($claves as $clave) { $textosPartida[$clave] = $txt[$clave] ?? $clave; }
 
         <section class="tablero-area">
             <div class="tablero-cabecera">
-                <button type="button" class="flecha-tablero" id="tablero-anterior" aria-label="Anterior">&#10094;</button>
+                <button type="button" class="flecha-tablero" id="tablero-anterior" aria-label="<?php echo htmlspecialchars($txt['anterior'], ENT_QUOTES, 'UTF-8'); ?>">&#10094;</button>
                 <h1 id="tablero-propietario"></h1>
-                <button type="button" class="flecha-tablero" id="tablero-siguiente" aria-label="Siguiente">&#10095;</button>
+                <button type="button" class="flecha-tablero" id="tablero-siguiente" aria-label="<?php echo htmlspecialchars($txt['siguiente'], ENT_QUOTES, 'UTF-8'); ?>">&#10095;</button>
             </div>
             <div class="mapa-partida" id="mapa-partida">
                 <img id="mapa-imagen" src="../../Assets/MapaAsistente.png" alt="" draggable="false">
