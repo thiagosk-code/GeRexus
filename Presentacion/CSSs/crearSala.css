@@ -1,0 +1,420 @@
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+}
+
+.user-name {
+    font-family: var(--font-main);
+    font-size: 1.75rem;
+    color: var(--color-accent);
+    text-shadow: var(--shadow-text);
+}
+
+.user-avatar-img {
+    display: inline-block;
+    width: 2.5rem;
+    height: 2.5rem;
+    background-image: var(--url-img-diogenes);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    filter: drop-shadow(0 0.1875rem 0.375rem var(--shadow-strong));
+}
+
+.glass-box {
+    width: 100%;
+    max-width: 26rem;
+    box-sizing: border-box;
+    padding: 1.2rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    background-color: var(--bg-btn-jugar);
+    border: 0.1875rem solid var(--color-btn-border);
+    border-radius: 1.25rem;
+    box-shadow: 0 0.25rem 0.625rem var(--shadow-light);
+}
+
+.btn-nav {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    height: 3.2rem;
+    padding: 0 1.8rem;
+    font-family: var(--font-main);
+    font-size: 1.05rem;
+    color: var(--color-main);
+    background-color: var(--bg-btn-jugar);
+    border: 0.1875rem solid var(--color-btn-border);
+    border-radius: 1.25rem;
+    cursor: pointer;
+    box-shadow: 0 0.25rem 0.625rem var(--shadow-light);
+    text-shadow: var(--shadow-text);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.1s ease;
+}
+
+.btn-nav:hover {
+    background-color: var(--bg-btn-hover);
+    box-shadow: 0 0.375rem 0.875rem var(--shadow-medium);
+}
+
+.btn-nav:active {
+    transform: scale(0.98);
+}
+
+.modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(5px);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-overlay.active {
+    display: flex;
+}
+
+.modal-window {
+    background-color: var(--bg-autofill);
+    border: 0.1875rem solid var(--color-btn-border);
+    border-radius: 1.25rem;
+    padding: 1.6rem 1.8rem;
+    width: 90%;
+    max-width: 28rem;
+    position: relative;
+    color: var(--color-main);
+    box-shadow: 0 0.5rem 1.5rem var(--shadow-strong);
+}
+
+.modal-close-btn {
+    position: absolute;
+    top: 0.6rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    color: var(--color-error);
+    font-size: 2rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.modal-header-title {
+    padding-right: 2.2rem;
+    margin-bottom: 0.8rem;
+    font-size: 1.6rem;
+    font-weight: normal;
+    text-shadow: var(--shadow-text);
+}
+
+@media (max-width: 768px) {
+    .main-header {
+        padding: 0.5rem 0.75rem;
+    }
+
+    .logo-text {
+        font-size: 1.05rem;
+    }
+
+    .logo-img {
+        width: 1.8rem;
+        height: 1.8rem;
+    }
+
+    .tema-toggle {
+        padding: 0.1rem;
+    }
+
+    .tema-toggle .material-symbols-outlined {
+        font-size: 1.2rem;
+    }
+
+    .header-actions {
+        gap: 0.5rem;
+    }
+
+    .leng-switcher {
+        font-size: 0.8rem;
+    }
+
+    .user-profile {
+        gap: 0.35rem;
+    }
+
+    .user-name {
+        font-size: 0.85rem;
+    }
+
+    .user-avatar-img {
+        width: 1.6rem;
+        height: 1.6rem;
+    }
+}
+
+.modal-wide {
+    max-width: 34rem;
+}
+
+.crear-content {
+    width: 100%;
+    padding: 5.2rem 1.5rem 0 1.5rem;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.main-title {
+    margin-bottom: 1.5rem;
+    font-size: clamp(1.4rem, 6.2vw, 3.8rem);
+    font-weight: normal;
+    letter-spacing: 0.125rem;
+    text-align: center;
+    text-wrap: balance;
+    color: var(--color-main);
+    text-shadow: var(--shadow-text);
+}
+
+.crear-form {
+    width: 100%;
+    max-width: 34rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.2rem;
+}
+
+.crear-form .glass-box {
+    width: 100%;
+    max-width: none;
+    box-sizing: border-box;
+    padding: 1.2rem 1.5rem;
+    gap: 0.9rem;
+}
+
+.seccion-titulo {
+    padding-bottom: 0.4rem;
+    font-size: 1.15rem;
+    font-weight: normal;
+    text-align: center;
+    color: var(--color-main);
+    text-shadow: var(--shadow-text);
+    border-bottom: 0.1rem solid var(--color-main);
+}
+
+.tableros-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+.tablero-opt {
+    position: relative;
+    display: block;
+    cursor: pointer;
+}
+
+.tablero-radio {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.tablero-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    padding: 0.5rem;
+    background-color: rgba(0, 0, 0, 0.2);
+    border: 0.1875rem solid var(--color-btn-border);
+    border-radius: 1rem;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.tablero-img {
+    width: 100%;
+    height: 7rem;
+    object-fit: contain;
+    border-radius: 0.6rem;
+}
+
+.tablero-nombre {
+    font-size: 0.9rem;
+    text-align: center;
+    color: var(--color-main);
+    text-shadow: var(--shadow-text);
+}
+
+.tablero-opt:hover .tablero-card {
+    background-color: var(--bg-btn-hover);
+}
+
+.tablero-radio:checked + .tablero-card {
+    border-color: var(--color-accent);
+    background-color: rgba(140, 156, 63, 0.2);
+}
+
+.tablero-radio:focus-visible + .tablero-card {
+    outline: 0.125rem solid var(--color-main);
+}
+
+.adeptos-slots {
+    display: grid;
+    grid-template-columns: repeat(6, 4.5rem);
+    justify-content: center;
+    gap: 0.6rem;
+}
+
+.adepto-slot-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.slot-numero {
+    font-size: 0.95rem;
+    color: var(--color-main);
+    text-shadow: var(--shadow-text);
+}
+
+.adepto-slot {
+    width: 4.5rem;
+    height: 4.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    background-color: rgba(0, 0, 0, 0.2);
+    border: 0.125rem solid var(--color-btn-border);
+    border-radius: 0.8rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.adepto-slot:hover {
+    background-color: var(--bg-btn-hover);
+}
+
+.adepto-icon {
+    width: 80%;
+    height: 80%;
+    object-fit: contain;
+}
+
+.btn-crear {
+    cursor: pointer;
+}
+
+.btn-crear:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.msg-error {
+    font-size: 0.95rem;
+    text-align: center;
+    color: var(--color-error);
+    text-shadow: var(--shadow-text);
+}
+
+.volver-container {
+    position: fixed;
+    left: 2rem;
+    bottom: 1.25rem;
+    z-index: 5;
+}
+
+.adepto-actual {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.panel-subtitle {
+    margin-bottom: 0.6rem;
+    font-size: 1.05rem;
+    font-weight: normal;
+    text-align: center;
+    color: var(--color-main);
+    text-shadow: var(--shadow-text);
+}
+
+.adeptos-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.8rem;
+    margin-bottom: 1.2rem;
+}
+
+.adepto-select-btn {
+    width: 3.6rem;
+    height: 3.6rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    background-color: rgba(0, 0, 0, 0.2);
+    border: 0.125rem solid var(--color-btn-border);
+    border-radius: 0.8rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease, opacity 0.2s ease;
+}
+
+.adepto-select-btn:hover {
+    background-color: var(--bg-btn-hover);
+}
+
+.adepto-select-btn.en-uso {
+    opacity: 0.45;
+}
+
+.modal-footer-left {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.btn-sub-pill {
+    font-family: var(--font-main);
+    font-size: 0.95rem;
+    color: var(--color-main);
+    background-color: var(--bg-btn-jugar);
+    border: 0.125rem solid var(--color-btn-border);
+    border-radius: 1.25rem;
+    padding: 0.5rem 1.2rem;
+    cursor: pointer;
+    text-shadow: var(--shadow-text);
+    box-shadow: 0 0.25rem 0.625rem var(--shadow-light);
+}
+
+.btn-sub-pill:hover {
+    background-color: var(--bg-btn-hover);
+}
+
+@media (max-width: 900px), (max-height: 640px) {
+    body {
+        overflow-y: auto;
+    }
+
+    .crear-content {
+        padding: 4.5rem 1rem 1.5rem 1rem;
+    }
+
+    .volver-container {
+        position: static;
+        width: 100%;
+        max-width: 34rem;
+        margin-top: 1.2rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .adeptos-slots {
+        grid-template-columns: repeat(3, 4.5rem);
+    }
+}
+

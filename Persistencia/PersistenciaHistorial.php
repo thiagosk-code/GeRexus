@@ -1,14 +1,14 @@
 <?php
 
 require_once (__DIR__ . '/../Conexion/ConexionBD.php');
+require_once (__DIR__ . '/../DTO/UsuarioDTO.php');
+require_once (__DIR__ . '/../DTO/PartidaDTO.php');
 require_once (__DIR__ . '/../DTO/HistorialDTO.php');
 require_once (__DIR__ . '/IPersistenciaHistorial.php');
 
 class PersistenciaHistorial implements IPersistenciaHistorial {
 
     private $conn;
-    private $res;
-
     private static ?PersistenciaHistorial $instancia = null;
 
     public static function getInstancia(): PersistenciaHistorial {
@@ -26,60 +26,54 @@ class PersistenciaHistorial implements IPersistenciaHistorial {
             $conexionBD = new ConexionBD();
             $this->conn = $conexionBD->connect();
         } catch (Exception $e) {
-            echo "Error de conexión en PersistenciaHistorial: " . $e->getMessage();
+            error_log("Error de conexion en PersistenciaHistorial: " . $e->getMessage());
         }
     }
 
-    public function altaHistorial(HistorialDTO $historialDTO): bool {
+    public function altaHistorial(HistorialDTO $historial): bool {
         $res = false;
-
         if ($this->conn !== null) {
-            if ($historialDTO !== null) {
-                $sql = "INSERT INTO Historiales (idUsuario, idPartida, Puesto, PuntosHistoricos, esGanador, Baja_logica) VALUES (?, ?, ?, ?, ?, ?);";
+            $sql = "CALL sp_InsertarHistorial(?, ?, ?, ?, ?, ?);";
 
-                $idUsuario = $historialDTO->getIdUsuario();
-                $idPartida = $historialDTO->getIdPartida();
-                $puesto = $historialDTO->getPuesto();
-                $puntosHistoricos = $historialDTO->getPuntosHistoricos();
-                $esGanador = $historialDTO->getEsGanador() ? 1 : 0;
-                $bajaLogica = 0;
+            $idUsuario = $historial->getIdUsuario()->getIdUsuario();
+            $idPartida = $historial->getIdPartida()->getIdPartida();
+            $puesto = $historial->getPuesto();
+            $puntosHistoricos = $historial->getPuntosHistoricos();
+            $esGanador = $historial->getEsGanador() ? 1 : 0;
+            $bajaLogica = 0;
 
-                try {
-                    $stmt = $this->conn->prepare($sql);
-                    $stmt->execute([$idUsuario, $idPartida, $puesto, $puntosHistoricos, $esGanador, $bajaLogica]);
-                    $stmt->closeCursor();
-                    $res = true;
-                } catch (\PDOException $e) {
-                    print "Error al guardar en la base de datos: " . $e->getMessage();
-                    $res = false;
-                }
+            try {
+                $stmt = $this->conn->prepare($sql);
+                $stmt->execute([$idUsuario, $idPartida, $puesto, $puntosHistoricos, $esGanador, $bajaLogica]);
+                $stmt->closeCursor();
+                $res = true;
+            } catch (\PDOException $e) {
+                error_log("Error en altaHistorial: " . $e->getMessage());
+                $res = false;
             }
         }
-
         return $res;
     }
 
     public function modificarHistorial(HistorialDTO $historial): bool {
         $res = false;
         if ($this->conn !== null) {
-            if ($historial !== null) {
-                $sql = "UPDATE Historiales SET Puesto = ?, PuntosHistoricos = ?, esGanador = ? WHERE idUsuario = ? AND idPartida = ?;";
+            $sql = "CALL sp_ModificarHistorial(?, ?, ?, ?, ?);";
 
-                $idUsuario = $historial->getIdUsuario();
-                $idPartida = $historial->getIdPartida();
-                $puesto = $historial->getPuesto();
-                $puntosHistoricos = $historial->getPuntosHistoricos();
-                $esGanador = $historial->getEsGanador() ? 1 : 0;
+            $idUsuario = $historial->getIdUsuario()->getIdUsuario();
+            $idPartida = $historial->getIdPartida()->getIdPartida();
+            $puesto = $historial->getPuesto();
+            $puntosHistoricos = $historial->getPuntosHistoricos();
+            $esGanador = $historial->getEsGanador() ? 1 : 0;
 
-                try {
-                    $stmt = $this->conn->prepare($sql);
-                    $stmt->execute([$puesto, $puntosHistoricos, $esGanador, $idUsuario, $idPartida]);
-                    $stmt->closeCursor();
-                    $res = true;
-                } catch (\PDOException $e) {
-                    print "Error al guardar en la base de datos: " . $e->getMessage();
-                    $res = false;
-                }
+            try {
+                $stmt = $this->conn->prepare($sql);
+                $stmt->execute([$idUsuario, $idPartida, $puesto, $puntosHistoricos, $esGanador]);
+                $stmt->closeCursor();
+                $res = true;
+            } catch (\PDOException $e) {
+                error_log("Error en modificarHistorial: " . $e->getMessage());
+                $res = false;
             }
         }
         return $res;
@@ -88,7 +82,7 @@ class PersistenciaHistorial implements IPersistenciaHistorial {
     public function bajaHistorial(int $idUsuario, int $idPartida): bool {
         $res = false;
         if ($this->conn !== null) {
-            $sql = "UPDATE Historiales SET Baja_logica = 1 WHERE idUsuario = ? AND idPartida = ?;";
+            $sql = "CALL sp_BajaHistorial(?, ?);";
 
             try {
                 $stmt = $this->conn->prepare($sql);
@@ -96,7 +90,7 @@ class PersistenciaHistorial implements IPersistenciaHistorial {
                 $stmt->closeCursor();
                 $res = true;
             } catch (\PDOException $e) {
-                print "Error al actualizar en la base de datos: " . $e->getMessage();
+                error_log("Error en bajaHistorial: " . $e->getMessage());
                 $res = false;
             }
         }
@@ -105,32 +99,57 @@ class PersistenciaHistorial implements IPersistenciaHistorial {
 
     public function buscarHistorial(int $idUsuario, int $idPartida): ?HistorialDTO {
         $historial = null;
-
         if ($this->conn !== null) {
-            $sql = "SELECT * FROM Historiales WHERE idUsuario = ? AND idPartida = ?;";
+            $sql = "CALL sp_BuscarHistorial(?, ?);";
 
             try {
                 $stmt = $this->conn->prepare($sql);
                 $stmt->execute([$idUsuario, $idPartida]);
-
                 $reader = $stmt->fetch(\PDO::FETCH_ASSOC);
-                if ($reader) {
-                    $idUsuario1 = (int)$reader['idUsuario'];
-                    $idPartida1 = (int)$reader['idPartida'];
-                    $puesto = (int)$reader['Puesto'];
-                    $puntosHistoricos = (int)$reader['PuntosHistoricos'];
-                    $esGanador = (bool)$reader['esGanador'];
 
-                    $historial = new HistorialDTO($idUsuario1, $idPartida1, $puesto, $puntosHistoricos, $esGanador);
+                if ($reader !== false) {
+                    $historial = new HistorialDTO(
+                        new UsuarioDTO((int)$reader['idUsuario']),
+                        new PartidaDTO((int)$reader['idPartida']),
+                        (int)$reader['Puesto'],
+                        (int)$reader['PuntosHistoricos'],
+                        (bool)$reader['esGanador']
+                    );
                 }
-
                 $stmt->closeCursor();
-                return $historial;
             } catch (\PDOException $e) {
-                print "Error al recuperar datos en la base de datos: " . $e->getMessage();
+                error_log("Error en buscarHistorial: " . $e->getMessage());
                 $historial = null;
             }
         }
         return $historial;
+    }
+
+    public function obtenerHistorialDeUsuario(int $idUsuario, int $limite, int $desplazamiento): array {
+        $lista = [];
+        if ($this->conn !== null) {
+            $sql = "CALL sp_ObtenerHistorialUsuario(?, ?, ?);";
+
+            try {
+                $stmt = $this->conn->prepare($sql);
+                $stmt->execute([$idUsuario, $limite, $desplazamiento]);
+                $filas = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+                $stmt->closeCursor();
+
+                foreach ($filas as $fila) {
+                    $lista[] = new HistorialDTO(
+                        new UsuarioDTO($idUsuario),
+                        new PartidaDTO((int)$fila['idPartida'], (string)$fila['Fecha'], (int)$fila['JugadoresTotales']),
+                        (int)$fila['Puesto'],
+                        (int)$fila['PuntosHistoricos'],
+                        (bool)$fila['esGanador']
+                    );
+                }
+            } catch (\PDOException $e) {
+                error_log("Error en obtenerHistorialDeUsuario: " . $e->getMessage());
+                $lista = [];
+            }
+        }
+        return $lista;
     }
 }

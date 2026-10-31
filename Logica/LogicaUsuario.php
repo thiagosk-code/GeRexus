@@ -208,14 +208,16 @@ class LogicaUsuario implements ILogicaUsuario {
         $fachadaPersistencia = new FachadaPersistencia();
         $persistencia = $fachadaPersistencia->retornoIPersistenciaUsuario();
 
-        $restaurar = false;
+        $idUsuarioBaja = 0;
         if ($persistencia->existeEmail($email) === true) {
-            if ($persistencia->esEmailBaja($email) === true) {
-                $idUsuarioBaja = $persistencia->buscarUsuarioBaja($email);
-                $restaurar = $persistencia->restaurarHistorial($idUsuarioBaja);  
-            }else{
+            if ($persistencia->esEmailBaja($email) === false) {
                 return ['exito' => false, 'mensaje_key' => 'err_email_registrado', 'mensaje' => 'El correo electronico ya esta registrado.'];
-            }          
+            }
+
+            $idUsuarioBaja = $persistencia->buscarUsuarioBaja($email);
+            if ($idUsuarioBaja <= 0) {
+                return ['exito' => false, 'mensaje_key' => 'err_alta_db', 'mensaje' => 'No se pudo completar la reactivacion de la cuenta.'];
+            }
         }
 
         $contraConPimienta = $contraPlana . PEPPER_SECRET;
@@ -230,21 +232,20 @@ class LogicaUsuario implements ILogicaUsuario {
             return ['exito' => false, 'mensaje_key' => 'err_cifrado', 'mensaje' => 'Error al procesar el cifrado de la contrasenia.'];
         }
 
-        if ($restaurar !== true) {
-            $nuevoDTO = new UsuarioDTO(0, $nom, $email, $hashSeguro, 0, 0, self::ROL_JUGADOR_POR_DEFECTO);
-            $idUsuario = $persistencia->altaUsuario($nuevoDTO);
-        }else{
+        if ($idUsuarioBaja > 0) {
             $nuevoDTO = new UsuarioDTO($idUsuarioBaja, $nom, $email, $hashSeguro, 0, 0, self::ROL_JUGADOR_POR_DEFECTO);
-            $res = $persistencia->modificarUsuario($nuevoDTO);
-            $idUsuario = $idUsuarioBaja;
+            $idNuevo = $persistencia->reactivarUsuario($nuevoDTO) ? $idUsuarioBaja : 0;
+        } else {
+            $nuevoDTO = new UsuarioDTO(0, $nom, $email, $hashSeguro, 0, 0, self::ROL_JUGADOR_POR_DEFECTO);
+            $idNuevo = $persistencia->altaUsuario($nuevoDTO);
         }
 
-        if ($idUsuario > 0) {
+        if ($idNuevo > 0) {
             return [
                 'exito' => true,
                 'mensaje_key' => 'msg_alta_exito',
                 'mensaje' => 'Usuario registrado con exito.',
-                'idUsuario' => $idUsuario
+                'idUsuario' => $idNuevo
             ];
         }
 

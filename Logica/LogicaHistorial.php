@@ -8,54 +8,42 @@ require_once (__DIR__ . '/../Persistencia/FachadaPersistencia.php');
 class LogicaHistorial implements ILogicaHistorial {
 
     public function altaHistorialL(HistorialDTO $historial): bool {
-        $res = false;
-     
-        if ($historial !== null) {
-            $fachadaPersistencia = new FachadaPersistencia();
-            $res = $fachadaPersistencia->retornoIPersistenciaHistorial()->altaHistorial($historial);
-        }
-
-        return $res;
+        $fachadaPersistencia = new FachadaPersistencia();
+        return $fachadaPersistencia->retornoIPersistenciaHistorial()->altaHistorial($historial);
     }
 
     public function bajaHistorialL(HistorialDTO $historial): bool {
-        $res = false;
-     
-        if ($historial !== null) {
-            $fachadaPersistencia = new FachadaPersistencia();
-            
-            $res = $fachadaPersistencia->retornoIPersistenciaHistorial()->bajaHistorial(
-                $historial->getIdUsuario(), 
-                $historial->getIdPartida()
-            );
-        }
-
-        return $res;
+        $fachadaPersistencia = new FachadaPersistencia();
+        return $fachadaPersistencia->retornoIPersistenciaHistorial()->bajaHistorial(
+            $historial->getIdUsuario()->getIdUsuario(),
+            $historial->getIdPartida()->getIdPartida()
+        );
     }
 
     public function modificarHistorialL(HistorialDTO $historial): bool {
-        $res = false;
-     
-        if ($historial !== null) {
-            $fachadaPersistencia = new FachadaPersistencia();
-            $res = $fachadaPersistencia->retornoIPersistenciaHistorial()->modificarHistorial($historial);
-        }
-
-        return $res;
+        $fachadaPersistencia = new FachadaPersistencia();
+        return $fachadaPersistencia->retornoIPersistenciaHistorial()->modificarHistorial($historial);
     }
 
     public function buscarHistorialL(HistorialDTO $historial): ?HistorialDTO {
-        $res = null;
-     
-        if ($historial !== null) {
+        $fachadaPersistencia = new FachadaPersistencia();
+        return $fachadaPersistencia->retornoIPersistenciaHistorial()->buscarHistorial(
+            $historial->getIdUsuario()->getIdUsuario(),
+            $historial->getIdPartida()->getIdPartida()
+        );
+    }
+
+    public function obtenerHistorialUsuarioL(int $idUsuario, int $limite = 20, int $desplazamiento = 0): array {
+        $res = ['historiales' => [], 'hayMas' => false];
+
+        if ($idUsuario > 0 && $limite > 0 && $limite <= 50 && $desplazamiento >= 0) {
             $fachadaPersistencia = new FachadaPersistencia();
-            $res = $fachadaPersistencia->retornoIPersistenciaHistorial()->buscarHistorial(
-                $historial->getIdUsuario(), 
-                $historial->getIdPartida()
-            );
+            $lista = $fachadaPersistencia->retornoIPersistenciaHistorial()->obtenerHistorialDeUsuario($idUsuario, $limite + 1, $desplazamiento);
+
+            $res['hayMas'] = count($lista) > $limite;
+            $res['historiales'] = array_slice($lista, 0, $limite);
         }
 
         return $res;
     }
-
 }

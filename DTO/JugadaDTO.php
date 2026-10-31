@@ -1,64 +1,51 @@
 <?php
 
 class JugadaDTO {
-    // Atributos
+
     private UsuarioDTO $usuario;
     private RecintoDTO $recinto;
     private AdeptoDTO $adepto;
-    private int $turno;
+    private int $turnoGlobal;
     private int $ronda;
+    private int $turnoRonda;
+    private bool $fueAutomatica;
+    private string $fecha;
 
-    // Constructor
-    public function __construct(UsuarioDTO $usuario, RecintoDTO $recinto, AdeptoDTO $adepto, int $turno, int $ronda) {
+    public function __construct(UsuarioDTO $usuario, RecintoDTO $recinto, AdeptoDTO $adepto, int $turnoGlobal = 0, int $ronda = 0, int $turnoRonda = 0, bool $fueAutomatica = false, string $fecha = '') {
         $this->usuario = $usuario;
         $this->recinto = $recinto;
         $this->adepto = $adepto;
-        $this->turno = $turno;
+        $this->turnoGlobal = $turnoGlobal;
         $this->ronda = $ronda;
-    }
-
-    // usuario
-    public function setUsuario(UsuarioDTO $usuario): void {
-        $this->usuario = $usuario;
+        $this->turnoRonda = $turnoRonda;
+        $this->fueAutomatica = $fueAutomatica;
+        $this->fecha = $fecha;
     }
 
     public function getUsuario(): UsuarioDTO {
         return $this->usuario;
     }
-
-    // recinto
-    public function setRecinto(RecintoDTO $recinto): void {
-        $this->recinto = $recinto;
+    public function setUsuario(UsuarioDTO $usuario): void {
+        $this->usuario = $usuario;
     }
 
     public function getRecinto(): RecintoDTO {
         return $this->recinto;
     }
-
-    // adepto
-    public function setAdepto(AdeptoDTO $adepto): void {
-        $this->adepto = $adepto;
+    public function setRecinto(RecintoDTO $recinto): void {
+        $this->recinto = $recinto;
     }
 
     public function getAdepto(): AdeptoDTO {
         return $this->adepto;
     }
-
-    // turno
-    public function setTurno(int $turno): void {
-        $this->turno = $turno;
+    public function setAdepto(AdeptoDTO $adepto): void {
+        $this->adepto = $adepto;
     }
 
-    public function getTurno(): int {
-        return $this->turno;
-    }
-
-    // ronda
-    public function setRonda(int $ronda): void {
-        $this->ronda = $ronda;
-    }
-
-    public function getRonda(): int {
-        return $this->ronda;
-    }
+    public function getTurnoGlobal(): int { return $this->turnoGlobal; }
+    public function getRonda(): int { return $this->ronda; }
+    public function getTurnoRonda(): int { return $this->turnoRonda; }
+    public function getFueAutomatica(): bool { return $this->fueAutomatica; }
+    public function getFecha(): string { return $this->fecha; }
 }

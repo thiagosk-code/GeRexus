@@ -43,9 +43,72 @@ document.addEventListener('DOMContentLoaded', () => {
         btnOpenDelete.addEventListener('click', () => openModal(modalDelete));
     }
 
-    document.querySelectorAll('.btn-moves').forEach(btn => {
-        btn.addEventListener('click', () => openModal(modalMoves));
+    const movesContent = document.getElementById('moves-content');
+    const gamesList = document.getElementById('games-list');
+    const btnMore = document.getElementById('btn-more-games');
+    let solicitudJugadas = 0;
+
+    async function pedirJson(url) {
+        const res = await fetch(url, { credentials: 'same-origin', headers: { 'Accept': 'application/json' } });
+        if (!res.ok) {
+            throw new Error('http');
+        }
+        return res.json();
+    }
+
+    function mostrarMensaje(contenedor, texto) {
+        contenedor.innerHTML = '';
+        const p = document.createElement('p');
+        p.textContent = texto;
+        contenedor.appendChild(p);
+    }
+
+    document.addEventListener('click', async (e) => {
+        const btn = e.target.closest('.btn-moves');
+        if (!btn || !movesContent) return;
+
+        const solicitud = ++solicitudJugadas;
+        mostrarMensaje(movesContent, movesContent.dataset.cargando);
+        openModal(modalMoves);
+
+        try {
+            const data = await pedirJson('jugadas_partida.php?id=' + encodeURIComponent(btn.dataset.partida));
+            if (solicitud !== solicitudJugadas) return;
+
+            if (data.vacio) {
+                mostrarMensaje(movesContent, movesContent.dataset.vacio);
+            } else {
+                movesContent.innerHTML = data.html;
+            }
+        } catch (err) {
+            if (solicitud !== solicitudJugadas) return;
+            mostrarMensaje(movesContent, movesContent.dataset.error);
+        }
     });
+
+    if (btnMore && gamesList) {
+        btnMore.addEventListener('click', async () => {
+            btnMore.disabled = true;
+
+            try {
+                const data = await pedirJson('historial_partidas.php?offset=' + encodeURIComponent(btnMore.dataset.offset));
+                gamesList.insertAdjacentHTML('beforeend', data.html);
+                btnMore.dataset.offset = data.siguiente;
+
+                if (data.hayMas) {
+                    btnMore.disabled = false;
+                } else {
+                    btnMore.remove();
+                }
+            } catch (err) {
+                btnMore.textContent = btnMore.dataset.error;
+                setTimeout(() => {
+                    btnMore.textContent = btnMore.dataset.label;
+                    btnMore.disabled = false;
+                }, 2500);
+            }
+        });
+    }
 
     document.querySelectorAll('[data-close]').forEach(btn => {
         btn.addEventListener('click', () => {

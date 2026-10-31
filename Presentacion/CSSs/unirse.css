@@ -210,3 +210,16 @@
         height: 1.6rem;
     }
 }
+
+#codigo-invitacion {
+    text-transform: uppercase;
+    letter-spacing: 0.15rem;
+}
+
+.msg-error {
+    font-size: 0.95rem;
+    text-align: center;
+    color: var(--color-error);
+    text-shadow: var(--shadow-text);
+}
+

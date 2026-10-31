@@ -49,6 +49,14 @@
     text-shadow: var(--shadow-text);
 }
 
+.msg-error {
+    margin: 0.5rem auto;
+    color: var(--color-error);
+    font-family: var(--font-main);
+    text-align: center;
+    text-shadow: var(--shadow-text);
+}
+
 .asistente-grid {
     display: grid;
     grid-template-columns: var(--mapa) minmax(0, 1fr);
@@ -110,6 +118,32 @@
 .recinto-hotspot.bonus-activo::before {
     background: radial-gradient(closest-side, rgba(120, 255, 160, 0.65) 0%, rgba(120, 255, 160, 0.4) 60%, rgba(120, 255, 160, 0) 100%);
     opacity: 1;
+}
+
+.recinto-fichas {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    padding: 0.18rem;
+    box-sizing: border-box;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+    gap: 0.04rem;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.recinto-fichas img {
+    width: clamp(0.95rem, min(2.4vw, 5vh), 2.6rem);
+    height: clamp(0.95rem, min(2.4vw, 5vh), 2.6rem);
+    flex: 0 0 clamp(0.95rem, min(2.4vw, 5vh), 2.6rem);
+    object-fit: contain;
+    filter: drop-shadow(0 0.08rem 0.12rem rgba(0, 0, 0, 0.7));
+    pointer-events: none;
 }
 
 .glass-box {
@@ -174,10 +208,33 @@
     left: 2rem;
     bottom: 1.25rem;
     display: flex;
-    gap: 1rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.55rem;
     width: auto;
+    max-width: min(36rem, calc(100vw - 4rem));
     margin: 0;
     z-index: 5;
+}
+
+.asistente-acciones-botones {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.volver-container .msg-error {
+    width: 100%;
+    max-height: 4.4rem;
+    margin: 0;
+    padding: 0.45rem 0.65rem;
+    box-sizing: border-box;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    border-radius: 0.65rem;
+    background: rgba(0, 0, 0, 0.45);
+    line-height: 1.4;
+    text-align: left;
 }
 
 .btn-nav {
@@ -452,6 +509,18 @@ button.btn-nav {
         margin: 1rem 0 1.5rem 0;
     }
 
+    .asistente-acciones-botones {
+        width: 100%;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.8rem;
+    }
+
+    .volver-container .msg-error {
+        width: min(100%, 28rem);
+        text-align: center;
+    }
+
     .btn-nav {
         width: 100%;
         max-width: 16rem;
@@ -512,4 +581,3 @@ button.btn-nav {
         width: 92%;
     }
 }
-

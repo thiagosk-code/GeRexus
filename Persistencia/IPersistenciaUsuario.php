@@ -6,7 +6,7 @@ interface IPersistenciaUsuario {
     public function existeEmail(string $email): bool;
     public function esEmailBaja(string $email): bool;
     public function buscarUsuarioBaja(string $email): int;
-    public function restaurarHistorial(int $idUsuarioBaja): bool;
+    public function reactivarUsuario(UsuarioDTO $usuario): bool;
     public function altaUsuario(UsuarioDTO $usuarioDTO): int;
     public function modificarUsuario(UsuarioDTO $usuario): bool;
     public function bajaUsuario(int $idUsuario): bool;

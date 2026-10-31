@@ -5,6 +5,34 @@ require_once __DIR__ . '/../Scripts/lang.php';
 if (empty($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
+
+$idUsuario = (int)$usuarioActual->getIdUsuario();
+$logicaSala = $fachadaLogica->retornoILogicaSala();
+
+$salaActiva = $logicaSala->obtenerSalaActivaL($idUsuario);
+if ($salaActiva !== null) {
+    header('Location: sala.php?codigo=' . urlencode($salaActiva));
+    exit();
+}
+
+$mensajeError = '';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $tokenEnviado = $_POST['csrf_token'] ?? '';
+
+    if (!hash_equals($_SESSION['csrf_token'], $tokenEnviado)) {
+        $mensajeError = 'Peticion no valida (Error CSRF).';
+    } else {
+        $res = $logicaSala->unirseSalaL($idUsuario, (string)($_POST['codigo_invitacion'] ?? ''));
+
+        if ($res['exito'] === true) {
+            header('Location: sala.php?codigo=' . urlencode($res['codigo']));
+            exit();
+        }
+
+        $mensajeError = $txt[$res['mensaje_key']] ?? $res['mensaje'];
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo htmlspecialchars($lang ?? 'es', ENT_QUOTES, 'UTF-8'); ?>">
@@ -63,7 +91,10 @@ if (empty($_SESSION['csrf_token'])) {
             <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
 
             <label for="codigo-invitacion" class="card-title"><?php echo htmlspecialchars($txt['codigo_invitacion'] ?? 'Ingrese Código de invitación', ENT_QUOTES, 'UTF-8'); ?></label>
-            <input type="text" id="codigo-invitacion" name="codigo_invitacion" class="input-pill" placeholder="<?php echo htmlspecialchars($txt['placeholder_codigo_invitacion'] ?? 'Ejemplo123', ENT_QUOTES, 'UTF-8'); ?>" autocomplete="off" required>
+            <input type="text" id="codigo-invitacion" name="codigo_invitacion" class="input-pill" placeholder="<?php echo htmlspecialchars($txt['placeholder_codigo_invitacion'] ?? 'Ejemplo123', ENT_QUOTES, 'UTF-8'); ?>" autocomplete="off" maxlength="6" autocapitalize="characters" spellcheck="false" required>
+            <?php if ($mensajeError !== ''): ?>
+                <p class="msg-error"><?php echo htmlspecialchars($mensajeError, ENT_QUOTES, 'UTF-8'); ?></p>
+            <?php endif; ?>
             <button type="submit" class="btn-unirse"><?php echo htmlspecialchars($txt['unirse'] ?? 'Unirse', ENT_QUOTES, 'UTF-8'); ?></button>
         </form>
 
