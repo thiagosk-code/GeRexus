@@ -344,7 +344,7 @@
 }
 
 .status-defeat {
-    color: var(--color-error);
+    color: #C53F54;
 }
 
 .game-details {
@@ -508,4 +508,21 @@
 
 @media (max-width: 768px) {
     .main-title { font-size: 2.2rem; }
+}
+
+.games-empty {
+    padding: 1rem 0;
+    font-size: 0.95rem;
+    text-align: center;
+    color: var(--color-main);
+    text-shadow: var(--shadow-text);
+}
+
+.btn-more-games {
+    width: auto;
+}
+
+.btn-more-games:disabled {
+    opacity: 0.6;
+    cursor: wait;
 }

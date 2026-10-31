@@ -1,228 +1,174 @@
 document.addEventListener('DOMContentLoaded', () => {
+    const data = window.asistenteData || {};
+    const escuela = data.escuela || {};
+    const nombresRecintos = data.nombresRecintos || {};
+    const csrfToken = data.csrfToken || '';
     const modalRecinto = document.getElementById('modal-recinto');
     const tituloModal = document.getElementById('recinto-modal-title');
     const colocadosContainer = document.getElementById('recinto-colocados');
     const inputRecintoId = document.getElementById('input-recinto-id');
-    const inputEspecie = document.getElementById('input-especie');
-    const inputCorriente = document.getElementById('input-corriente');
+    const inputAdepto = document.getElementById('input-adepto');
     const formAgregarAdepto = document.getElementById('form-agregar-adepto');
     const bonusRow = document.getElementById('bonus-row');
     const bonusCheck = document.getElementById('bonus-rey');
-    const csrfTokenVal = document.querySelector('input[name="csrf_token"]')?.value || '';
-    let hotspotActual = null;
-
-    // Utiliza las traducciones inyectadas desde PHP o valores por defecto
-    const nombresRecintos = window.recintosNombres || {
-        '1': 'El Congreso',
-        '2': 'Profesorado',
-        '3': 'La Pradera del Amor',
-        '4': 'Rey Filósofo',
-        '5': 'El Ágora',
-        '6': 'Director',
-        '7': 'El Pasillo'
-    };
 
     const imagenesAdeptos = {
-        'cinica': '../../Assets/DiogenesPerro.png',
-        'socratica': '../../Assets/SocratesHyrax.png',
-        'neoplatonica': '../../Assets/HypatiaAbeja.png',
-        'peripatetica': '../../Assets/AristotelesTortuga.png',
-        'platonica': '../../Assets/PlatonPato.png',
-        'epicurea': '../../Assets/EpicuroKoala.png'
+        cinica: '../../Assets/DiogenesPerro.png',
+        socratica: '../../Assets/SocratesHyrax.png',
+        neoplatonica: '../../Assets/HypatiaAbeja.png',
+        peripatetica: '../../Assets/AristotelesTortuga.png',
+        platonica: '../../Assets/PlatonPato.png',
+        epicurea: '../../Assets/EpicuroKoala.png'
     };
 
     function openModal(modal) {
-        if (modal) {
-            modal.classList.add('active');
-        }
+        if (modal) modal.classList.add('active');
     }
 
     function closeModal(modal) {
-        if (modal) {
-            modal.classList.remove('active');
-        }
+        if (modal) modal.classList.remove('active');
+    }
+
+    function submitAction(fields) {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = 'asistente.php';
+
+        Object.entries({ ...fields, csrf_token: csrfToken }).forEach(([name, value]) => {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = name;
+            input.value = String(value);
+            form.appendChild(input);
+        });
+
+        document.body.appendChild(form);
+        form.submit();
+    }
+
+    function rutaAdepto(adepto) {
+        const archivo = typeof adepto.archivo === 'string' ? adepto.archivo : '';
+        return archivo !== '' ? `../../Assets/${archivo}` : (imagenesAdeptos[adepto.corriente] || '../../Assets/Socrates.png');
+    }
+
+    function renderTablero() {
+        document.querySelectorAll('.recinto-hotspot').forEach((hotspot) => {
+            const idRecinto = hotspot.dataset.recinto || '';
+            const key = idRecinto === '7' ? 'pasillo' : idRecinto;
+            const adeptos = Array.isArray(escuela[key]) ? escuela[key] : [];
+            const contenedor = hotspot.querySelector('.recinto-fichas');
+            if (!contenedor) return;
+
+            contenedor.replaceChildren();
+
+            adeptos.forEach((adepto) => {
+                const img = document.createElement('img');
+                img.src = rutaAdepto(adepto);
+                img.alt = '';
+                img.loading = 'lazy';
+                contenedor.appendChild(img);
+            });
+        });
     }
 
     function renderColocados(idRecinto, esRey) {
         if (!colocadosContainer) return;
 
-        colocadosContainer.innerHTML = '';
-        const key = (idRecinto === '7') ? 'pasillo' : parseInt(idRecinto);
-        const adeptosEnRecinto = window.escuela[key] || [];
+        colocadosContainer.replaceChildren();
+        const key = idRecinto === '7' ? 'pasillo' : idRecinto;
+        const adeptos = Array.isArray(escuela[key]) ? escuela[key] : [];
 
-        // Gestionar visibilidad del checkbox del Rey Filósofo:
-        // Solo se muestra si es el recinto del rey Y ya tiene al menos un adepto colocado.
-        if (bonusRow) {
-            if (esRey && adeptosEnRecinto.length > 0) {
-                bonusRow.style.display = 'flex';
-                if (bonusCheck) {
-                    bonusCheck.checked = !!adeptosEnRecinto[0].bonusRey;
-                }
-            } else {
-                bonusRow.style.display = 'none';
-                if (bonusCheck) bonusCheck.checked = false;
-            }
+        if (bonusRow && bonusCheck) {
+            const mostrarBonus = esRey && adeptos.length > 0;
+            bonusRow.classList.toggle('visible', mostrarBonus);
+            bonusCheck.checked = mostrarBonus && Boolean(adeptos[0].bonusRey);
         }
 
-        adeptosEnRecinto.forEach((adepto, index) => {
-            const wrapper = document.createElement('div');
+        adeptos.forEach((adepto, indice) => {
+            const wrapper = document.createElement('span');
+            wrapper.className = 'adepto-select-btn';
             wrapper.style.position = 'relative';
-            wrapper.style.display = 'inline-block';
-            wrapper.style.cursor = 'pointer';
-
-            const btnItem = document.createElement('button');
-            btnItem.type = 'button';
-            btnItem.classList.add('adepto-select-btn');
 
             const img = document.createElement('img');
-            img.src = imagenesAdeptos[adepto.corriente] || '../../Assets/Socrates.png';
+            img.src = rutaAdepto(adepto);
             img.alt = adepto.corriente || 'Adepto colocado';
-            img.classList.add('adepto-icon');
+            img.className = 'adepto-icon';
 
-            btnItem.appendChild(img);
+            const eliminar = document.createElement('button');
+            eliminar.type = 'button';
+            eliminar.textContent = '×';
+            eliminar.setAttribute('aria-label', data.eliminarLabel || 'Eliminar adepto');
+            eliminar.style.position = 'absolute';
+            eliminar.style.top = '-0.45rem';
+            eliminar.style.right = '-0.45rem';
+            eliminar.style.width = '1.35rem';
+            eliminar.style.height = '1.35rem';
+            eliminar.style.padding = '0';
+            eliminar.style.border = '0';
+            eliminar.style.borderRadius = '50%';
+            eliminar.style.background = 'rgba(197, 63, 84, 0.95)';
+            eliminar.style.color = '#fff';
+            eliminar.style.cursor = 'pointer';
+            eliminar.addEventListener('click', () => {
+                submitAction({ accion: 'eliminar_adepto', recinto: idRecinto, indice });
+            });
 
-            // Cruz de borrado individual en la esquina superior derecha
-            const deleteBadge = document.createElement('span');
-            deleteBadge.innerHTML = '&times;';
-            deleteBadge.style.position = 'absolute';
-            deleteBadge.style.top = '-0.3rem';
-            deleteBadge.style.right = '-0.3rem';
-            deleteBadge.style.background = 'rgba(197, 63, 84, 0.9)';
-            deleteBadge.style.color = '#fff';
-            deleteBadge.style.borderRadius = '50%';
-            deleteBadge.style.width = '1.3rem';
-            deleteBadge.style.height = '1.3rem';
-            deleteBadge.style.display = 'flex';
-            deleteBadge.style.alignItems = 'center';
-            deleteBadge.style.justifyContent = 'center';
-            deleteBadge.style.fontSize = '0.95rem';
-            deleteBadge.style.fontWeight = 'bold';
-            deleteBadge.style.zIndex = '10';
-
-            const eliminarAdeptoHandler = (e) => {
-                e.stopPropagation();
-                const form = document.createElement('form');
-                form.method = 'POST';
-                form.action = 'asistente.php';
-
-                const inputs = [
-                    { name: 'accion', value: 'eliminar_adepto' },
-                    { name: 'recinto', value: idRecinto },
-                    { name: 'indice', value: index },
-                    { name: 'csrf_token', value: csrfTokenVal }
-                ];
-
-                inputs.forEach(data => {
-                    const inp = document.createElement('input');
-                    inp.type = 'hidden';
-                    inp.name = data.name;
-                    inp.value = data.value;
-                    form.appendChild(inp);
-                });
-
-                document.body.appendChild(form);
-                form.submit();
-            };
-
-            wrapper.appendChild(btnItem);
-            wrapper.appendChild(deleteBadge);
-
-            wrapper.addEventListener('click', eliminarAdeptoHandler);
+            wrapper.append(img, eliminar);
             colocadosContainer.appendChild(wrapper);
         });
     }
 
-    document.querySelectorAll('.recinto-hotspot').forEach(hotspot => {
+    renderTablero();
+
+    document.querySelectorAll('.recinto-hotspot').forEach((hotspot) => {
+        if (hotspot.dataset.recinto === '4' && Array.isArray(escuela['4']) && escuela['4'][0]?.bonusRey) {
+            hotspot.classList.add('bonus-activo');
+        }
+
         hotspot.addEventListener('click', () => {
-            const idRecinto = hotspot.getAttribute('data-recinto');
+            const idRecinto = hotspot.dataset.recinto || '';
             const esRey = hotspot.hasAttribute('data-rey');
 
-            hotspotActual = hotspot;
-
-            if (tituloModal) {
-                tituloModal.textContent = nombresRecintos[idRecinto] || ('Recinto ' + idRecinto);
-            }
-
-            if (inputRecintoId) {
-                inputRecintoId.value = idRecinto;
-            }
+            if (tituloModal) tituloModal.textContent = nombresRecintos[idRecinto] || `Recinto ${idRecinto}`;
+            if (inputRecintoId) inputRecintoId.value = idRecinto;
 
             renderColocados(idRecinto, esRey);
             openModal(modalRecinto);
         });
     });
 
-    // Captura correcta de los botones de selección para evitar el envío erróneo por defecto
-    document.querySelectorAll('.adepto-select-btn[data-especie]').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const especie = btn.getAttribute('data-especie');
-            const corriente = btn.getAttribute('data-corriente');
-
-            if (inputEspecie) inputEspecie.value = especie;
-            if (inputCorriente) inputCorriente.value = corriente;
-
-            if (formAgregarAdepto) {
-                formAgregarAdepto.submit();
-            }
+    document.querySelectorAll('.adepto-select-btn[data-adepto]').forEach((boton) => {
+        boton.addEventListener('click', () => {
+            if (!inputAdepto || !formAgregarAdepto) return;
+            inputAdepto.value = boton.dataset.adepto || '';
+            formAgregarAdepto.submit();
         });
     });
 
-    // Actualizar el bonus del Rey Filósofo de manera dinámica al cambiar el checkbox
     if (bonusCheck) {
         bonusCheck.addEventListener('change', () => {
-            if (inputRecintoId && inputRecintoId.value === '4') {
-                const form = document.createElement('form');
-                form.method = 'POST';
-                form.action = 'asistente.php';
-
-                const inputs = [
-                    { name: 'accion', value: 'actualizar_bonus_rey' },
-                    { name: 'csrf_token', value: csrfTokenVal }
-                ];
-
-                if (bonusCheck.checked) {
-                    inputs.push({ name: 'bonus_rey', value: '1' });
-                }
-
-                inputs.forEach(data => {
-                    const inp = document.createElement('input');
-                    inp.type = 'hidden';
-                    inp.name = data.name;
-                    inp.value = data.value;
-                    form.appendChild(inp);
-                });
-
-                document.body.appendChild(form);
-                form.submit();
-            } else if (hotspotActual && hotspotActual.hasAttribute('data-rey')) {
-                hotspotActual.classList.toggle('bonus-activo', bonusCheck.checked);
-            }
+            const fields = { accion: 'actualizar_bonus_rey' };
+            if (bonusCheck.checked) fields.bonus_rey = '1';
+            submitAction(fields);
         });
     }
 
-    document.querySelectorAll('[data-open]').forEach(btn => {
-        btn.addEventListener('click', () => {
-            openModal(document.getElementById(btn.getAttribute('data-open')));
+    document.querySelectorAll('[data-open]').forEach((boton) => {
+        boton.addEventListener('click', () => openModal(document.getElementById(boton.dataset.open)));
+    });
+
+    document.querySelectorAll('[data-close]').forEach((boton) => {
+        boton.addEventListener('click', () => closeModal(document.getElementById(boton.dataset.close)));
+    });
+
+    document.querySelectorAll('.modal-overlay').forEach((overlay) => {
+        overlay.addEventListener('click', (event) => {
+            if (event.target === overlay) closeModal(overlay);
         });
     });
 
-    document.querySelectorAll('[data-close]').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const targetId = btn.getAttribute('data-close');
-            closeModal(document.getElementById(targetId));
-        });
-    });
-
-    document.querySelectorAll('.modal-overlay').forEach(overlay => {
-        overlay.addEventListener('click', (e) => {
-            if (e.target === overlay) {
-                closeModal(overlay);
-            }
-        });
-    });
-
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
             document.querySelectorAll('.modal-overlay.active').forEach(closeModal);
         }
     });

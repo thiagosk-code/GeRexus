@@ -338,3 +338,20 @@
         height: 1.6rem;
     }
 }
+
+.sala-contador {
+    margin-left: 0.4rem;
+    opacity: 0.8;
+}
+
+.msg-status-placeholder {
+    margin-top: 1rem;
+    font-size: 0.95rem;
+    text-align: center;
+    text-shadow: var(--shadow-text);
+}
+
+.msg-error {
+    color: var(--color-error);
+}
+

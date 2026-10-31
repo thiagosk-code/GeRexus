@@ -7,14 +7,18 @@ class AdeptoDTO {
     private bool $esShiny;
     private string $corriente;
     private string $descripcion;
+    private string $ruta = '';
+    private bool $esSocratico = false;
 
     // Constructor
-    public function __construct(int $idAdepto, string $especie, bool $esShiny = false, string $corriente = '', string $descripcion = '') {
+    public function __construct(int $idAdepto, string $especie, bool $esShiny = false, string $corriente = '', string $descripcion = '', string $ruta = '', bool $esSocratico = false) {
+        $this->ruta = $ruta;
         $this->idAdepto = $idAdepto;
         $this->especie = $especie;
         $this->esShiny = $esShiny;
         $this->corriente = $corriente;
         $this->descripcion = $descripcion;
+        $this->esSocratico = $esSocratico;
     }
 
     // idAdepto
@@ -60,5 +64,21 @@ class AdeptoDTO {
 
     public function getDescripcion(): string {
         return $this->descripcion;
+    }
+
+    public function getRuta(): string {
+        return $this->ruta;
+    }
+
+    public function setRuta(string $ruta): void {
+        $this->ruta = $ruta;
+    }
+
+    public function getEsSocratico(): bool {
+        return $this->esSocratico;
+    }
+
+    public function setEsSocratico(bool $esSocratico): void {
+        $this->esSocratico = $esSocratico;
     }
 }

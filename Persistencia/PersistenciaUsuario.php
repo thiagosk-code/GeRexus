@@ -28,18 +28,19 @@ class PersistenciaUsuario implements IPersistenciaUsuario {
         }
     }
 
+    private function contarEmail(string $sql, string $email): int {
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([$email]);
+        $row = $stmt->fetch(\PDO::FETCH_ASSOC);
+        $stmt->closeCursor();
+        return ($row !== false && isset($row['total'])) ? (int)$row['total'] : 0;
+    }
+
     public function existeEmail(string $email): bool {
         $res = false;
         if ($this->conn !== null) {
-            $sql = "CALL sp_ExisteEmail(?);";
             try {
-                $stmt = $this->conn->prepare($sql);
-                $stmt->execute([$email]);
-                $row = $stmt->fetch(\PDO::FETCH_ASSOC);
-                $stmt->closeCursor();
-                if ($row !== false && isset($row['total'])) {
-                    $res = ((int)$row['total'] > 0);
-                }
+                $res = $this->contarEmail("CALL sp_ExisteEmail(?);", $email) > 0;
             } catch (\PDOException $e) {
                 $res = false;
             }
@@ -48,59 +49,75 @@ class PersistenciaUsuario implements IPersistenciaUsuario {
     }
 
     public function esEmailBaja(string $email): bool {
-        $res = false;
-        if ($this->conn !== null) {
-            $sql = "CALL sp_EsEmailBaja(?);";
-            try {
-                $stmt = $this->conn->prepare($sql);
-                $stmt->execute([$email]);
-                $row = $stmt->fetch(\PDO::FETCH_ASSOC);
-                $stmt->closeCursor();
-                if ($row !== false && isset($row['total'])) {
-                    $res = ((int)$row['total'] > 0);
-                }
-            } catch (\PDOException $e) {
-                $res = false;
-            }
+        if ($this->conn === null) {
+            return false;
         }
-        return $res;
+
+        try {
+            $total = $this->contarEmail("CALL sp_ExisteEmail(?);", $email);
+            $bajas = $this->contarEmail("CALL sp_EsEmailBaja(?);", $email);
+            return $total > 0 && $total === $bajas;
+        } catch (\PDOException $e) {
+            return false;
+        }
     }
 
     public function buscarUsuarioBaja(string $email): int {
-        $idEncontrado = 0;
-        if ($this->conn !== null) {
-            $sql = "CALL sp_buscarUsuarioBaja(?);";
-            try {
-                $stmt = $this->conn->prepare($sql);
-                $stmt->execute([$email]);
-                $row = $stmt->fetch(\PDO::FETCH_ASSOC);
-                $stmt->closeCursor();
-                if ($row !== false) {
-                    $idEncontrado = (int)$row['idUsuario'];
-                }
-            } catch (\PDOException $e) {
-                $idEncontrado = 0;
-            }
+        if ($this->conn === null) {
+            return 0;
         }
-        return $idEncontrado;
+
+        try {
+            $stmt = $this->conn->prepare("CALL sp_BuscarUsuarioBaja(?);");
+            $stmt->execute([$email]);
+            $row = $stmt->fetch(\PDO::FETCH_ASSOC);
+            $stmt->closeCursor();
+            return ($row !== false && isset($row['idUsuario'])) ? (int)$row['idUsuario'] : 0;
+        } catch (\PDOException $e) {
+            return 0;
+        }
     }
 
-    public function restaurarHistorial(int $idUsuarioBaja): bool {
-        $res = false;
-        if($this->conn !== null) {
-            $sql = "CALL sp_RestaurarHistorial(?);";
-            try {
-                $stmt = $this->conn->prepare($sql);
-                $stmt->execute([$idUsuarioBaja]);
-                $stmt->closeCursor();
-                $res = true;
-            } catch (\PDOException $e) {
-                $res = false;
-            }
+    public function reactivarUsuario(UsuarioDTO $usuario): bool {
+        if ($this->conn === null || $usuario->getIdUsuario() <= 0) {
+            return false;
         }
-        return $res;
+
+        $iniciaTransaccion = !$this->conn->inTransaction();
+
+        try {
+            if ($iniciaTransaccion) {
+                $this->conn->beginTransaction();
+            }
+
+            $stmtHistorial = $this->conn->prepare("CALL sp_RestaurarHistorial(?);");
+            $stmtHistorial->execute([$usuario->getIdUsuario()]);
+            $stmtHistorial->closeCursor();
+
+            $stmtUsuario = $this->conn->prepare("CALL sp_ModificarUsuario(?, ?, ?, ?, ?, ?);");
+            $stmtUsuario->execute([
+                $usuario->getIdUsuario(),
+                $usuario->getNombre(),
+                $usuario->getEmail(),
+                $usuario->getPassword(),
+                $usuario->getMonedas(),
+                0
+            ]);
+            $stmtUsuario->closeCursor();
+
+            if ($iniciaTransaccion) {
+                $this->conn->commit();
+            }
+            return true;
+        } catch (\Throwable $e) {
+            if ($iniciaTransaccion && $this->conn->inTransaction()) {
+                $this->conn->rollBack();
+            }
+            error_log("Error al reactivar usuario: " . $e->getMessage());
+            return false;
+        }
     }
-    
+
     public function altaUsuario(UsuarioDTO $usuarioDTO): int {
         $idGenerado = 0;
         if ($this->conn !== null && $usuarioDTO !== null) {

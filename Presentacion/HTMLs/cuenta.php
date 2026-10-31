@@ -3,6 +3,7 @@ require_once __DIR__ . '/../Scripts/auth_check.php';
 require_once __DIR__ . '/../Scripts/lang.php';
 require_once __DIR__ . '/../../Logica/FachadaLogica.php';
 require_once __DIR__ . '/../../DTO/UsuarioDTO.php';
+require_once __DIR__ . '/../Scripts/historial_render.php';
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
@@ -18,6 +19,7 @@ $esErrorCuenta = false;
 $fachadaLogica = new FachadaLogica();
 $logicaUsuario = $fachadaLogica->retornoILogicaUsuario();
 $logicaAutorizacion = $fachadaLogica->retornoILogicaAutorizacion();
+$logicaHistorial = $fachadaLogica->retornoILogicaHistorial();
 
 $idUsuarioLogueado = 0;
 if (isset($usuarioActual) && method_exists($usuarioActual, 'getIdUsuario')) {
@@ -71,7 +73,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $nom = $nombreUsuarioLogueado ?? ($_SESSION['usuario_nombre'] ?? 'User');
 $email = ($usuarioActual !== null && method_exists($usuarioActual, 'getEmail')) ? $usuarioActual->getEmail() : ($_SESSION['usuario_email'] ?? 'Ejemplo@gmail.com');
 $admin = ($usuarioActual !== null) ? $logicaAutorizacion->tienePermiso($usuarioActual, 'ver_panel_admin') : false;
-$wins = ($usuarioActual !== null && method_exists($usuarioActual, 'getPartidasGanadas')) ? $usuarioActual->getPartidasGanadas() : 0;
+$wins = ($usuarioActual !== null) ? $logicaUsuario->buscarPartidasGanadasL($usuarioActual) : 0;
+$resHistorial = $logicaHistorial->obtenerHistorialUsuarioL((int)$idUsuarioLogueado, 20, 0);
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo htmlspecialchars($lang ?? 'es', ENT_QUOTES, 'UTF-8'); ?>">
@@ -193,27 +196,18 @@ $wins = ($usuarioActual !== null && method_exists($usuarioActual, 'getPartidasGa
                     <h2 class="section-subtitle center"><?php echo htmlspecialchars($txt['partidas_jugadas'] ?? 'Partidas Jugadas', ENT_QUOTES, 'UTF-8'); ?></h2>
                     <span class="wins-counter"><?php echo htmlspecialchars($txt['victorias'] ?? 'Victorias:', ENT_QUOTES, 'UTF-8'); ?> <?php echo $wins; ?></span>
 
-                    <div class="games-scroll-container">
-                        <div class="game-card">
-                            <span class="status-txt status-victory"><?php echo htmlspecialchars($txt['victoria'] ?? 'Victoria', ENT_QUOTES, 'UTF-8'); ?></span>
-                            <div class="game-details">
-                                <span><?php echo htmlspecialchars($txt['puesto'] ?? 'Puesto:', ENT_QUOTES, 'UTF-8'); ?> 1</span>
-                                <span><?php echo htmlspecialchars($txt['puntos'] ?? 'Puntos:', ENT_QUOTES, 'UTF-8'); ?> 256</span>
-                            </div>
-                            <hr class="card-divider">
-                            <button type="button" class="btn-sub-pill btn-moves"><?php echo htmlspecialchars($txt['ver_jugadas'] ?? 'Ver Jugadas', ENT_QUOTES, 'UTF-8'); ?></button>
-                        </div>
-
-                        <div class="game-card">
-                            <span class="status-txt status-defeat"><?php echo htmlspecialchars($txt['derrota'] ?? 'Derrota', ENT_QUOTES, 'UTF-8'); ?></span>
-                            <div class="game-details">
-                                <span><?php echo htmlspecialchars($txt['puesto'] ?? 'Puesto:', ENT_QUOTES, 'UTF-8'); ?> 4</span>
-                                <span><?php echo htmlspecialchars($txt['puntos'] ?? 'Puntos:', ENT_QUOTES, 'UTF-8'); ?> 32</span>
-                            </div>
-                            <hr class="card-divider">
-                            <button type="button" class="btn-sub-pill btn-moves"><?php echo htmlspecialchars($txt['ver_jugadas'] ?? 'Ver Jugadas', ENT_QUOTES, 'UTF-8'); ?></button>
-                        </div>
+                    <div class="games-scroll-container" id="games-list">
+                        <?php foreach ($resHistorial['historiales'] as $historial): ?>
+                            <?php echo renderPartidaCard($historial, $txt); ?>
+                        <?php endforeach; ?>
+                        <?php if (count($resHistorial['historiales']) === 0): ?>
+                            <p class="games-empty"><?php echo htmlspecialchars($txt['sin_partidas'] ?? 'Todavía no jugaste ninguna partida.', ENT_QUOTES, 'UTF-8'); ?></p>
+                        <?php endif; ?>
                     </div>
+
+                    <?php if ($resHistorial['hayMas']): ?>
+                        <button type="button" class="btn-sub-pill btn-more-games" id="btn-more-games" data-offset="<?php echo count($resHistorial['historiales']); ?>" data-label="<?php echo htmlspecialchars($txt['ver_mas'] ?? 'Ver más', ENT_QUOTES, 'UTF-8'); ?>" data-error="<?php echo htmlspecialchars($txt['err_cargar'] ?? 'No se pudo cargar. Intentá de nuevo.', ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($txt['ver_mas'] ?? 'Ver más', ENT_QUOTES, 'UTF-8'); ?></button>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -275,11 +269,7 @@ $wins = ($usuarioActual !== null && method_exists($usuarioActual, 'getPartidasGa
         <div class="modal-window modal-wide">
             <button type="button" class="modal-close-btn" data-close="modal-moves">&times;</button>
             <h2 class="modal-header-title"><?php echo htmlspecialchars($txt['historial_jugadas'] ?? 'Historial de Jugadas', ENT_QUOTES, 'UTF-8'); ?></h2>
-            <div class="moves-scroll-box">
-                <p>Jugador Pepe Asigna Koala a sala Rey Filósofo</p>
-                <p>Jugador Pepe Asigna Koala a sala Rey Filósofo</p>
-                <p>Jugador Pepe Asigna Koala a sala Rey Filósofo</p>
-            </div>
+            <div class="moves-scroll-box" id="moves-content" data-cargando="<?php echo htmlspecialchars($txt['cargando'] ?? 'Cargando...', ENT_QUOTES, 'UTF-8'); ?>" data-error="<?php echo htmlspecialchars($txt['err_cargar'] ?? 'No se pudo cargar. Intentá de nuevo.', ENT_QUOTES, 'UTF-8'); ?>" data-vacio="<?php echo htmlspecialchars($txt['sin_jugadas'] ?? 'Esta partida no tiene jugadas registradas.', ENT_QUOTES, 'UTF-8'); ?>"></div>
             <button type="button" class="btn-sub-pill btn-full-width" data-close="modal-moves"><?php echo htmlspecialchars($txt['cerrar_panel'] ?? 'Cerrar Panel', ENT_QUOTES, 'UTF-8'); ?></button>
         </div>
     </div>
