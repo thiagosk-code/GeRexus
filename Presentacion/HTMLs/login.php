@@ -1,6 +1,5 @@
 <?php
 
-// Usar el mismo sistema de idiomas que register.php: lee la cookie lang y actualiza la sesión.
 require_once __DIR__ . '/../Scripts/lang.php';
 require_once __DIR__ . '/../../Logica/FachadaLogica.php';
 
@@ -49,7 +48,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
 }
 
-// Compatibilidad con las claves del diccionario compartido.
 $txt['correo'] = $txt['correo'] ?? $txt['correo_elec'] ?? ($lang === 'en' ? 'Email' : 'Correo');
 $txt['no_cuenta'] = $txt['no_cuenta'] ?? ($lang === 'en' ? "Don't have an account?" : '¿No tienes una cuenta?');
 $txt['registrarse'] = $txt['registrarse'] ?? ($lang === 'en' ? 'Sign up' : 'Registrarse');
