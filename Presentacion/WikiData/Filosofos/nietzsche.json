@@ -2,8 +2,8 @@
   "id": "nietzsche",
   "corriente_id": "vitalismo",
   "img_cuadro": "../../Assets/NietzscheCuadro.png",
-  "img_adepto_normal": "../../Assets/sinAdepto.png",
-  "img_adepto_shiny": "../../Assets/sinAdepto.png",
+  "img_adepto_normal": "../../Assets/NietzscheLeon.png",
+  "img_adepto_shiny": "../../Assets/NietzscheLeonShiny.png",
   "i18n": {
     "es": {
       "nombre": "Friedrich Nietzsche",

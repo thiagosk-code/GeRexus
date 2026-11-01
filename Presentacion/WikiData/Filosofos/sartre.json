@@ -2,8 +2,8 @@
   "id": "sartre",
   "corriente_id": "existencialismo",
   "img_cuadro": "../../Assets/SartreCuadro.png",
-  "img_adepto_normal": "../../Assets/sinAdepto.png",
-  "img_adepto_shiny": "../../Assets/sinAdepto.png",
+  "img_adepto_normal": "../../Assets/SartreGato.png",
+  "img_adepto_shiny": "../../Assets/SartreGatoShiny.png",
   "i18n": {
     "es": {
       "nombre": "Jean-Paul Sartre",

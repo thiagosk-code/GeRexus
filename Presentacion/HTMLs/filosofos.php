@@ -43,7 +43,7 @@ $filosofos = [
         'id' => 'sartre',
         'nombre' => $txt['sartre'] ?? 'Jean-Paul Sartre',
         'img_autor' => '../../Assets/Sartre.png',
-        'img_adepto' => '../../Assets/sinAdepto.png'
+        'img_adepto' => '../../Assets/SartreGato.png'
     ],
     [
         'id' => 'camus',
@@ -55,7 +55,7 @@ $filosofos = [
         'id' => 'nietzsche',
         'nombre' => $txt['nietzsche'] ?? 'Friedrich Nietzsche',
         'img_autor' => '../../Assets/Nietzsche.png',
-        'img_adepto' => '../../Assets/sinAdepto.png'
+        'img_adepto' => '../../Assets/NietzscheLeon.png'
     ]
 ];
 ?>
@@ -82,7 +82,7 @@ $filosofos = [
             <span class="logo-img"></span>
             <span class="logo-text">GeRexus</span>
         </a>
-        
+
         <div class="header-actions">
             <div class="leng-switcher">
                 <?php if (($lang ?? 'es') === 'en'): ?>
@@ -95,7 +95,7 @@ $filosofos = [
                     <a href="?lang=en" class="inactive">Eng</a>
                 <?php endif; ?>
             </div>
-            
+
             <button class="tema-toggle" aria-label="<?php echo htmlspecialchars($txt['cambiar_modo_claro'], ENT_QUOTES, 'UTF-8'); ?>" data-label-light="<?php echo htmlspecialchars($txt['cambiar_modo_claro'], ENT_QUOTES, 'UTF-8'); ?>" data-label-dark="<?php echo htmlspecialchars($txt['cambiar_modo_oscuro'], ENT_QUOTES, 'UTF-8'); ?>">
                 <span class="material-symbols-outlined">light_mode</span>
             </button>
