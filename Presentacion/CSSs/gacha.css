@@ -142,6 +142,16 @@
     filter: grayscale(1) brightness(0.55);
 }
 
+.lista-vacia {
+    grid-column: 1 / -1;
+    margin: 1rem 0;
+    color: var(--color-main);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    text-align: center;
+    text-shadow: var(--shadow-text);
+}
+
 .gacha-machine {
     position: relative;
     height: var(--maquina-h);
@@ -189,6 +199,37 @@
 
 .btn-tirada:active {
     transform: scale(0.98);
+}
+
+.btn-tirada:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+    transform: none;
+}
+
+.gacha-feedback {
+    position: fixed;
+    left: 50%;
+    bottom: 1.7rem;
+    z-index: 6;
+    width: min(34rem, calc(100vw - 28rem));
+    margin: 0;
+    padding: 0.75rem 1rem;
+    color: var(--color-main);
+    background: var(--bg-btn-jugar);
+    border: 0.125rem solid var(--color-btn-border);
+    border-radius: 1rem;
+    text-align: center;
+    text-shadow: var(--shadow-text);
+    transform: translateX(-50%);
+}
+
+.gacha-feedback.exito {
+    border-color: var(--color-accent);
+}
+
+.gacha-feedback.error {
+    border-color: #e57373;
 }
 
 .gacha-nav {
@@ -281,6 +322,13 @@
         position: static;
         max-width: 26rem;
         margin: 1.5rem auto 0 auto;
+    }
+
+    .gacha-feedback {
+        position: static;
+        width: min(100%, 26rem);
+        margin: 1rem auto;
+        transform: none;
     }
 }
 

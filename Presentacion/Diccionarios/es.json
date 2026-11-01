@@ -263,5 +263,13 @@
   "adepto_shiny_alt": "Adepto shiny",
   "puntos_clasificacion": "puntos",
   "pagina_anterior": "Página anterior",
-  "pagina_siguiente": "Página siguiente"
+  "pagina_siguiente": "Página siguiente",
+  "err_gacha_estado": "No se pudo cargar el estado del gacha.",
+  "err_gacha_usuario": "El usuario no es válido para usar el gacha.",
+  "err_gacha_tirada": "No se pudo completar la tirada.",
+  "err_gacha_completo": "Ya desbloqueaste todos los adeptos disponibles.",
+  "err_gacha_dracmas": "No tienes suficientes dracmas para comprar una tirada.",
+  "msg_gacha_desbloqueado": "Desbloqueaste a {adepto}.",
+  "gacha_sin_desbloqueados": "Todavía no tienes adeptos desbloqueados.",
+  "gacha_todos_desbloqueados": "Ya desbloqueaste todos los adeptos disponibles."
 }

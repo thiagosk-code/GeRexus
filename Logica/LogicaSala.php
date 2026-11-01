@@ -7,6 +7,7 @@ require_once (__DIR__ . '/../Persistencia/FachadaPersistencia.php');
 require_once (__DIR__ . '/ILogicaSala.php');
 require_once (__DIR__ . '/ILogicaAutorizacion.php');
 require_once (__DIR__ . '/LogicaAutorizacion.php');
+require_once (__DIR__ . '/ConfiguracionJuego.php');
 
 class LogicaSala implements ILogicaSala {
 
@@ -32,6 +33,7 @@ class LogicaSala implements ILogicaSala {
         'ERR_USUARIO_INVALIDO' => ['err_usuario_invalido', 'El usuario no es valido.'],
         'ERR_DEMASIADOS_INTENTOS' => ['err_demasiados_intentos', 'Demasiados intentos. Espera unos minutos.'],
         'ERR_ACCESO_DENEGADO' => ['err_acceso_denegado', 'Acceso denegado.'],
+        'ERR_CONCURRENCIA' => ['err_sala_cerrada', 'La sala cambio. Intenta nuevamente.'],
         'ERR_BD' => ['err_bd', 'Ocurrio un error. Intenta de nuevo.']
     ];
 
@@ -98,6 +100,22 @@ class LogicaSala implements ILogicaSala {
         $_SESSION['intentos_codigo_sala'] = $registro;
     }
 
+    private function limpiarSalasInactivas(): void {
+        $persistencia = $this->persistencia();
+        $ahora = time();
+        $limiteActividad = date('Y-m-d H:i:s', $ahora - ConfiguracionJuego::SEGUNDOS_INACTIVIDAD_SALA);
+        $limiteCreacion = date('Y-m-d H:i:s', $ahora - ConfiguracionJuego::SEGUNDOS_VIDA_SALA);
+        foreach ($persistencia->obtenerCandidatosInactivos($limiteActividad, $limiteCreacion) as $candidata) {
+            try {
+                $persistencia->cancelarSalaInactiva((int)$candidata['idSala'], (int)$candidata['Version']);
+            } catch (SalaException $e) {
+                if ($e->getCodigoError() !== 'ERR_CONCURRENCIA') {
+                    throw $e;
+                }
+            }
+        }
+    }
+
     private function accion(int $idUsuario, string $codigo, callable $ejecutar): array {
         $codigo = $this->normalizarCodigo($codigo);
 
@@ -131,7 +149,7 @@ class LogicaSala implements ILogicaSala {
     public function crearSalaL(int $idUsuario, int $idTablero, array $idsAdeptos): array {
         $ids = array_map('intval', array_values($idsAdeptos));
 
-        if (count($ids) !== 6 || count(array_unique($ids)) !== 6 || min($ids) <= 0) {
+        if (count($ids) !== ConfiguracionJuego::ADEPTOS_POR_SALA || count(array_unique($ids)) !== ConfiguracionJuego::ADEPTOS_POR_SALA || min($ids) <= 0) {
             return $this->error('ERR_ADEPTOS_INVALIDOS');
         }
 
@@ -141,6 +159,21 @@ class LogicaSala implements ILogicaSala {
 
         if ($this->tienePermiso($idUsuario, 'crear_sala') === false) {
             return $this->error('ERR_ACCESO_DENEGADO');
+        }
+
+        $tableros = array_map(static fn(TableroDTO $tablero): int => $tablero->getIdTablero(), $this->obtenerTablerosL());
+        if (!in_array($idTablero, $tableros, true)) {
+            return $this->error('ERR_TABLERO_INVALIDO');
+        }
+        $disponibles = array_map(static fn(AdeptoDTO $adepto): int => $adepto->getIdAdepto(), $this->obtenerAdeptosDisponiblesL($idUsuario));
+        if (count(array_intersect($ids, $disponibles)) !== ConfiguracionJuego::ADEPTOS_POR_SALA) {
+            return $this->error('ERR_ADEPTOS_INVALIDOS');
+        }
+
+        try {
+            $this->limpiarSalasInactivas();
+        } catch (SalaException $e) {
+            return $this->error($e->getCodigoError());
         }
 
         for ($intento = 0; $intento < self::REINTENTOS_CODIGO; $intento++) {
@@ -176,7 +209,27 @@ class LogicaSala implements ILogicaSala {
         }
 
         try {
-            $this->persistencia()->unirseSala($idUsuario, $codigo);
+            $this->limpiarSalasInactivas();
+            $persistencia = $this->persistencia();
+            $sala = $persistencia->obtenerEstadoSala($idUsuario, $codigo);
+            if ($sala === null) {
+                throw new SalaException('ERR_SALA_NO_EXISTE');
+            }
+            if ($sala->getEstado() !== 'espera') {
+                throw new SalaException('ERR_SALA_CERRADA');
+            }
+            if ($sala->getMiEstado() === 'expulsado') {
+                throw new SalaException('ERR_EXPULSADO');
+            }
+            if ($sala->getMiEstado() === 'activo') {
+                unset($_SESSION['intentos_codigo_sala']);
+                return ['exito' => true, 'codigo' => $codigo];
+            }
+            $jugadores = $persistencia->obtenerJugadoresSala($idUsuario, $codigo);
+            if (count($jugadores) >= ConfiguracionJuego::MAX_JUGADORES) {
+                throw new SalaException('ERR_SALA_LLENA');
+            }
+            $persistencia->unirseSala($idUsuario, $codigo, $sala->getVersion(), ConfiguracionJuego::MAX_JUGADORES);
             unset($_SESSION['intentos_codigo_sala']);
             return ['exito' => true, 'codigo' => $codigo];
         } catch (SalaException $e) {
@@ -198,11 +251,13 @@ class LogicaSala implements ILogicaSala {
     public function obtenerEstadoSalaL(int $idUsuario, string $codigo, int $versionCliente = 0): array {
         return $this->accion($idUsuario, $codigo, function (string $codigoSala) use ($idUsuario, $versionCliente): array {
             $persistencia = $this->persistencia();
+            $persistencia->registrarActividad($idUsuario, $codigoSala);
             $sala = $persistencia->obtenerEstadoSala($idUsuario, $codigoSala);
 
             if ($sala === null) {
                 return ['existe' => false, 'cambio' => true, 'sala' => null, 'esAnfitrion' => false];
             }
+            $sala->setMaxJugadores(ConfiguracionJuego::MAX_JUGADORES);
 
             $vigente = ($sala->getMiEstado() === 'activo' && $sala->getEstado() === 'espera');
             $cambio = ($vigente === false) || ($sala->getVersion() !== $versionCliente);
@@ -225,28 +280,114 @@ class LogicaSala implements ILogicaSala {
 
     public function salirSalaL(int $idUsuario, string $codigo): array {
         return $this->accion($idUsuario, $codigo, function (string $codigoSala) use ($idUsuario): array {
-            $this->persistencia()->salirSala($idUsuario, $codigoSala);
+            $persistencia = $this->persistencia();
+            $sala = $persistencia->obtenerEstadoSala($idUsuario, $codigoSala);
+            if ($sala === null) {
+                throw new SalaException('ERR_SALA_NO_EXISTE');
+            }
+            if ($sala->getIdAnfitrion() === $idUsuario) {
+                $persistencia->cancelarSala($idUsuario, $codigoSala, $sala->getVersion());
+            } else {
+                $persistencia->salirSala($idUsuario, $codigoSala, $sala->getVersion());
+            }
             return [];
         });
     }
 
     public function echarJugadorSalaL(int $idAnfitrion, string $codigo, int $idJugador): array {
         return $this->accion($idAnfitrion, $codigo, function (string $codigoSala) use ($idAnfitrion, $idJugador): array {
-            $this->persistencia()->echarJugadorSala($idAnfitrion, $codigoSala, $idJugador);
+            $persistencia = $this->persistencia();
+            $sala = $persistencia->obtenerEstadoSala($idAnfitrion, $codigoSala);
+            if ($sala === null || $sala->getIdAnfitrion() !== $idAnfitrion) {
+                throw new SalaException('ERR_NO_ANFITRION');
+            }
+            if ($idJugador === $idAnfitrion) {
+                throw new SalaException('ERR_NO_PUEDE_ECHAR_ANFITRION');
+            }
+            $persistencia->echarJugadorSala($idAnfitrion, $codigoSala, $idJugador, $sala->getVersion());
             return [];
         });
     }
 
     public function cancelarSalaL(int $idAnfitrion, string $codigo): array {
         return $this->accion($idAnfitrion, $codigo, function (string $codigoSala) use ($idAnfitrion): array {
-            $this->persistencia()->cancelarSala($idAnfitrion, $codigoSala);
+            $persistencia = $this->persistencia();
+            $sala = $persistencia->obtenerEstadoSala($idAnfitrion, $codigoSala);
+            if ($sala === null || $sala->getIdAnfitrion() !== $idAnfitrion) {
+                throw new SalaException('ERR_NO_ANFITRION');
+            }
+            $persistencia->cancelarSala($idAnfitrion, $codigoSala, $sala->getVersion());
             return [];
         });
     }
 
     public function iniciarSalaL(int $idAnfitrion, string $codigo): array {
         return $this->accion($idAnfitrion, $codigo, function (string $codigoSala) use ($idAnfitrion): array {
-            return ['idPartida' => $this->persistencia()->iniciarSala($idAnfitrion, $codigoSala)];
+            $persistencia = $this->persistencia();
+            $sala = $persistencia->obtenerEstadoSala($idAnfitrion, $codigoSala);
+            if ($sala === null || $sala->getIdAnfitrion() !== $idAnfitrion) {
+                throw new SalaException('ERR_NO_ANFITRION');
+            }
+            if ($sala->getEstado() === 'en_juego' && $sala->getIdPartida() > 0) {
+                return ['idPartida' => $sala->getIdPartida()];
+            }
+            if ($sala->getEstado() !== 'espera') {
+                throw new SalaException('ERR_SALA_CERRADA');
+            }
+
+            $usuarios = $persistencia->obtenerJugadoresSala($idAnfitrion, $codigoSala);
+            $adeptos = $persistencia->obtenerAdeptosSala($idAnfitrion, $codigoSala);
+            if (count($usuarios) < ConfiguracionJuego::MIN_JUGADORES) {
+                throw new SalaException('ERR_JUGADORES_INSUFICIENTES');
+            }
+            if (count($usuarios) > ConfiguracionJuego::MAX_JUGADORES || count($adeptos) !== ConfiguracionJuego::ADEPTOS_POR_SALA) {
+                throw new SalaException('ERR_ADEPTOS_INVALIDOS');
+            }
+
+            $jugadores = [];
+            foreach ($usuarios as $indice => $usuario) {
+                $jugadores[] = ['id_usuario' => $usuario->getIdUsuario(), 'orden' => $indice + 1];
+            }
+            $bolsa = [];
+            foreach ($adeptos as $adepto) {
+                for ($copia = 0; $copia < ConfiguracionJuego::COPIAS_POR_ADEPTO; $copia++) {
+                    $bolsa[] = $adepto->getIdAdepto();
+                }
+            }
+            for ($indice = count($bolsa) - 1; $indice > 0; $indice--) {
+                $otro = random_int(0, $indice);
+                [$bolsa[$indice], $bolsa[$otro]] = [$bolsa[$otro], $bolsa[$indice]];
+            }
+            $fichas = [];
+            $repartidas = count($jugadores) * ConfiguracionJuego::FICHAS_POR_RONDA;
+            foreach ($bolsa as $indice => $idAdepto) {
+                $numero = $indice + 1;
+                $idPoseedor = null;
+                $ronda = null;
+                if ($indice < $repartidas) {
+                    $orden = intdiv($indice, ConfiguracionJuego::FICHAS_POR_RONDA);
+                    $idPoseedor = $jugadores[$orden]['id_usuario'];
+                    $ronda = 1;
+                }
+                $fichas[] = [
+                    'numero' => $numero,
+                    'id_adepto' => $idAdepto,
+                    'estado' => $idPoseedor === null ? 'bolsa' : 'mano',
+                    'id_poseedor' => $idPoseedor,
+                    'ronda' => $ronda
+                ];
+            }
+            $primerActivo = $jugadores[random_int(0, count($jugadores) - 1)]['id_usuario'];
+            $limiteTirada = date('Y-m-d H:i:s', time() + ConfiguracionJuego::SEGUNDOS_TIRADA);
+            return ['idPartida' => $persistencia->iniciarSala(
+                $idAnfitrion,
+                $codigoSala,
+                $sala->getVersion(),
+                $jugadores,
+                $fichas,
+                $primerActivo,
+                $limiteTirada
+            )];
         });
     }
 }

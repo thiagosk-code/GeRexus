@@ -3,6 +3,7 @@
 require_once (__DIR__ . '/ILogicaPartida.php');
 require_once (__DIR__ . '/LogicaRecintos.php');
 require_once (__DIR__ . '/ConfiguracionRecintos.php');
+require_once (__DIR__ . '/ConfiguracionJuego.php');
 require_once (__DIR__ . '/../Persistencia/FachadaPersistencia.php');
 require_once (__DIR__ . '/../Persistencia/PartidaException.php');
 
@@ -18,6 +19,7 @@ class LogicaPartida implements ILogicaPartida {
         'ERR_PARTIDA_FICHA' => 'err_partida_ficha',
         'ERR_PARTIDA_RECINTO' => 'err_partida_recinto',
         'ERR_PARTIDA_VOTO' => 'err_partida_voto',
+        'ERR_CONCURRENCIA' => 'err_partida_estado',
         'ERR_BD' => 'err_bd'
     ];
 
@@ -40,7 +42,7 @@ class LogicaPartida implements ILogicaPartida {
 
         try {
             $persistencia = $this->persistencia();
-            $persistencia->procesarVencimientos($idUsuario, $idPartida);
+            $this->procesarVencimientos($idUsuario, $idPartida);
             $raw = $persistencia->obtenerEstado($idUsuario, $idPartida);
             if ($raw === null) {
                 return $this->error('ERR_PARTIDA_NO_AUTORIZADA');
@@ -48,7 +50,7 @@ class LogicaPartida implements ILogicaPartida {
 
             if (($raw['partida']['Estado'] ?? '') === 'calculando') {
                 $clasificacion = $this->crearClasificacion($raw);
-                $persistencia->finalizar($idPartida, $clasificacion);
+                $persistencia->finalizar($idPartida, (int)$raw['partida']['Version'], $clasificacion);
                 $raw = $persistencia->obtenerEstado($idUsuario, $idPartida);
             }
 
@@ -82,8 +84,38 @@ class LogicaPartida implements ILogicaPartida {
         }
         try {
             $persistencia = $this->persistencia();
-            $persistencia->procesarVencimientos($idUsuario, $idPartida);
-            $persistencia->tirarDado($idUsuario, $idPartida);
+            $this->procesarVencimientos($idUsuario, $idPartida);
+            $raw = $persistencia->obtenerEstado($idUsuario, $idPartida);
+            if ($raw === null) {
+                return $this->error('ERR_PARTIDA_NO_AUTORIZADA');
+            }
+            $turno = $raw['turno'];
+            if (($raw['partida']['Estado'] ?? '') !== 'en_juego' || $turno === null || $turno['Fase'] !== 'esperando_tirada') {
+                return $this->error('ERR_PARTIDA_FASE');
+            }
+            if ((int)$turno['idJugadorActivo'] !== $idUsuario) {
+                return $this->error('ERR_PARTIDA_NO_ACTIVO');
+            }
+            try {
+                $persistencia->aplicarTirada(
+                    $idUsuario,
+                    $idPartida,
+                    (int)$raw['partida']['Version'],
+                    (int)$turno['TurnoGlobal'],
+                    $this->elegirRestriccion(),
+                    $this->fechaLimite($raw, ConfiguracionJuego::SEGUNDOS_COLOCACION)
+                );
+            } catch (PartidaException $e) {
+                if ($e->getCodigoError() !== 'ERR_CONCURRENCIA') {
+                    throw $e;
+                }
+                $actual = $persistencia->obtenerEstado($idUsuario, $idPartida);
+                if ($actual === null || $actual['turno'] === null
+                    || (int)$actual['turno']['TurnoGlobal'] !== (int)$turno['TurnoGlobal']
+                    || $actual['turno']['Fase'] !== 'colocacion') {
+                    throw $e;
+                }
+            }
             return ['exito' => true];
         } catch (PartidaException $e) {
             return $this->error($e->getCodigoError());
@@ -98,7 +130,7 @@ class LogicaPartida implements ILogicaPartida {
 
         try {
             $persistencia = $this->persistencia();
-            $persistencia->procesarVencimientos($idUsuario, $idPartida);
+            $this->procesarVencimientos($idUsuario, $idPartida);
             $contexto = $persistencia->obtenerContextoColocacion($idUsuario, $idPartida, $idFicha);
             if ($contexto === null) {
                 return $this->error('ERR_PARTIDA_NO_AUTORIZADA');
@@ -138,7 +170,30 @@ class LogicaPartida implements ILogicaPartida {
                 return $this->error('ERR_PARTIDA_REGLA', (string)$validacion['mensaje_key']);
             }
 
-            $persistencia->colocar($idUsuario, $idPartida, $idFicha, $codigoRecinto);
+            for ($intento = 0; $intento < 3; $intento++) {
+                try {
+                    $persistencia->colocar(
+                        $idUsuario,
+                        $idPartida,
+                        (int)$contexto['partida']['Version'],
+                        (int)$turno['TurnoGlobal'],
+                        $idFicha,
+                        $codigoRecinto
+                    );
+                    break;
+                } catch (PartidaException $e) {
+                    if ($e->getCodigoError() !== 'ERR_CONCURRENCIA' || $intento === 2) {
+                        throw $e;
+                    }
+                    $contexto = $persistencia->obtenerContextoColocacion($idUsuario, $idPartida, $idFicha);
+                    if ($contexto === null || $contexto['ficha'] === null || $contexto['turno'] === null
+                        || $contexto['turno']['Fase'] !== 'colocacion'
+                        || (int)$contexto['turno']['TurnoGlobal'] !== (int)$turno['TurnoGlobal']) {
+                        throw new PartidaException('ERR_PARTIDA_FASE');
+                    }
+                }
+            }
+            $this->cerrarTurnoSiCorresponde($idUsuario, $idPartida);
             return ['exito' => true];
         } catch (PartidaException $e) {
             return $this->error($e->getCodigoError());
@@ -152,18 +207,258 @@ class LogicaPartida implements ILogicaPartida {
 
         try {
             $persistencia = $this->persistencia();
-            $resultado = $persistencia->establecerVotoFinalizacion($idUsuario, $idPartida, $voto);
-
-            if (!empty($resultado['debe_finalizar'])) {
-                $raw = $persistencia->obtenerEstado($idUsuario, $idPartida);
-                if ($raw !== null && ($raw['partida']['Estado'] ?? '') === 'calculando') {
-                    $persistencia->finalizar($idPartida, $this->crearClasificacion($raw));
+            $raw = $persistencia->obtenerEstado($idUsuario, $idPartida);
+            if ($raw === null) {
+                return $this->error('ERR_PARTIDA_NO_AUTORIZADA');
+            }
+            if (in_array($raw['partida']['Estado'], ['calculando', 'finalizada'], true)) {
+                return ['exito' => true, 'finalizada' => true];
+            }
+            $resultado = [];
+            for ($intento = 0; $intento < 3; $intento++) {
+                try {
+                    $resultado = $persistencia->establecerVotoFinalizacion(
+                        $idUsuario,
+                        $idPartida,
+                        (int)$raw['partida']['Version'],
+                        $voto
+                    );
+                    break;
+                } catch (PartidaException $e) {
+                    if ($e->getCodigoError() !== 'ERR_CONCURRENCIA' || $intento === 2) {
+                        throw $e;
+                    }
+                    $raw = $persistencia->obtenerEstado($idUsuario, $idPartida);
+                    if ($raw === null || ($raw['partida']['Estado'] ?? '') !== 'en_juego') {
+                        return ['exito' => true, 'finalizada' => true];
+                    }
+                }
+            }
+            $votos = (int)($resultado['Votos'] ?? 0);
+            $total = (int)($resultado['Total'] ?? 0);
+            $debeFinalizar = $total > 0 && $votos >= intdiv($total, 2) + 1;
+            if ($debeFinalizar) {
+                for ($intento = 0; $intento < 3; $intento++) {
+                    $actual = $persistencia->obtenerEstado($idUsuario, $idPartida);
+                    if ($actual === null || ($actual['partida']['Estado'] ?? '') !== 'en_juego' || $actual['turno'] === null) {
+                        break;
+                    }
+                    $votosActuales = count(array_filter(
+                        $actual['jugadores'],
+                        static fn(array $jugador): bool => (bool)$jugador['VotoFinalizacion']
+                    ));
+                    if ($votosActuales < intdiv(count($actual['jugadores']), 2) + 1) {
+                        $debeFinalizar = false;
+                        break;
+                    }
+                    $colocacionesActuales = count(array_filter(
+                        $actual['jugadas_todas'],
+                        static fn(array $jugada): bool => (int)$jugada['TurnoGlobal'] === (int)$actual['turno']['TurnoGlobal']
+                    ));
+                    if ($colocacionesActuales === count($actual['jugadores'])
+                        && $actual['turno']['Fase'] === 'colocacion') {
+                        $this->cerrarTurnoSiCorresponde($idUsuario, $idPartida);
+                        continue;
+                    }
+                    try {
+                        $persistencia->descartarTurno(
+                            $idPartida,
+                            (int)$actual['partida']['Version'],
+                            (int)$actual['turno']['TurnoGlobal']
+                        );
+                        break;
+                    } catch (PartidaException $e) {
+                        if ($e->getCodigoError() !== 'ERR_CONCURRENCIA' || $intento === 2) {
+                            throw $e;
+                        }
+                    }
+                }
+                $actual = $persistencia->obtenerEstado($idUsuario, $idPartida);
+                if ($actual !== null && ($actual['partida']['Estado'] ?? '') === 'calculando') {
+                    $persistencia->finalizar($idPartida, (int)$actual['partida']['Version'], $this->crearClasificacion($actual));
                 }
             }
 
-            return ['exito' => true, 'finalizada' => !empty($resultado['terminada']) || !empty($resultado['debe_finalizar'])];
+            return ['exito' => true, 'finalizada' => $debeFinalizar || !empty($resultado['Terminada'])];
         } catch (PartidaException $e) {
             return $this->error($e->getCodigoError());
+        }
+    }
+
+    private function elegirRestriccion(): string {
+        $restricciones = ConfiguracionJuego::RESTRICCIONES_DADO;
+        return $restricciones[random_int(0, count($restricciones) - 1)];
+    }
+
+    private function fechaLimite(array $raw, int $segundos): string {
+        $turno = $raw['turno'];
+        $servidor = $turno === null ? time() : (int)($turno['ServidorEpoch'] ?? time());
+        return date('Y-m-d H:i:s', $servidor + $segundos);
+    }
+
+    private function procesarVencimientos(int $idUsuario, int $idPartida): void {
+        $persistencia = $this->persistencia();
+        for ($intento = 0; $intento < 3; $intento++) {
+            $raw = $persistencia->obtenerEstado($idUsuario, $idPartida);
+            if ($raw === null || ($raw['partida']['Estado'] ?? '') !== 'en_juego' || $raw['turno'] === null) {
+                return;
+            }
+            $turno = $raw['turno'];
+            $servidor = (int)($turno['ServidorEpoch'] ?? time());
+            try {
+                if ($turno['Fase'] === 'esperando_tirada'
+                    && $turno['LimiteTiradaEpoch'] !== null
+                    && (int)$turno['LimiteTiradaEpoch'] <= $servidor) {
+                    $persistencia->aplicarTirada(
+                        (int)$turno['idJugadorActivo'],
+                        $idPartida,
+                        (int)$raw['partida']['Version'],
+                        (int)$turno['TurnoGlobal'],
+                        $this->elegirRestriccion(),
+                        date('Y-m-d H:i:s', $servidor + ConfiguracionJuego::SEGUNDOS_COLOCACION)
+                    );
+                    continue;
+                }
+
+                if ($turno['Fase'] === 'colocacion'
+                    && $turno['LimiteColocacionEpoch'] !== null
+                    && (int)$turno['LimiteColocacionEpoch'] <= $servidor) {
+                    $this->colocarPendientesAutomaticamente($idUsuario, $idPartida, $raw);
+                    $this->cerrarTurnoSiCorresponde($idUsuario, $idPartida);
+                }
+                return;
+            } catch (PartidaException $e) {
+                if ($e->getCodigoError() !== 'ERR_CONCURRENCIA') {
+                    throw $e;
+                }
+            }
+        }
+    }
+
+    private function colocarPendientesAutomaticamente(int $idConsulta, int $idPartida, array $raw): void {
+        $persistencia = $this->persistencia();
+        $turnoGlobal = (int)$raw['turno']['TurnoGlobal'];
+        $yaJugaron = [];
+        foreach ($raw['jugadas_todas'] as $jugada) {
+            if ((int)$jugada['TurnoGlobal'] === $turnoGlobal) {
+                $yaJugaron[(int)$jugada['idUsuario']] = true;
+            }
+        }
+
+        foreach ($raw['jugadores'] as $jugador) {
+            $idUsuario = (int)$jugador['idUsuario'];
+            if (isset($yaJugaron[$idUsuario])) {
+                continue;
+            }
+            for ($intento = 0; $intento < 3; $intento++) {
+                $actual = $persistencia->obtenerEstado($idConsulta, $idPartida);
+                if ($actual === null || $actual['turno'] === null || (int)$actual['turno']['TurnoGlobal'] !== $turnoGlobal) {
+                    return;
+                }
+                $fichas = array_values(array_filter(
+                    $actual['fichas'],
+                    static fn(array $ficha): bool => $ficha['Estado'] === 'mano' && (int)$ficha['idUsuarioPoseedor'] === $idUsuario
+                ));
+                if ($fichas === []) {
+                    throw new PartidaException('ERR_PARTIDA_ESTADO');
+                }
+                $ficha = $fichas[random_int(0, count($fichas) - 1)];
+                try {
+                    $persistencia->colocarAutomaticamente(
+                        $idUsuario,
+                        $idPartida,
+                        (int)$actual['partida']['Version'],
+                        $turnoGlobal,
+                        (int)$ficha['idFicha']
+                    );
+                    break;
+                } catch (PartidaException $e) {
+                    if ($e->getCodigoError() !== 'ERR_CONCURRENCIA') {
+                        throw $e;
+                    }
+                }
+            }
+        }
+    }
+
+    private function cerrarTurnoSiCorresponde(int $idUsuario, int $idPartida): void {
+        $persistencia = $this->persistencia();
+        for ($intento = 0; $intento < 3; $intento++) {
+            $raw = $persistencia->obtenerEstado($idUsuario, $idPartida);
+            if ($raw === null || ($raw['partida']['Estado'] ?? '') !== 'en_juego' || $raw['turno'] === null) {
+                return;
+            }
+            $turno = $raw['turno'];
+            if ($turno['Fase'] !== 'colocacion') {
+                return;
+            }
+            $turnoGlobal = (int)$turno['TurnoGlobal'];
+            $colocaciones = 0;
+            foreach ($raw['jugadas_todas'] as $jugada) {
+                if ((int)$jugada['TurnoGlobal'] === $turnoGlobal) {
+                    $colocaciones++;
+                }
+            }
+            if ($colocaciones !== count($raw['jugadores'])) {
+                return;
+            }
+
+            try {
+                $version = (int)$raw['partida']['Version'];
+                if ($turnoGlobal >= ConfiguracionJuego::totalTurnos()) {
+                    $persistencia->cerrarUltimoTurno($idPartida, $version, $turnoGlobal);
+                    return;
+                }
+
+                $jugadores = $raw['jugadores'];
+                usort($jugadores, static fn(array $a, array $b): int => (int)$a['OrdenJugador'] <=> (int)$b['OrdenJugador']);
+                $ids = array_map(static fn(array $jugador): int => (int)$jugador['idUsuario'], $jugadores);
+                $indiceActivo = array_search((int)$turno['idJugadorActivo'], $ids, true);
+                if ($indiceActivo === false) {
+                    throw new PartidaException('ERR_PARTIDA_ESTADO');
+                }
+                $nuevoGlobal = $turnoGlobal + 1;
+                $nuevoTurno = [
+                    'global' => $nuevoGlobal,
+                    'ronda' => intdiv($nuevoGlobal - 1, ConfiguracionJuego::TURNOS_POR_RONDA) + 1,
+                    'numero' => (($nuevoGlobal - 1) % ConfiguracionJuego::TURNOS_POR_RONDA) + 1,
+                    'id_activo' => $ids[($indiceActivo + 1) % count($ids)],
+                    'limite_tirada' => $this->fechaLimite($raw, ConfiguracionJuego::SEGUNDOS_TIRADA)
+                ];
+
+                if ((int)$turno['TurnoRonda'] < ConfiguracionJuego::TURNOS_POR_RONDA) {
+                    $siguiente = [];
+                    foreach ($ids as $indice => $id) {
+                        $siguiente[$id] = $ids[($indice + 1) % count($ids)];
+                    }
+                    $plan = [];
+                    foreach ($raw['fichas'] as $ficha) {
+                        if ($ficha['Estado'] === 'mano') {
+                            $propietario = (int)$ficha['idUsuarioPoseedor'];
+                            $plan[] = ['id_ficha' => (int)$ficha['idFicha'], 'id_poseedor' => $siguiente[$propietario]];
+                        }
+                    }
+                    $persistencia->cerrarTurnoYPasarManos($idPartida, $version, $turnoGlobal, $plan, $nuevoTurno);
+                } else {
+                    $bolsa = array_values(array_filter($raw['fichas'], static fn(array $ficha): bool => $ficha['Estado'] === 'bolsa'));
+                    usort($bolsa, static fn(array $a, array $b): int => (int)$a['NumeroBolsa'] <=> (int)$b['NumeroBolsa']);
+                    $necesarias = count($ids) * ConfiguracionJuego::FICHAS_POR_RONDA;
+                    if (count($bolsa) < $necesarias) {
+                        throw new PartidaException('ERR_PARTIDA_ESTADO');
+                    }
+                    $plan = [];
+                    for ($indice = 0; $indice < $necesarias; $indice++) {
+                        $orden = intdiv($indice, ConfiguracionJuego::FICHAS_POR_RONDA);
+                        $plan[] = ['id_ficha' => (int)$bolsa[$indice]['idFicha'], 'id_poseedor' => $ids[$orden]];
+                    }
+                    $persistencia->cerrarTurnoEIniciarRonda($idPartida, $version, $turnoGlobal, $plan, $nuevoTurno);
+                }
+                return;
+            } catch (PartidaException $e) {
+                if ($e->getCodigoError() !== 'ERR_CONCURRENCIA') {
+                    throw $e;
+                }
+            }
         }
     }
 

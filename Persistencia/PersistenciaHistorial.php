@@ -33,7 +33,7 @@ class PersistenciaHistorial implements IPersistenciaHistorial {
     public function altaHistorial(HistorialDTO $historial): bool {
         $res = false;
         if ($this->conn !== null) {
-            $sql = "CALL sp_InsertarHistorial(?, ?, ?, ?, ?, ?);";
+            $sql = "CALL sp_historial_tx_insertar(?, ?, ?, ?, ?, ?);";
 
             $idUsuario = $historial->getIdUsuario()->getIdUsuario();
             $idPartida = $historial->getIdPartida()->getIdPartida();
@@ -58,7 +58,7 @@ class PersistenciaHistorial implements IPersistenciaHistorial {
     public function modificarHistorial(HistorialDTO $historial): bool {
         $res = false;
         if ($this->conn !== null) {
-            $sql = "CALL sp_ModificarHistorial(?, ?, ?, ?, ?);";
+            $sql = "CALL sp_historial_tx_modificar(?, ?, ?, ?, ?);";
 
             $idUsuario = $historial->getIdUsuario()->getIdUsuario();
             $idPartida = $historial->getIdPartida()->getIdPartida();
@@ -82,7 +82,7 @@ class PersistenciaHistorial implements IPersistenciaHistorial {
     public function bajaHistorial(int $idUsuario, int $idPartida): bool {
         $res = false;
         if ($this->conn !== null) {
-            $sql = "CALL sp_BajaHistorial(?, ?);";
+            $sql = "CALL sp_historial_tx_baja(?, ?);";
 
             try {
                 $stmt = $this->conn->prepare($sql);
@@ -100,7 +100,7 @@ class PersistenciaHistorial implements IPersistenciaHistorial {
     public function buscarHistorial(int $idUsuario, int $idPartida): ?HistorialDTO {
         $historial = null;
         if ($this->conn !== null) {
-            $sql = "CALL sp_BuscarHistorial(?, ?);";
+            $sql = "CALL sp_historial_q_uno(?, ?);";
 
             try {
                 $stmt = $this->conn->prepare($sql);
@@ -128,7 +128,7 @@ class PersistenciaHistorial implements IPersistenciaHistorial {
     public function obtenerHistorialDeUsuario(int $idUsuario, int $limite, int $desplazamiento): array {
         $lista = [];
         if ($this->conn !== null) {
-            $sql = "CALL sp_ObtenerHistorialUsuario(?, ?, ?);";
+            $sql = "CALL sp_historial_q_usuario(?, ?, ?);";
 
             try {
                 $stmt = $this->conn->prepare($sql);

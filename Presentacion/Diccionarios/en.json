@@ -263,5 +263,13 @@
   "adepto_shiny_alt": "Shiny adept",
   "puntos_clasificacion": "points",
   "pagina_anterior": "Previous page",
-  "pagina_siguiente": "Next page"
+  "pagina_siguiente": "Next page",
+  "err_gacha_estado": "The gacha status could not be loaded.",
+  "err_gacha_usuario": "The user is not valid for using the gacha.",
+  "err_gacha_tirada": "The pull could not be completed.",
+  "err_gacha_completo": "You have already unlocked every available adept.",
+  "err_gacha_dracmas": "You do not have enough drachmas to buy a pull.",
+  "msg_gacha_desbloqueado": "You unlocked {adepto}.",
+  "gacha_sin_desbloqueados": "You have not unlocked any adepts yet.",
+  "gacha_todos_desbloqueados": "You have already unlocked every available adept."
 }

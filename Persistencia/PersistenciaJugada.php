@@ -34,7 +34,7 @@ class PersistenciaJugada implements IPersistenciaJugada {
     public function obtenerJugadasDePartida(int $idUsuario, int $idPartida): array {
         $lista = [];
         if ($this->conn !== null) {
-            $sql = "CALL sp_ObtenerJugadasPartida(?, ?);";
+            $sql = "CALL sp_historial_q_jugadas_partida(?, ?);";
 
             try {
                 $stmt = $this->conn->prepare($sql);

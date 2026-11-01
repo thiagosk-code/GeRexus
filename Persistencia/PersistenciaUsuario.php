@@ -40,7 +40,7 @@ class PersistenciaUsuario implements IPersistenciaUsuario {
         $res = false;
         if ($this->conn !== null) {
             try {
-                $res = $this->contarEmail("CALL sp_ExisteEmail(?);", $email) > 0;
+                $res = $this->contarEmail("CALL sp_usuario_q_contar_email(?);", $email) > 0;
             } catch (\PDOException $e) {
                 $res = false;
             }
@@ -54,8 +54,8 @@ class PersistenciaUsuario implements IPersistenciaUsuario {
         }
 
         try {
-            $total = $this->contarEmail("CALL sp_ExisteEmail(?);", $email);
-            $bajas = $this->contarEmail("CALL sp_EsEmailBaja(?);", $email);
+            $total = $this->contarEmail("CALL sp_usuario_q_contar_email(?);", $email);
+            $bajas = $this->contarEmail("CALL sp_usuario_q_contar_email_baja(?);", $email);
             return $total > 0 && $total === $bajas;
         } catch (\PDOException $e) {
             return false;
@@ -68,7 +68,7 @@ class PersistenciaUsuario implements IPersistenciaUsuario {
         }
 
         try {
-            $stmt = $this->conn->prepare("CALL sp_BuscarUsuarioBaja(?);");
+            $stmt = $this->conn->prepare("CALL sp_usuario_q_baja_por_email(?);");
             $stmt->execute([$email]);
             $row = $stmt->fetch(\PDO::FETCH_ASSOC);
             $stmt->closeCursor();
@@ -83,36 +83,18 @@ class PersistenciaUsuario implements IPersistenciaUsuario {
             return false;
         }
 
-        $iniciaTransaccion = !$this->conn->inTransaction();
-
         try {
-            if ($iniciaTransaccion) {
-                $this->conn->beginTransaction();
-            }
-
-            $stmtHistorial = $this->conn->prepare("CALL sp_RestaurarHistorial(?);");
-            $stmtHistorial->execute([$usuario->getIdUsuario()]);
-            $stmtHistorial->closeCursor();
-
-            $stmtUsuario = $this->conn->prepare("CALL sp_ModificarUsuario(?, ?, ?, ?, ?, ?);");
+            $stmtUsuario = $this->conn->prepare("CALL sp_usuario_tx_reactivar(?, ?, ?, ?, ?);");
             $stmtUsuario->execute([
                 $usuario->getIdUsuario(),
                 $usuario->getNombre(),
                 $usuario->getEmail(),
                 $usuario->getPassword(),
-                $usuario->getMonedas(),
-                0
+                $usuario->getMonedas()
             ]);
             $stmtUsuario->closeCursor();
-
-            if ($iniciaTransaccion) {
-                $this->conn->commit();
-            }
             return true;
         } catch (\Throwable $e) {
-            if ($iniciaTransaccion && $this->conn->inTransaction()) {
-                $this->conn->rollBack();
-            }
             error_log("Error al reactivar usuario: " . $e->getMessage());
             return false;
         }
@@ -121,7 +103,7 @@ class PersistenciaUsuario implements IPersistenciaUsuario {
     public function altaUsuario(UsuarioDTO $usuarioDTO): int {
         $idGenerado = 0;
         if ($this->conn !== null && $usuarioDTO !== null) {
-            $sql = "CALL sp_InsertarUsuario(?, ?, ?, ?, ?, ?);";
+            $sql = "CALL sp_usuario_tx_insertar(?, ?, ?, ?, ?, ?);";
 
             $nom = $usuarioDTO->getNombre();
             $email = $usuarioDTO->getEmail();
@@ -146,7 +128,7 @@ class PersistenciaUsuario implements IPersistenciaUsuario {
     public function modificarUsuario(UsuarioDTO $usuario): bool {
         $res = false;
         if ($this->conn !== null && $usuario !== null) {
-            $sql = "CALL sp_ModificarUsuario(?, ?, ?, ?, ?, ?);";
+            $sql = "CALL sp_usuario_tx_modificar(?, ?, ?, ?, ?, ?);";
 
             $idUsuario = $usuario->getIdUsuario();
             $nom = $usuario->getNombre();
@@ -170,7 +152,7 @@ class PersistenciaUsuario implements IPersistenciaUsuario {
     public function bajaUsuario(int $idUsuario): bool {
         $res = false;
         if ($this->conn !== null) {
-            $sql = "CALL sp_BajaUsuario(?);";
+            $sql = "CALL sp_usuario_tx_baja(?);";
 
             try {
                 $stmt = $this->conn->prepare($sql);
@@ -187,7 +169,7 @@ class PersistenciaUsuario implements IPersistenciaUsuario {
     public function buscarUsuario(int $idUsuario): ?UsuarioDTO {
         $usuario = null;
         if ($this->conn !== null) {
-            $sql = "CALL sp_BuscarUsuario(?);";
+            $sql = "CALL sp_usuario_q_por_id(?);";
 
             try {
                 $stmt = $this->conn->prepare($sql);
@@ -216,7 +198,7 @@ class PersistenciaUsuario implements IPersistenciaUsuario {
         $partidasGanadas = 0;
         if ($this->conn !== null) {
             try {
-                $sql = "CALL sp_buscarPartidasGanadas(?, @partidas);";
+                $sql = "CALL sp_usuario_q_partidas_ganadas(?, @partidas);";
                 $stmt = $this->conn->prepare($sql);
                 $stmt->execute([$idUsuario]);
                 $stmt->closeCursor();
@@ -239,7 +221,7 @@ class PersistenciaUsuario implements IPersistenciaUsuario {
     public function buscarEmail(string $email): ?UsuarioDTO {
         $usuario = null;
         if ($this->conn !== null) {
-            $sql = "CALL sp_BuscarEmail(?);";
+            $sql = "CALL sp_usuario_q_por_email(?);";
 
             try {
                 $stmt = $this->conn->prepare($sql);
@@ -268,7 +250,7 @@ class PersistenciaUsuario implements IPersistenciaUsuario {
         $lista = [];
 
         if ($this->conn !== null) {
-            $sql = "CALL sp_ObtenerTodosLosUsuarios();";
+            $sql = "CALL sp_usuario_q_todos();";
             $stmt = $this->conn->prepare($sql);
             $stmt->execute();
             $resultado = $stmt->fetchAll(\PDO::FETCH_ASSOC);

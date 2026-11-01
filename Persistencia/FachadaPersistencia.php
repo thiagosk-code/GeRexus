@@ -15,6 +15,8 @@ require_once (__DIR__ . '/../Persistencia/PersistenciaAutorizacion.php');
 require_once (__DIR__ . '/../Persistencia/IPersistenciaAutorizacion.php');
 require_once (__DIR__ . '/../Persistencia/PersistenciaPartida.php');
 require_once (__DIR__ . '/../Persistencia/IPersistenciaPartida.php');
+require_once (__DIR__ . '/../Persistencia/PersistenciaGacha.php');
+require_once (__DIR__ . '/../Persistencia/IPersistenciaGacha.php');
 
 class FachadaPersistencia {
 
@@ -40,6 +42,10 @@ class FachadaPersistencia {
 
     public function retornoIPersistenciaPartida() : IPersistenciaPartida {
         return PersistenciaPartida::getInstancia();
+    }
+
+    public function retornoIPersistenciaGacha() : IPersistenciaGacha {
+        return PersistenciaGacha::getInstancia();
     }
    
 }

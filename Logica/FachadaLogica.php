@@ -14,6 +14,8 @@ require_once (__DIR__ . '/ILogicaAutorizacion.php');
 require_once (__DIR__ . '/LogicaAutorizacion.php');
 require_once (__DIR__ . '/ILogicaPartida.php');
 require_once (__DIR__ . '/LogicaPartida.php');
+require_once (__DIR__ . '/ILogicaGacha.php');
+require_once (__DIR__ . '/LogicaGacha.php');
 
 class FachadaLogica {
 
@@ -48,6 +50,10 @@ class FachadaLogica {
 
     public function retornoILogicaPartida() : ILogicaPartida {
         return new LogicaPartida();
+    }
+
+    public function retornoILogicaGacha() : ILogicaGacha {
+        return new LogicaGacha();
     }
 
 }

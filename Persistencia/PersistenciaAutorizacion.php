@@ -4,7 +4,6 @@ require_once (__DIR__ . '/../Conexion/ConexionBD.php');
 require_once (__DIR__ . '/IPersistenciaAutorizacion.php');
 
 class PersistenciaAutorizacion implements IPersistenciaAutorizacion {
-
     private $conn;
     private static ?PersistenciaAutorizacion $instancia = null;
 
@@ -30,13 +29,11 @@ class PersistenciaAutorizacion implements IPersistenciaAutorizacion {
     public function obtenerPermisosDeRol(int $idRol): array {
         $permisos = [];
         if ($this->conn !== null) {
-            $sql = "CALL sp_ObtenerPermisosDeRol(?);";
-
+            $sql = "CALL sp_autorizacion_q_permisos_rol(?);";
             try {
                 $stmt = $this->conn->prepare($sql);
                 $stmt->execute([$idRol]);
                 $resultado = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-
                 foreach ($resultado as $fila) {
                     $permisos[] = $fila['Nombre'];
                 }
