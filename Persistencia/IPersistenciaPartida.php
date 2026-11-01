@@ -3,7 +3,7 @@
 interface IPersistenciaPartida {
     public function obtenerEstado(int $idUsuario, int $idPartida): ?array;
     public function obtenerContextoColocacion(int $idUsuario, int $idPartida, int $idFicha): ?array;
-    public function aplicarTirada(int $idUsuario, int $idPartida, int $versionEsperada, int $turnoEsperado, string $restriccion, string $limiteColocacion): void;
+    public function aplicarTirada(int $idUsuario, int $idPartida, int $versionEsperada, int $turnoEsperado, string $restriccion, int $segundosColocacion): void;
     public function colocar(int $idUsuario, int $idPartida, int $versionEsperada, int $turnoEsperado, int $idFicha, string $codigoRecinto): void;
     public function colocarAutomaticamente(int $idUsuario, int $idPartida, int $versionEsperada, int $turnoEsperado, int $idFicha): void;
     public function establecerVotoFinalizacion(int $idUsuario, int $idPartida, int $versionEsperada, bool $voto): array;

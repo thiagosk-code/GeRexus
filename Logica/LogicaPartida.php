@@ -103,7 +103,7 @@ class LogicaPartida implements ILogicaPartida {
                     (int)$raw['partida']['Version'],
                     (int)$turno['TurnoGlobal'],
                     $this->elegirRestriccion(),
-                    $this->fechaLimite($raw, ConfiguracionJuego::SEGUNDOS_COLOCACION)
+                    ConfiguracionJuego::SEGUNDOS_COLOCACION
                 );
             } catch (PartidaException $e) {
                 if ($e->getCodigoError() !== 'ERR_CONCURRENCIA') {
@@ -290,12 +290,6 @@ class LogicaPartida implements ILogicaPartida {
         return $restricciones[random_int(0, count($restricciones) - 1)];
     }
 
-    private function fechaLimite(array $raw, int $segundos): string {
-        $turno = $raw['turno'];
-        $servidor = $turno === null ? time() : (int)($turno['ServidorEpoch'] ?? time());
-        return date('Y-m-d H:i:s', $servidor + $segundos);
-    }
-
     private function procesarVencimientos(int $idUsuario, int $idPartida): void {
         $persistencia = $this->persistencia();
         for ($intento = 0; $intento < 3; $intento++) {
@@ -315,7 +309,7 @@ class LogicaPartida implements ILogicaPartida {
                         (int)$raw['partida']['Version'],
                         (int)$turno['TurnoGlobal'],
                         $this->elegirRestriccion(),
-                        date('Y-m-d H:i:s', $servidor + ConfiguracionJuego::SEGUNDOS_COLOCACION)
+                        ConfiguracionJuego::SEGUNDOS_COLOCACION
                     );
                     continue;
                 }
@@ -423,7 +417,7 @@ class LogicaPartida implements ILogicaPartida {
                     'ronda' => intdiv($nuevoGlobal - 1, ConfiguracionJuego::TURNOS_POR_RONDA) + 1,
                     'numero' => (($nuevoGlobal - 1) % ConfiguracionJuego::TURNOS_POR_RONDA) + 1,
                     'id_activo' => $ids[($indiceActivo + 1) % count($ids)],
-                    'limite_tirada' => $this->fechaLimite($raw, ConfiguracionJuego::SEGUNDOS_TIRADA)
+                    'segundos_tirada' => ConfiguracionJuego::SEGUNDOS_TIRADA
                 ];
 
                 if ((int)$turno['TurnoRonda'] < ConfiguracionJuego::TURNOS_POR_RONDA) {

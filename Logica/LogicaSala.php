@@ -102,10 +102,10 @@ class LogicaSala implements ILogicaSala {
 
     private function limpiarSalasInactivas(): void {
         $persistencia = $this->persistencia();
-        $ahora = time();
-        $limiteActividad = date('Y-m-d H:i:s', $ahora - ConfiguracionJuego::SEGUNDOS_INACTIVIDAD_SALA);
-        $limiteCreacion = date('Y-m-d H:i:s', $ahora - ConfiguracionJuego::SEGUNDOS_VIDA_SALA);
-        foreach ($persistencia->obtenerCandidatosInactivos($limiteActividad, $limiteCreacion) as $candidata) {
+        foreach ($persistencia->obtenerCandidatosInactivos(
+            ConfiguracionJuego::SEGUNDOS_INACTIVIDAD_SALA,
+            ConfiguracionJuego::SEGUNDOS_VIDA_SALA
+        ) as $candidata) {
             try {
                 $persistencia->cancelarSalaInactiva((int)$candidata['idSala'], (int)$candidata['Version']);
             } catch (SalaException $e) {
@@ -378,7 +378,6 @@ class LogicaSala implements ILogicaSala {
                 ];
             }
             $primerActivo = $jugadores[random_int(0, count($jugadores) - 1)]['id_usuario'];
-            $limiteTirada = date('Y-m-d H:i:s', time() + ConfiguracionJuego::SEGUNDOS_TIRADA);
             return ['idPartida' => $persistencia->iniciarSala(
                 $idAnfitrion,
                 $codigoSala,
@@ -386,7 +385,7 @@ class LogicaSala implements ILogicaSala {
                 $jugadores,
                 $fichas,
                 $primerActivo,
-                $limiteTirada
+                ConfiguracionJuego::SEGUNDOS_TIRADA
             )];
         });
     }

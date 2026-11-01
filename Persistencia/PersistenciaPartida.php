@@ -90,8 +90,8 @@ class PersistenciaPartida implements IPersistenciaPartida {
         return $estado;
     }
 
-    public function aplicarTirada(int $idUsuario, int $idPartida, int $versionEsperada, int $turnoEsperado, string $restriccion, string $limiteColocacion): void {
-        $this->llamar('sp_partida_tx_aplicar_tirada', [$idUsuario, $idPartida, $versionEsperada, $turnoEsperado, $restriccion, $limiteColocacion]);
+    public function aplicarTirada(int $idUsuario, int $idPartida, int $versionEsperada, int $turnoEsperado, string $restriccion, int $segundosColocacion): void {
+        $this->llamar('sp_partida_tx_aplicar_tirada', [$idUsuario, $idPartida, $versionEsperada, $turnoEsperado, $restriccion, $segundosColocacion]);
     }
 
     public function colocar(int $idUsuario, int $idPartida, int $versionEsperada, int $turnoEsperado, int $idFicha, string $codigoRecinto): void {
@@ -116,7 +116,7 @@ class PersistenciaPartida implements IPersistenciaPartida {
             $idPartida, $versionEsperada, $turnoEsperado,
             json_encode($planManos, JSON_THROW_ON_ERROR),
             $nuevoTurno['global'], $nuevoTurno['ronda'], $nuevoTurno['numero'],
-            $nuevoTurno['id_activo'], $nuevoTurno['limite_tirada']
+            $nuevoTurno['id_activo'], $nuevoTurno['segundos_tirada']
         ]);
     }
 
@@ -125,7 +125,7 @@ class PersistenciaPartida implements IPersistenciaPartida {
             $idPartida, $versionEsperada, $turnoEsperado,
             json_encode($planReparto, JSON_THROW_ON_ERROR),
             $nuevoTurno['global'], $nuevoTurno['ronda'], $nuevoTurno['numero'],
-            $nuevoTurno['id_activo'], $nuevoTurno['limite_tirada']
+            $nuevoTurno['id_activo'], $nuevoTurno['segundos_tirada']
         ]);
     }
 

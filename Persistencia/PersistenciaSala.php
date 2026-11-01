@@ -154,18 +154,18 @@ class PersistenciaSala implements IPersistenciaSala {
         $this->llamar("CALL sp_sala_tx_cancelar(?, ?, ?);", [$idAnfitrion, $codigo, $versionEsperada]);
     }
 
-    public function obtenerCandidatosInactivos(string $limiteActividad, string $limiteCreacion): array {
-        return $this->llamar("CALL sp_sala_q_candidatas_inactivas(?, ?);", [$limiteActividad, $limiteCreacion]);
+    public function obtenerCandidatosInactivos(int $segundosInactividad, int $segundosVida): array {
+        return $this->llamar("CALL sp_sala_q_candidatas_inactivas(?, ?);", [$segundosInactividad, $segundosVida]);
     }
 
     public function cancelarSalaInactiva(int $idSala, int $versionEsperada): void {
         $this->llamar("CALL sp_sala_tx_cancelar_inactiva(?, ?);", [$idSala, $versionEsperada]);
     }
 
-    public function iniciarSala(int $idAnfitrion, string $codigo, int $versionEsperada, array $jugadores, array $fichas, int $primerActivo, string $limiteTirada): int {
+    public function iniciarSala(int $idAnfitrion, string $codigo, int $versionEsperada, array $jugadores, array $fichas, int $primerActivo, int $segundosTirada): int {
         $filas = $this->llamar(
             "CALL sp_sala_tx_iniciar_partida(?, ?, ?, ?, ?, ?, ?);",
-            [$idAnfitrion, $codigo, $versionEsperada, json_encode($jugadores, JSON_THROW_ON_ERROR), json_encode($fichas, JSON_THROW_ON_ERROR), $primerActivo, $limiteTirada]
+            [$idAnfitrion, $codigo, $versionEsperada, json_encode($jugadores, JSON_THROW_ON_ERROR), json_encode($fichas, JSON_THROW_ON_ERROR), $primerActivo, $segundosTirada]
         );
 
         if (count($filas) === 0) {
